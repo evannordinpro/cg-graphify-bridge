@@ -4277,6 +4277,16 @@
       "confidence": "EXTRACTED",
       "context": "calls",
       "relation": "calls",
+      "source": "cg:6e6700629aaaebd1",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:4b1559b6f6e0f7ea",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
       "source": "cg:7109be104c735530",
       "source_file": "",
       "source_location": "",
@@ -17069,8 +17079,8 @@
   "stats": {
     "cg_nodes": 508,
     "composite_nodes": 507,
-    "edges_in": 820,
-    "edges_out": 820,
+    "edges_in": 821,
+    "edges_out": 821,
     "kind_dist": {
       "class": 3,
       "constant": 17,

@@ -1,7 +1,7 @@
 # Fused Graph Report (codegraph substrate + graphify overlay)
 
-- nodes: 507  edges: 700  communities: 23
-- adapter stats: {'cg_nodes': 508, 'composite_nodes': 507, 'merges': 1, 'edges_in': 820, 'edges_out': 820, 'unmapped_edges': 0, 'kind_dist': {'class': 3, 'method': 2, 'function': 283, 'file': 39, 'import': 131, 'variable': 32, 'constant': 17}}
+- nodes: 507  edges: 701  communities: 23
+- adapter stats: {'cg_nodes': 508, 'composite_nodes': 507, 'merges': 1, 'edges_in': 821, 'edges_out': 821, 'unmapped_edges': 0, 'kind_dist': {'class': 3, 'method': 2, 'function': 283, 'file': 39, 'import': 131, 'variable': 32, 'constant': 17}}
 
 ## God nodes
 
