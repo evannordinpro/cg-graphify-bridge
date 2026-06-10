@@ -1,5 +1,5 @@
 {
-  "hash": "d4fbe0168a870728d014def56a4600d41e9ceec85db269918528bbca1fa6f75d",
+  "hash": "8084e10c5b357099103ee161f4e7b78eb482c19d403e1e98f12866f733132829",
   "files": 11,
   "scopes": [
     "src"
@@ -9,6 +9,8 @@
   "graspologic": null,
   "networkx": "3.6.1",
   "schema_version": 1,
+  "substrate": "codegraph",
+  "substrate_version": "codegraph@0.9.9",
   "semantic": {
     "docs_hash": "7a7a3353e6217a0e848cec8a8e42ccee1773da5751493cb7e086ec1cf02f389c",
     "docs_count": 5,
