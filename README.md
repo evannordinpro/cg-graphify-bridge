@@ -17,11 +17,14 @@ A standalone, **pipx-installed** developer tool with a hands-off freshness model
 
 ## Install
 
+Installed from this GitHub repo (not published to PyPI). Pin a tag for reproducibility:
+
 ```bash
-pipx install "cg-graphify-bridge[leiden]"      # CI / power users: Leiden community detection
-pipx install cg-graphify-bridge                # base: Louvain (deterministic, lighter)
-# or a pinned tag:
+# Leiden community detection (higher quality — what CI uses):
 pipx install "git+https://github.com/evannordinpro/cg-graphify-bridge@v0.1.0#egg=cg-graphify-bridge[leiden]"
+
+# base: Louvain (deterministic, lighter — no graspologic):
+pipx install "git+https://github.com/evannordinpro/cg-graphify-bridge@v0.1.0"
 ```
 
 Runtime deps (checked by `doctor`): **node** (TS substrate), the **codegraph** CLI (other

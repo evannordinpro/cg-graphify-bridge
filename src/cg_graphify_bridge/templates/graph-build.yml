@@ -52,10 +52,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      # --- install the tool. Adapt this line to your source: ---
-      #   published:  pipx install "cg-graphify-bridge[leiden]"
-      #   pinned tag: pipx install "git+https://github.com/evannordinpro/cg-graphify-bridge@v0.1.0#egg=cg-graphify-bridge[leiden]"
-      - run: pipx install "cg-graphify-bridge[leiden]"
+      # Install the tool from its public repo, pinned to a tag for reproducible structural builds.
+      # Bump the tag deliberately when you adopt a new tool version.
+      - run: pipx install "git+https://github.com/evannordinpro/cg-graphify-bridge@v0.1.0#egg=cg-graphify-bridge[leiden]"
       # TS substrate uses the TARGET repo's typescript; codegraph covers other languages.
       - run: if [ -f package.json ]; then npm ci --legacy-peer-deps; fi
       - run: npm i -g @colbymchenry/codegraph || true
