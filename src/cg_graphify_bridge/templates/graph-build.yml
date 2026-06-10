@@ -15,6 +15,7 @@
 name: graph-build
 
 on:
+  workflow_dispatch: {}                # manual trigger — on-demand rebuild / validation
   pull_request:
     paths:
       - 'apps/**'
@@ -23,7 +24,10 @@ on:
       - 'infra/**'
       - 'src/**'
   push:
-    branches-ignore: [main, develop]   # protected branches only change via reviewed PRs
+    # Default (build-on-PR-branch): build on feature-branch pushes, NOT on protected main/develop —
+    # structural lands on the PR branch and merges with the code. If your repo instead pushes
+    # straight to an UNprotected main, swap this for `branches: [main]` so it rebuilds + commits there.
+    branches-ignore: [main, develop]
     paths:
       - 'apps/**'
       - 'services/**'
