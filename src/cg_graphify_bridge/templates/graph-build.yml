@@ -65,7 +65,7 @@ jobs:
       - run: pipx install "git+https://github.com/evannordinpro/cg-graphify-bridge@v0.1.0#egg=cg-graphify-bridge[leiden]"
       # TS substrate uses the TARGET repo's typescript; codegraph covers other languages.
       - run: if [ -f package.json ]; then npm ci --legacy-peer-deps; fi
-      - run: npm i -g @colbymchenry/codegraph || true
+      - run: npm i -g @colbymchenry/codegraph@0.9.9 || true   # PIN the substrate version (it's stamped + drift-checked); bump deliberately
       - name: Build structural graph (the tool pins PYTHONHASHSEED -> byte-deterministic)
         run: cg-graphify-bridge build . --out graphify-out
       - name: Commit + push ONLY if structural changed (diff-gated = loop backstop)

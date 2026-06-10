@@ -29,6 +29,28 @@ def _codegraph_bin() -> str | None:
     return shutil.which("codegraph")
 
 
+def _substrate_version(substrate: str, repo: Path) -> str | None:
+    """Version of the EXTRACTION substrate, for the manifest stamp + drift detection (R6).
+    TS -> the target repo's typescript; else -> the codegraph CLI (`codegraph --version`).
+    Best-effort: returns None if it can't be determined (drift check then skips)."""
+    if substrate == "ts":
+        try:
+            pj = json.loads((repo / "node_modules" / "typescript" / "package.json").read_text())
+            return f"typescript@{pj.get('version')}" if pj.get("version") else None
+        except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+            return None
+    binp = _codegraph_bin()
+    if not binp:
+        return None
+    try:
+        base = ["node", binp] if binp.endswith(".js") else [binp]
+        r = subprocess.run(base + ["--version"], capture_output=True, text=True, timeout=15)
+        ver = (r.stdout or "").strip().splitlines()[0].strip() if r.returncode == 0 and r.stdout else None
+        return f"codegraph@{ver}" if ver else None
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
 def _index(repo: Path) -> Path:
     binp = _codegraph_bin()
     if not binp:
@@ -104,18 +126,25 @@ def build_repo(repo: Path, out_name: str, *, substrate: str = "auto", scopes: st
     `init` commands. Returns a result dict (no printing)."""
     from . import driver, engine, freshness
     out = repo / out_name
+    prior = freshness.read_manifest(out)
     # KD14: refuse to overwrite a graph built by a different clustering engine (would flip
     # community ids + churn the committed artifact). Fail fast — before any indexing work.
-    engine.check_engine_compat(freshness.read_manifest(out))
+    engine.check_engine_compat(prior)
     scope_list = [s.strip() for s in scopes.split(",") if s.strip()] if scopes else _default_scopes(repo)
     res, sub = _adapt_repo(repo, substrate, scope_list, build_index=True)
+    sub_version = _substrate_version(sub, repo)
+    drift = engine.check_substrate_drift(prior, sub, sub_version)
+    if drift:  # advisory, not fatal — substrate version drift MAY change extraction (R5/R6)
+        print(f"⚠ {drift}", file=sys.stderr)
     fused = driver.build_fused(res=res, prune_orphans=prune_orphans, fold_singletons=not no_fold)
     written = driver.write_artifact(fused, out)
-    manifest = freshness.write_manifest(out, repo, scope_list, engine_stamp=engine.detect_engine())
+    stamp = {**engine.detect_engine(), "substrate": sub, "substrate_version": sub_version}
+    manifest = freshness.write_manifest(out, repo, scope_list, engine_stamp=stamp)
     if activate:
         (out / ".cg_overlay").write_text(f"{sub}-substrate overlay — built by cg-graphify-bridge\n")
-    return {**written, "out_dir": str(out), "substrate": sub, "scopes": scope_list,
-            "engine": manifest.get("engine"), "schema_version": manifest.get("schema_version"),
+    return {**written, "out_dir": str(out), "substrate": sub, "substrate_version": sub_version,
+            "scopes": scope_list, "engine": manifest.get("engine"),
+            "schema_version": manifest.get("schema_version"),
             "communities": len(fused["communities"]), "god_nodes": len(fused["god_nodes"]),
             "overlay_activated": bool(activate), "manifest_files": manifest["files"],
             "adapter_stats": fused["adapt"].stats}

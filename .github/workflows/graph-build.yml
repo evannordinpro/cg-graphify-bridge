@@ -63,7 +63,7 @@ jobs:
       - run: pip install "."
       # TS substrate uses the TARGET repo's typescript; codegraph covers other languages.
       - run: if [ -f package.json ]; then npm ci --legacy-peer-deps; fi
-      - run: npm i -g @colbymchenry/codegraph || true
+      - run: npm i -g @colbymchenry/codegraph@0.9.9 || true   # PINNED: substrate version is stamped + drift-checked
       - name: Build structural graph (the tool pins PYTHONHASHSEED -> byte-deterministic)
         run: cg-graphify-bridge build . --out graphify-out
       - name: Commit + push ONLY if structural changed (diff-gated = loop backstop)

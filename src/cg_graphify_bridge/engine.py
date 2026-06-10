@@ -70,3 +70,21 @@ def check_engine_compat(manifest: dict | None) -> None:
     raise SystemExit(
         f"cg-graphify-bridge: engine mismatch — committed graph built with '{committed}', "
         f"this runtime would use '{current}'. {hint}")
+
+
+def check_substrate_drift(manifest: dict | None, substrate: str, substrate_version: str | None) -> str | None:
+    """Return an ADVISORY (non-fatal) when the committed graph's substrate/version differs from this
+    runtime's (R6). Unlike the clustering-engine guard, a substrate version bump only *may* change
+    extraction, so this warns rather than blocks — and the diff-gate catches any real churn. CI is
+    the authoritative builder, so its pinned substrate version is canonical. Returns None when there
+    is nothing to compare (no manifest, a pre-stamp manifest, or an exact match)."""
+    if not manifest:
+        return None
+    committed = (manifest.get("substrate"), manifest.get("substrate_version"))
+    if committed == (None, None):
+        return None  # pre-substrate-stamp manifest — first stamp establishes it
+    if committed == (substrate, substrate_version):
+        return None
+    return (f"substrate drift: committed graph built with {committed[0]} {committed[1]!r}, this "
+            f"runtime uses {substrate} {substrate_version!r} — extraction may differ (structural.json "
+            f"will diff if so). CI is the authoritative builder; align versions for reproducibility.")
