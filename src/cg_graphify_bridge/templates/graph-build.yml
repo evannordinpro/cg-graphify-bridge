@@ -1,0 +1,76 @@
+# cg-graphify-bridge — CI builds the deterministic structural graph and commits it onto the
+# PULL REQUEST'S OWN BRANCH, so code + structural.json review and merge together in ONE PR.
+#
+# Why this shape (build-on-PR-branch, not a post-merge bot PR):
+#   * structural is correct AT MERGE time — no stale window, no second PR, no auto-merge dance.
+#   * loop-safe by construction: the structural commit touches only graphify-out/**, which is
+#     NOT a trigger path below, so it never re-runs this workflow. And even if it did, a
+#     deterministic rebuild is byte-identical, so the diff-gated push step is a no-op.
+#
+# CI is the SINGLE Leiden builder (install the [leiden] extra). Devs run a light Louvain build
+# locally only for the semantic overlay; they never rebuild structural by hand.
+#
+# NOTE: fork PRs can't be pushed to (GITHUB_TOKEN has no write to forks) — the push step is
+# guarded to same-repo PRs; a fork-PR check-only fallback is a future addition.
+name: graph-build
+
+on:
+  pull_request:
+    paths:
+      - 'apps/**'
+      - 'services/**'
+      - 'packages/**'
+      - 'infra/**'
+      - 'src/**'
+  push:
+    branches-ignore: [main, develop]   # protected branches only change via reviewed PRs
+    paths:
+      - 'apps/**'
+      - 'services/**'
+      - 'packages/**'
+      - 'infra/**'
+      - 'src/**'
+
+permissions:
+  contents: write        # push the structural update back onto the PR's head branch
+
+concurrency:
+  group: graph-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  structural:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}   # the PR's source branch
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # --- install the tool. Adapt this line to your source: ---
+      #   published:  pipx install "cg-graphify-bridge[leiden]"
+      #   pinned tag: pipx install "git+https://github.com/evannordinpro/cg-graphify-bridge@v0.1.0#egg=cg-graphify-bridge[leiden]"
+      - run: pipx install "cg-graphify-bridge[leiden]"
+      # TS substrate uses the TARGET repo's typescript; codegraph covers other languages.
+      - run: if [ -f package.json ]; then npm ci --legacy-peer-deps; fi
+      - run: npm i -g @colbymchenry/codegraph || true
+      - name: Build structural graph (the tool pins PYTHONHASHSEED -> byte-deterministic)
+        run: cg-graphify-bridge build . --out graphify-out
+      - name: Commit + push ONLY if structural changed (diff-gated = loop backstop)
+        if: ${{ !github.event.pull_request.head.repo.fork }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          layers="graphify-out/structural.json graphify-out/GRAPH_REPORT.md graphify-out/.cg_manifest.json"
+          if git diff --quiet -- $layers; then
+            echo "structural unchanged — deterministic rebuild, nothing to push."
+          else
+            git add $layers
+            git commit -m "chore(graph): refresh structural graph"
+            git push origin "HEAD:${{ github.head_ref || github.ref_name }}"
+          fi

@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+*.egg-info/
+# codegraph local index + any test-fixture git/index (all regenerable)
+.codegraph/
+sample/.git/

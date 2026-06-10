@@ -1,0 +1,410 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "auth.py",
+      "file_type": "code",
+      "source_file": "pkg_a/auth.py",
+      "source_location": "L1",
+      "metadata": {
+        "cg_kind": "file",
+        "origin": "codegraph",
+        "qualified_name": "pkg_a/auth.py",
+        "signature": null,
+        "language": "python",
+        "start_line": 1,
+        "end_line": 17,
+        "cg_merged_ids": []
+      },
+      "community": null,
+      "god_node": false,
+      "id": "cg:d31c9c8fc575d2d3"
+    },
+    {
+      "label": "process",
+      "file_type": "code",
+      "source_file": "pkg_a/auth.py",
+      "source_location": "L4",
+      "metadata": {
+        "cg_kind": "function",
+        "origin": "codegraph",
+        "qualified_name": "process",
+        "signature": "(token)",
+        "language": "python",
+        "start_line": 4,
+        "end_line": 7,
+        "cg_merged_ids": []
+      },
+      "community": 0,
+      "god_node": true,
+      "id": "cg:450328e573e39257"
+    },
+    {
+      "label": "process_helper",
+      "file_type": "code",
+      "source_file": "pkg_a/auth.py",
+      "source_location": "L10",
+      "metadata": {
+        "cg_kind": "function",
+        "origin": "codegraph",
+        "qualified_name": "process_helper",
+        "signature": "(token)",
+        "language": "python",
+        "start_line": 10,
+        "end_line": 11,
+        "cg_merged_ids": []
+      },
+      "community": 0,
+      "god_node": true,
+      "id": "cg:60e1250902d2b7b8"
+    },
+    {
+      "label": "AuthService",
+      "file_type": "code",
+      "source_file": "pkg_a/auth.py",
+      "source_location": "L14",
+      "metadata": {
+        "cg_kind": "class",
+        "origin": "codegraph",
+        "qualified_name": "AuthService",
+        "signature": null,
+        "language": "python",
+        "start_line": 14,
+        "end_line": 16,
+        "cg_merged_ids": []
+      },
+      "community": 0,
+      "god_node": true,
+      "id": "cg:7e57e7053a783993"
+    },
+    {
+      "label": "login",
+      "file_type": "code",
+      "source_file": "pkg_a/auth.py",
+      "source_location": "L15",
+      "metadata": {
+        "cg_kind": "method",
+        "origin": "codegraph",
+        "qualified_name": "AuthService::login",
+        "signature": "(self, token)",
+        "language": "python",
+        "start_line": 15,
+        "end_line": 16,
+        "cg_merged_ids": []
+      },
+      "community": 0,
+      "god_node": true,
+      "id": "cg:ef4389a18cf34da1"
+    },
+    {
+      "label": "billing.py",
+      "file_type": "code",
+      "source_file": "pkg_b/billing.py",
+      "source_location": "L1",
+      "metadata": {
+        "cg_kind": "file",
+        "origin": "codegraph",
+        "qualified_name": "pkg_b/billing.py",
+        "signature": null,
+        "language": "python",
+        "start_line": 1,
+        "end_line": 13,
+        "cg_merged_ids": []
+      },
+      "community": null,
+      "god_node": false,
+      "id": "cg:d380d9f8a06622b7"
+    },
+    {
+      "label": "process",
+      "file_type": "code",
+      "source_file": "pkg_b/billing.py",
+      "source_location": "L4",
+      "metadata": {
+        "cg_kind": "function",
+        "origin": "codegraph",
+        "qualified_name": "process",
+        "signature": "(amount)",
+        "language": "python",
+        "start_line": 4,
+        "end_line": 7,
+        "cg_merged_ids": []
+      },
+      "community": 1,
+      "god_node": true,
+      "id": "cg:3481bab748d3ec12"
+    },
+    {
+      "label": "BillingService",
+      "file_type": "code",
+      "source_file": "pkg_b/billing.py",
+      "source_location": "L10",
+      "metadata": {
+        "cg_kind": "class",
+        "origin": "codegraph",
+        "qualified_name": "BillingService",
+        "signature": null,
+        "language": "python",
+        "start_line": 10,
+        "end_line": 12,
+        "cg_merged_ids": []
+      },
+      "community": 1,
+      "god_node": true,
+      "id": "cg:ecbe05a1116903e5"
+    },
+    {
+      "label": "charge",
+      "file_type": "code",
+      "source_file": "pkg_b/billing.py",
+      "source_location": "L11",
+      "metadata": {
+        "cg_kind": "method",
+        "origin": "codegraph",
+        "qualified_name": "BillingService::charge",
+        "signature": "(self, amount)",
+        "language": "python",
+        "start_line": 11,
+        "end_line": 12,
+        "cg_merged_ids": []
+      },
+      "community": 1,
+      "god_node": true,
+      "id": "cg:3f5051ef05e94f7e"
+    },
+    {
+      "label": "test_auth.py",
+      "file_type": "code",
+      "source_file": "tests/test_auth.py",
+      "source_location": "L1",
+      "metadata": {
+        "cg_kind": "file",
+        "origin": "codegraph",
+        "qualified_name": "tests/test_auth.py",
+        "signature": null,
+        "language": "python",
+        "start_line": 1,
+        "end_line": 7,
+        "cg_merged_ids": []
+      },
+      "community": null,
+      "god_node": false,
+      "id": "cg:5cb2d1353df41b6b"
+    },
+    {
+      "label": "pkg_a.auth",
+      "file_type": "code",
+      "source_file": "tests/test_auth.py",
+      "source_location": "L2",
+      "metadata": {
+        "cg_kind": "import",
+        "origin": "codegraph",
+        "qualified_name": "pkg_a.auth",
+        "signature": "from pkg_a.auth import process",
+        "language": "python",
+        "start_line": 2,
+        "end_line": 2,
+        "cg_merged_ids": []
+      },
+      "community": null,
+      "god_node": false,
+      "id": "cg:1ea77c82b996b452"
+    },
+    {
+      "label": "test_process",
+      "file_type": "code",
+      "source_file": "tests/test_auth.py",
+      "source_location": "L5",
+      "metadata": {
+        "cg_kind": "function",
+        "origin": "codegraph",
+        "qualified_name": "test_process",
+        "signature": "()",
+        "language": "python",
+        "start_line": 5,
+        "end_line": 6,
+        "cg_merged_ids": []
+      },
+      "community": null,
+      "god_node": false,
+      "id": "cg:207b99f46c13b191"
+    },
+    {
+      "label": "design.md",
+      "file_type": "document",
+      "id": "doc:design"
+    }
+  ],
+  "edges": [
+    {
+      "relation": "contains",
+      "context": "contains",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:d31c9c8fc575d2d3",
+      "target": "cg:450328e573e39257"
+    },
+    {
+      "relation": "contains",
+      "context": "contains",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:d31c9c8fc575d2d3",
+      "target": "cg:60e1250902d2b7b8"
+    },
+    {
+      "relation": "contains",
+      "context": "contains",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:d31c9c8fc575d2d3",
+      "target": "cg:7e57e7053a783993"
+    },
+    {
+      "relation": "calls",
+      "context": "calls",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:450328e573e39257",
+      "target": "cg:ef4389a18cf34da1"
+    },
+    {
+      "relation": "references",
+      "context": "instantiates",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:450328e573e39257",
+      "target": "cg:7e57e7053a783993"
+    },
+    {
+      "relation": "contains",
+      "context": "contains",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:7e57e7053a783993",
+      "target": "cg:ef4389a18cf34da1"
+    },
+    {
+      "relation": "calls",
+      "context": "calls",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:ef4389a18cf34da1",
+      "target": "cg:60e1250902d2b7b8"
+    },
+    {
+      "relation": "contains",
+      "context": "contains",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:d380d9f8a06622b7",
+      "target": "cg:3481bab748d3ec12"
+    },
+    {
+      "relation": "contains",
+      "context": "contains",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:d380d9f8a06622b7",
+      "target": "cg:ecbe05a1116903e5"
+    },
+    {
+      "relation": "calls",
+      "context": "calls",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:3481bab748d3ec12",
+      "target": "cg:3f5051ef05e94f7e"
+    },
+    {
+      "relation": "references",
+      "context": "instantiates",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:3481bab748d3ec12",
+      "target": "cg:ecbe05a1116903e5"
+    },
+    {
+      "relation": "contains",
+      "context": "contains",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:ecbe05a1116903e5",
+      "target": "cg:3f5051ef05e94f7e"
+    },
+    {
+      "relation": "contains",
+      "context": "contains",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:5cb2d1353df41b6b",
+      "target": "cg:1ea77c82b996b452"
+    },
+    {
+      "relation": "contains",
+      "context": "contains",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:5cb2d1353df41b6b",
+      "target": "cg:207b99f46c13b191"
+    },
+    {
+      "relation": "imports",
+      "context": "imports",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:5cb2d1353df41b6b",
+      "target": "cg:d31c9c8fc575d2d3"
+    },
+    {
+      "relation": "imports",
+      "context": "imports",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:5cb2d1353df41b6b",
+      "target": "cg:450328e573e39257"
+    },
+    {
+      "relation": "calls",
+      "context": "calls",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source": "cg:207b99f46c13b191",
+      "target": "cg:450328e573e39257"
+    },
+    {
+      "relation": "explains",
+      "context": "semantic",
+      "confidence": "INFERRED",
+      "weight": 1.0,
+      "source": "doc:design",
+      "target": "cg:7e57e7053a783993"
+    },
+    {
+      "relation": "references",
+      "context": "semantic",
+      "confidence": "INFERRED",
+      "weight": 1.0,
+      "source": "doc:design",
+      "target": "cg:ef4389a18cf34da1"
+    },
+    {
+      "relation": "explains",
+      "context": "semantic",
+      "confidence": "INFERRED",
+      "weight": 1.0,
+      "source": "doc:design",
+      "target": "cg:ecbe05a1116903e5"
+    },
+    {
+      "relation": "references",
+      "context": "semantic",
+      "confidence": "INFERRED",
+      "weight": 1.0,
+      "source": "doc:design",
+      "target": "cg:3f5051ef05e94f7e"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+[project]
+name = "cg-graphify-bridge"
+version = "0.1.0"
+description = "Bridge: codegraph (code substrate) × graphify (semantic overlay) → one fused graph. Standalone, pipx-installed, hands-off freshness."
+readme = "README.md"
+license = { text = "Proprietary" }
+requires-python = ">=3.10"
+classifiers = [
+    # Internal tool — installed via pipx from a git tag, never published to PyPI.
+    # "Private :: Do Not Upload" is the standard guard that makes `twine upload` refuse it.
+    "Private :: Do Not Upload",
+    "License :: Other/Proprietary License",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    # Pinned for cross-machine graph.json byte-determinism (committed-artifact model, R5/KD6):
+    # an engine swap or a networkx node_link_data change would alter the committed output.
+    # NOTE: base install is Louvain-deterministic — graspologic is NOT pulled here; it is the
+    # opt-in [leiden] extra (CI carries it as the single Leiden builder, D4/KD14).
+    "graphifyy==0.8.36",
+    "networkx==3.6.1",
+]
+
+[project.optional-dependencies]
+# Leiden community detection (higher quality) — opt-in; CI installs this to be the sole
+# Leiden builder. Pinned so the CI-built committed graph is byte-reproducible (R5/R6).
+leiden = ["graspologic==3.4.4"]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+cg-graphify-bridge = "cg_graphify_bridge.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# Ship non-.py package data (the bundled Node extractor) in the wheel/sdist (KD5).
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+# extract.cjs + the CI workflow template travel with the package so importlib.resources
+# resolves them post-install.
+"cg_graphify_bridge.ts_substrate_js" = ["*.cjs"]
+"cg_graphify_bridge.templates" = ["*.yml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
