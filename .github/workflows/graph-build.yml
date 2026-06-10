@@ -15,6 +15,7 @@
 name: graph-build
 
 on:
+  workflow_dispatch: {}                # manual trigger — on-demand rebuild / CI validation
   pull_request:
     paths:
       - 'apps/**'
@@ -23,7 +24,7 @@ on:
       - 'infra/**'
       - 'src/**'
   push:
-    branches-ignore: [main, develop]   # protected branches only change via reviewed PRs
+    branches: [main]                   # this repo pushes straight to main (unprotected) → rebuild + commit-back on main
     paths:
       - 'apps/**'
       - 'services/**'
