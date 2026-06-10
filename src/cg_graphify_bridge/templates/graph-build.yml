@@ -38,6 +38,10 @@ on:
 permissions:
   contents: write        # push the structural update back onto the PR's head branch
 
+env:
+  # Run the JS actions (checkout/setup-*) on Node 24 — GitHub forces this 2026-06-16; opt in now.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 concurrency:
   group: graph-build-${{ github.ref }}
   cancel-in-progress: true
@@ -55,7 +59,7 @@ jobs:
           python-version: '3.13'
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
       # Install the tool from its public repo, pinned to a tag for reproducible structural builds.
       # Bump the tag deliberately when you adopt a new tool version.
       - run: pipx install "git+https://github.com/evannordinpro/cg-graphify-bridge@v0.1.0#egg=cg-graphify-bridge[leiden]"
