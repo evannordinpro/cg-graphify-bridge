@@ -4277,16 +4277,6 @@
       "confidence": "EXTRACTED",
       "context": "calls",
       "relation": "calls",
-      "source": "cg:6e6700629aaaebd1",
-      "source_file": "",
-      "source_location": "",
-      "target": "cg:4b1559b6f6e0f7ea",
-      "weight": 1.0
-    },
-    {
-      "confidence": "EXTRACTED",
-      "context": "calls",
-      "relation": "calls",
       "source": "cg:7109be104c735530",
       "source_file": "",
       "source_location": "",
@@ -8613,15 +8603,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 492,
+        "end_line": 507,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_merge_driver::ekey",
         "signature": "(e)",
-        "start_line": 491
+        "start_line": 506
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L491"
+      "source_location": "L506"
     },
     {
       "file_type": "code",
@@ -8681,7 +8671,7 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 416,
+        "end_line": 431,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_write_agents_md",
@@ -8715,15 +8705,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 724,
+        "end_line": 739,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "main::_substrate_flags",
         "signature": "(parser)",
-        "start_line": 718
+        "start_line": 733
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L718"
+      "source_location": "L733"
     },
     {
       "file_type": "code",
@@ -8817,15 +8807,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 445,
+        "end_line": 460,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_resolve_hook_cmd",
         "signature": "(sub: str, out_name: str) -> str",
-        "start_line": 441
+        "start_line": 456
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L441"
+      "source_location": "L456"
     },
     {
       "file_type": "code",
@@ -10111,15 +10101,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 563,
+        "end_line": 578,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_hook_disabled",
         "signature": "() -> bool",
-        "start_line": 561
+        "start_line": 576
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L561"
+      "source_location": "L576"
     },
     {
       "file_type": "code",
@@ -10434,15 +10424,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 503,
+        "end_line": 518,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_merge_driver",
         "signature": "(args: argparse.Namespace) -> None",
-        "start_line": 473
+        "start_line": 488
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L473"
+      "source_location": "L488"
     },
     {
       "file_type": "code",
@@ -11080,15 +11070,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 573,
+        "end_line": 588,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_hook_repo",
         "signature": "() -> Path",
-        "start_line": 566
+        "start_line": 581
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L566"
+      "source_location": "L581"
     },
     {
       "file_type": "code",
@@ -11097,15 +11087,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 422,
+        "end_line": 437,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_write_gitattributes",
         "signature": "(repo: Path, out_name: str) -> Path",
-        "start_line": 419
+        "start_line": 434
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L419"
+      "source_location": "L434"
     },
     {
       "file_type": "code",
@@ -11114,15 +11104,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 744,
+        "end_line": 759,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "main",
         "signature": "() -> None",
-        "start_line": 642
+        "start_line": 657
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L642"
+      "source_location": "L657"
     },
     {
       "file_type": "code",
@@ -11624,7 +11614,7 @@
       "metadata": {
         "cg_kind": "file",
         "cg_merged_ids": [],
-        "end_line": 745,
+        "end_line": 760,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "src/cg_graphify_bridge/cli.py",
@@ -12304,15 +12294,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 438,
+        "end_line": 453,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "write_ci_workflow",
         "signature": "(repo: Path) -> dict",
-        "start_line": 430
+        "start_line": 445
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L430"
+      "source_location": "L445"
     },
     {
       "file_type": "code",
@@ -12474,15 +12464,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 470,
+        "end_line": 485,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "write_claude_hooks",
         "signature": "(repo: Path, out_name: str) -> dict",
-        "start_line": 448
+        "start_line": 463
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L448"
+      "source_location": "L463"
     },
     {
       "file_type": "code",
@@ -13035,15 +13025,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 639,
+        "end_line": 654,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_pin_hashseed_for",
         "signature": "(cmd: str) -> None",
-        "start_line": 626
+        "start_line": 641
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L626"
+      "source_location": "L641"
     },
     {
       "file_type": "code",
@@ -13103,15 +13093,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 600,
+        "end_line": 615,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_hook_sessionstart",
         "signature": "(args: argparse.Namespace) -> None",
-        "start_line": 576
+        "start_line": 591
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L576"
+      "source_location": "L591"
     },
     {
       "file_type": "code",
@@ -13800,15 +13790,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 485,
+        "end_line": 500,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_merge_driver::_load",
         "signature": "(p)",
-        "start_line": 481
+        "start_line": 496
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L481"
+      "source_location": "L496"
     },
     {
       "file_type": "code",
@@ -13851,15 +13841,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 623,
+        "end_line": 638,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_hook_stop",
         "signature": "(args: argparse.Namespace) -> None",
-        "start_line": 603
+        "start_line": 618
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L603"
+      "source_location": "L618"
     },
     {
       "file_type": "code",
@@ -14055,15 +14045,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 554,
+        "end_line": 569,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_materialize",
         "signature": "(args: argparse.Namespace) -> None",
-        "start_line": 551
+        "start_line": 566
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L551"
+      "source_location": "L566"
     },
     {
       "file_type": "code",
@@ -14786,15 +14776,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 520,
+        "end_line": 535,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "configure_merge_driver",
         "signature": "(repo: Path, out_name: str) -> dict",
-        "start_line": 506
+        "start_line": 521
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L506"
+      "source_location": "L521"
     },
     {
       "file_type": "code",
@@ -15891,15 +15881,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 548,
+        "end_line": 563,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_init",
         "signature": "(args: argparse.Namespace) -> None",
-        "start_line": 523
+        "start_line": 538
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L523"
+      "source_location": "L538"
     },
     {
       "file_type": "code",
@@ -16792,15 +16782,15 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 427,
+        "end_line": 442,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_read_template",
         "signature": "(name: str) -> str",
-        "start_line": 425
+        "start_line": 440
       },
       "source_file": "src/cg_graphify_bridge/cli.py",
-      "source_location": "L425"
+      "source_location": "L440"
     },
     {
       "file_type": "code",
@@ -17079,8 +17069,8 @@
   "stats": {
     "cg_nodes": 508,
     "composite_nodes": 507,
-    "edges_in": 821,
-    "edges_out": 821,
+    "edges_in": 820,
+    "edges_out": 820,
     "kind_dist": {
       "class": 3,
       "constant": 17,

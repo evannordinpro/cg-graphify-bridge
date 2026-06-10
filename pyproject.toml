@@ -3,13 +3,10 @@ name = "cg-graphify-bridge"
 version = "0.1.0"
 description = "Bridge: codegraph (code substrate) × graphify (semantic overlay) → one fused graph. Standalone, pipx-installed, hands-off freshness."
 readme = "README.md"
-license = { text = "Proprietary" }
+license = { text = "Apache-2.0" }
 requires-python = ">=3.10"
 classifiers = [
-    # Internal tool — installed via pipx from a git tag, never published to PyPI.
-    # "Private :: Do Not Upload" is the standard guard that makes `twine upload` refuse it.
-    "Private :: Do Not Upload",
-    "License :: Other/Proprietary License",
+    "License :: OSI Approved :: Apache Software License",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",

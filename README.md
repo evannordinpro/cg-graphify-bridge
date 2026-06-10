@@ -27,8 +27,9 @@ pipx install "git+https://github.com/evannordinpro/cg-graphify-bridge@v0.1.0#egg
 pipx install "git+https://github.com/evannordinpro/cg-graphify-bridge@v0.1.0"
 ```
 
-Runtime deps (checked by `doctor`): **node** (TS substrate), the **codegraph** CLI (other
-languages), and — for TS repos — the *target repo's* `node_modules/typescript`.
+Runtime deps (run `cg-graphify-bridge doctor <repo>` to check, with install hints):
+**node** (the TS substrate); the **codegraph** CLI for non-TS repos — `npm i -g @colbymchenry/codegraph`
+(or set `$CODEGRAPH_BIN`); and — for TS repos — the *target repo's* `node_modules/typescript`.
 
 ## Quick start
 
@@ -78,3 +79,13 @@ pytest
 Codegraph-dependent tests skip cleanly when `CODEGRAPH_BIN` is unset (pure-unit tests still run).
 Determinism is non-negotiable: `build`/`init` re-exec under a pinned `PYTHONHASHSEED=0` so
 `structural.json` is byte-identical across machines and reruns.
+
+## Consuming the output
+- **[`docs/using-the-graph.md`](docs/using-the-graph.md)** — full walkthrough for human **and** agent
+  operators (reading the report, the composite-id model, the freshness gate, the worked example).
+- **[`AGENTS.md`](AGENTS.md)** — the terse agent contract `init` ships into every consumer:
+  how to *consume* the graph **and** the step-by-step protocol to *refresh* the semantic overlay.
+- This repo is self-hosted — `graphify-out/` is a live example of the tool's own output.
+
+## License
+[Apache-2.0](LICENSE).
