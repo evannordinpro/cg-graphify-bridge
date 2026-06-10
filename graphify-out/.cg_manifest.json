@@ -1,0 +1,18 @@
+{
+  "hash": "69c433f1afe085c47a0a2b2c9c2c06fa05bebc1706ce8ec7b7ff91a7bb154a8d",
+  "files": 11,
+  "scopes": [
+    "src"
+  ],
+  "engine": "louvain",
+  "graphifyy": "0.8.36",
+  "graspologic": null,
+  "networkx": "3.6.1",
+  "schema_version": 1,
+  "semantic": {
+    "docs_hash": "be5c40231e3cc181bf34c03a9d37b8e505ccf0dbb7159380a2d029e02db36697",
+    "docs_count": 3,
+    "linked_hash": "395aacec3214963762d97d392ad456ea7a205eb891ffaa8e384d98e1dfcd8d82",
+    "linked_count": 9
+  }
+}

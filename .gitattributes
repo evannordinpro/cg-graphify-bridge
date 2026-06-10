@@ -1,0 +1,2 @@
+# cg-graphify-bridge: semantic.json union/rebuild merge driver
+graphify-out/semantic.json merge=cg-semantic

@@ -1,0 +1,4 @@
+# cg-graphify-bridge: fused graph + caches are LOCAL (lazily materialized)
+# Commit the layers (structural.json, semantic.json, manifest.json, GRAPH_REPORT.md).
+graph.json
+.cache/

@@ -1,0 +1,189 @@
+{
+  "layer": "semantic",
+  "schema_version": 1,
+  "semantic_edges": [
+    {
+      "relation": "specifies",
+      "source": "doc:overlayskilloverlaymd",
+      "target": "cg:1a0dfa28bf7d3c3c"
+    },
+    {
+      "relation": "specifies",
+      "source": "doc:overlayskilloverlaymd",
+      "target": "cg:20071d980a7de331"
+    },
+    {
+      "relation": "specifies",
+      "source": "doc:overlayskilloverlaymd",
+      "target": "cg:4626ede89c8f1831"
+    },
+    {
+      "relation": "specifies",
+      "source": "doc:overlayskilloverlaymd",
+      "target": "cg:52ed65910189769a"
+    },
+    {
+      "relation": "specifies",
+      "source": "doc:overlayskilloverlaymd",
+      "target": "cg:5dc2a9c13ae8c1b6"
+    },
+    {
+      "relation": "specifies",
+      "source": "doc:overlayskilloverlaymd",
+      "target": "cg:6dd3607a25d92434"
+    },
+    {
+      "relation": "specifies",
+      "source": "doc:overlayskilloverlaymd",
+      "target": "cg:b4204c15352d8f77"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:13dc2f72e26c825e"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:164a13d5b9250633"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:1a0dfa28bf7d3c3c"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:3671ce95e1a767f3"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:37e1fb59471497e8"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:39fe57db003167c3"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:4b2ef1be40fba52c"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:52ed65910189769a"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:538debc562e34083"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:663c5cfd8b221c7b"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:6d17ce09b4fa2f20"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:7af7daeeb499bcf8"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:864183784e4f00cf"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:9d2d589b042b484a"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:aad5f15d80bae04e"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:b4204c15352d8f77"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:b8342ab2a94d09a7"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:d29d39a748be57b7"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:e088c0baf177a262"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:e44e1bf9d91fd0a1"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
+      "target": "cg:e7a781fb1be06490"
+    },
+    {
+      "relation": "describes",
+      "source": "doc:sampledocsdesignmd",
+      "target": "cg:172e861885ac849c"
+    },
+    {
+      "relation": "describes",
+      "source": "doc:sampledocsdesignmd",
+      "target": "cg:c5b83cbad5fcb865"
+    },
+    {
+      "relation": "describes",
+      "source": "doc:sampledocsdesignmd",
+      "target": "cg:ea5761eac89f83b9"
+    },
+    {
+      "relation": "describes",
+      "source": "doc:sampledocsdesignmd",
+      "target": "cg:ea87dac7d04078d1"
+    }
+  ],
+  "semantic_nodes": [
+    {
+      "file_type": "document",
+      "id": "doc:overlayskilloverlaymd",
+      "label": "SKILL_overlay.md"
+    },
+    {
+      "file_type": "document",
+      "id": "doc:readmemd",
+      "label": "README.md"
+    },
+    {
+      "file_type": "document",
+      "id": "doc:sampledocsdesignmd",
+      "label": "design.md"
+    }
+  ],
+  "stats": {
+    "dangling": 0,
+    "fallback": 0,
+    "kept": 32,
+    "payloads": 3
+  }
+}
