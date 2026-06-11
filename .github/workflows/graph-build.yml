@@ -68,14 +68,22 @@ jobs:
         run: cg-graphify-bridge build . --out graphify-out
       - name: Commit + push ONLY if structural changed (diff-gated = loop backstop)
         if: ${{ !github.event.pull_request.head.repo.fork }}
+        env:
+          CG_GRAPH_COMMIT_MSG: ${{ vars.CG_GRAPH_COMMIT_MSG }}   # optional repo-variable override
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           layers="graphify-out/structural.json graphify-out/GRAPH_REPORT.md graphify-out/.cg_manifest.json"
           if git diff --quiet -- $layers; then
-            echo "structural unchanged — deterministic rebuild, nothing to push."
-          else
-            git add $layers
-            git commit -m "chore(graph): refresh structural graph"
-            git push origin "HEAD:${{ github.head_ref || github.ref_name }}"
+            echo "structural unchanged — deterministic rebuild, nothing to push."; exit 0
+          fi
+          # Reuse the LAST commit's conventional type so the bot commit passes the repo's commitlint
+          # type-enum ('ci' is often disallowed); override the whole message with the CG_GRAPH_COMMIT_MSG var.
+          TYPE=$(git log -1 --format=%s | sed -nE 's/^([A-Za-z]+)(\([^)]*\))?!?:.*/\1/p')
+          MSG="${CG_GRAPH_COMMIT_MSG:-${TYPE:+$TYPE: }ci graph build}"
+          git add $layers
+          git commit -m "$MSG"
+          if ! git push origin "HEAD:${{ github.head_ref || github.ref_name }}"; then
+            echo "::error::cg-graphify-bridge: structural commit-back rejected — likely branch protection (required status checks / signed commits) or a read-only GITHUB_TOKEN. Relax that rule for the PR branch, or build structural locally and commit it in the PR." >&2
+            exit 1
           fi

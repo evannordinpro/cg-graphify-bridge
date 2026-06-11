@@ -1,17 +1,22 @@
-# cg-graphify-bridge — CI builds the deterministic structural graph and commits it onto the
+# cg-graphify-bridge — CI rebuilds the deterministic structural graph and commits it onto the
 # PULL REQUEST'S OWN BRANCH, so code + structural.json review and merge together in ONE PR.
 #
-# Why this shape (build-on-PR-branch, not a post-merge bot PR):
+# Why this shape (build-on-PR-branch):
 #   * structural is correct AT MERGE time — no stale window, no second PR, no auto-merge dance.
-#   * loop-safe by construction: the structural commit touches only graphify-out/**, which is
-#     NOT a trigger path below, so it never re-runs this workflow. And even if it did, a
-#     deterministic rebuild is byte-identical, so the diff-gated push step is a no-op.
+#   * minimal dependency: the built-in GITHUB_TOKEN (contents: write) — NO PAT, no app, no managed bot.
+#   * loop-safe: GITHUB_TOKEN pushes don't re-trigger workflows, and the structural commit touches
+#     only graphify-out/** (not a trigger path); a deterministic rebuild is byte-identical anyway.
+#   * the bot commit reuses the LAST commit's conventional type, so it passes commitlint type-enums.
 #
-# CI is the SINGLE Leiden builder (install the [leiden] extra). Devs run a light Louvain build
-# locally only for the semantic overlay; they never rebuild structural by hand.
+# Limits (the commit-back fails LOUDLY with guidance when it can't push):
+#   * required status checks + "require branches up to date": GITHUB_TOKEN pushes don't re-trigger
+#     checks, so the bot commit's SHA has no runs and merge is blocked. Exclude this job from that
+#     rule, or build structural locally and commit it in the PR.
+#   * required SIGNED commits, or a read-only GITHUB_TOKEN org default: the bot can't commit.
+#   * fork PRs: GITHUB_TOKEN can't write to a fork; the push step is guarded to skip them.
 #
-# NOTE: fork PRs can't be pushed to (GITHUB_TOKEN has no write to forks) — the push step is
-# guarded to same-repo PRs; a fork-PR check-only fallback is a future addition.
+# CI is the SINGLE structural builder (the [leiden] extra -> Leiden; otherwise base/Louvain). Devs
+# never rebuild structural by hand — they only refresh the semantic overlay (see AGENTS.md).
 name: graph-build
 
 on:
@@ -24,10 +29,7 @@ on:
       - 'infra/**'
       - 'src/**'
   push:
-    # Default (build-on-PR-branch): build on feature-branch pushes, NOT on protected main/develop —
-    # structural lands on the PR branch and merges with the code. If your repo instead pushes
-    # straight to an UNprotected main, swap this for `branches: [main]` so it rebuilds + commits there.
-    branches-ignore: [main, develop]
+    branches-ignore: [main, develop]   # feature-branch pushes only; protected branches merge via PR
     paths:
       - 'apps/**'
       - 'services/**'
@@ -70,14 +72,22 @@ jobs:
         run: cg-graphify-bridge build . --out graphify-out
       - name: Commit + push ONLY if structural changed (diff-gated = loop backstop)
         if: ${{ !github.event.pull_request.head.repo.fork }}
+        env:
+          CG_GRAPH_COMMIT_MSG: ${{ vars.CG_GRAPH_COMMIT_MSG }}   # optional: set this repo variable to override the bot commit message
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           layers="graphify-out/structural.json graphify-out/GRAPH_REPORT.md graphify-out/.cg_manifest.json"
           if git diff --quiet -- $layers; then
-            echo "structural unchanged — deterministic rebuild, nothing to push."
-          else
-            git add $layers
-            git commit -m "chore(graph): refresh structural graph"
-            git push origin "HEAD:${{ github.head_ref || github.ref_name }}"
+            echo "structural unchanged — deterministic rebuild, nothing to push."; exit 0
+          fi
+          # Reuse the LAST commit's conventional type so the bot commit passes the repo's commitlint
+          # type-enum ('ci' is often disallowed); override the whole message with the CG_GRAPH_COMMIT_MSG var.
+          TYPE=$(git log -1 --format=%s | sed -nE 's/^([A-Za-z]+)(\([^)]*\))?!?:.*/\1/p')
+          MSG="${CG_GRAPH_COMMIT_MSG:-${TYPE:+$TYPE: }ci graph build}"
+          git add $layers
+          git commit -m "$MSG"
+          if ! git push origin "HEAD:${{ github.head_ref || github.ref_name }}"; then
+            echo "::error::cg-graphify-bridge: structural commit-back rejected — likely branch protection (required status checks / signed commits) or a read-only GITHUB_TOKEN. Relax that rule for the PR branch, or build structural locally and commit it in the PR." >&2
+            exit 1
           fi
