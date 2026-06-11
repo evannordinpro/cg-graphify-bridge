@@ -122,6 +122,10 @@ cg-graphify-bridge status .          # structural + semantic freshness (+ exact 
 | `serve <repo>` | (opt-in) launch graphify's MCP over the **committed** graph for repeat-query (≥10/session) workflows — never auto-installed |
 | `health <repo> [--json] [--include-tests]` | structural + semantic + combined codebase-health metrics (advisory; never gates; production-scoped by default) |
 | `benchmark <repo> [--json]` | token-reduction of graph-guided retrieval vs naive file-read, per query class |
+| `callers <repo> <symbol> [--depth N] [--json]` | symbols that depend on SYMBOL (over the committed graph) |
+| `callees <repo> <symbol> [--depth N] [--json]` | symbols SYMBOL depends on |
+| `impact <repo> <symbol> [--depth N] [--json]` | transitive blast radius if SYMBOL changes (full by default) |
+| `insights <repo> [--out-file PATH]` | render the versioned showcase report (health + benchmark) as GitHub-native markdown |
 | `check-semantic <repo> [--require-committed]` | exit non-zero if the overlay is stale (the Stop-hook gate) |
 | `install-hook <repo>` | install the git freshness hooks |
 | `hook-sessionstart` / `hook-stop` | the Claude hook entrypoints (wired by `init` into `.claude/settings.json`) |
@@ -153,6 +157,22 @@ To surface health in CI **non-blockingly**, set the repo variable **`CG_HEALTH_A
 workflow then writes the report to the run summary (it never gates the build). Abstractness needs the
 `is_abstract` stamp the current extractor emits; a graph built by an older tool version shows a caveat
 until CI rebuilds it.
+
+### Showcase report
+`cg-graphify-bridge insights <repo>` renders a beautiful, GitHub-native markdown report composing the
+health + benchmark metrics — a scorecard, token-efficiency vs GraphRAG's 26–97% band, a **mermaid
+quadrant** of the Martin Zone-of-Pain/Uselessness, doc-coverage gauges, undocumented hubs, and the
+risk queue. It's **content-deterministic** (no timestamp/SHA) so it versions cleanly. The CI build
+renders it to **`GRAPH_INSIGHTS.md`** at the repo root and commits it: **always on** in this repo;
+in a consumer repo set the variable **`CG_INSIGHTS=true`** to enable it.
+
+### Querying the graph
+`cg-graphify-bridge callers|callees|impact <repo> <symbol>` navigate the committed graph offline:
+`callers` = who depends on a symbol, `callees` = what it depends on, `impact` = the **transitive**
+blast radius if it changes (full by default; `--depth N` to bound, output grouped by hop). You pass a
+plain **name** (e.g. `build_repo`) — it resolves by label → qualified-name → suffix, and an ambiguous
+name lists its candidates and exits non-zero. Unlike `health`, these traverse the **whole** graph
+(tests included — a test that calls X is real impact). `--json` for machine output.
 
 ## 7. Isolation — don't let graphify/codegraph installers interfere
 
