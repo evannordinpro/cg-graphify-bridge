@@ -33,17 +33,32 @@ Runtime deps (run `cg-graphify-bridge doctor <repo>` to check, with install hint
 
 ## Quick start
 
+**Adopting a repo** (owner, once):
+
 ```bash
 cg-graphify-bridge doctor .                 # check runtime deps with actionable hints
 cg-graphify-bridge init .                   # build + AGENTS.md + .gitattributes + CI + hooks
-cg-graphify-bridge status .                 # structural + semantic freshness (+ exact refresh cmds)
+# → commit what init generated, enable CI write access, seed the semantic overlay
+#   (the 7-step checklist: docs/setup.md §3)
+```
+
+**Working in a repo that has it** (every dev, daily):
+
+```bash
+pipx install "git+https://github.com/evannordinpro/cg-graphify-bridge@v0.1.0"   # once per machine
+cg-graphify-bridge status .                 # freshness — structural arrives via git pull (CI builds it)
+cg-graphify-bridge impact . <symbol>        # blast radius before you edit (also: callers / callees)
 # refresh the semantic overlay when docs / linked code change:
-cg-graphify-bridge semantic-prep .          # → Claude fills payloads (/graphify overlay) → …
+cg-graphify-bridge semantic-prep .          # → Claude fills payloads (per AGENTS.md) → …
 cg-graphify-bridge semantic-merge .         # … then commit graphify-out/semantic.json
 ```
 
-→ **Full setup** — runtime deps, **enabling CI write access**, per-developer steps, strict-repo CI
-limits, command reference, troubleshooting: **[`docs/setup.md`](docs/setup.md)**.
+With Claude Code, the committed hooks + `AGENTS.md` automate the daily loop (freshness surfacing,
+graph-first navigation, overlay refresh) — see [`docs/setup.md`](docs/setup.md) §5.
+
+→ **Full setup** — runtime deps, the **adoption checklist** (incl. enabling CI write access +
+metrics opt-ins), per-developer steps, strict-repo CI limits, command reference, troubleshooting:
+**[`docs/setup.md`](docs/setup.md)**.
 
 ## Committed artifact model (`graphify-out/`)
 
