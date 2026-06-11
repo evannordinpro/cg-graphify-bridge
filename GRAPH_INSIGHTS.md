@@ -4,7 +4,7 @@
 
 | 🎯 Token efficiency | 🏛️ Architecture | 📚 Documentation |
 |:--:|:--:|:--:|
-| 97% pinpoint · 96% global | 0 cycles · 3 Zone-of-Pain | hubs 100% · debt 0.4342 |
+| 97% pinpoint · 96% global | 0 cycles · 3 Zone-of-Pain | hubs 100% · debt 0.3121 |
 
 ## 🎯 Token efficiency
 
@@ -27,8 +27,8 @@ quadrantChart
     quadrant-2 Ideal - abstract and stable
     quadrant-3 Zone of Pain
     quadrant-4 Volatile leaf - ok
-    "c10": [0.000, 0.000]
-    "c16": [0.000, 0.000]
+    "c11": [0.000, 0.000]
+    "c15": [0.000, 0.000]
     "c0": [0.200, 0.000]
 ```
 
@@ -40,19 +40,18 @@ quadrantChart
 
 ## 🧹 Technical Debt
 
-**Debt score** &nbsp; `███████░░░░░░░░░░░░░` 35% _(0 = clean → 1 = heavy)_
+**Debt score** &nbsp; `██████░░░░░░░░░░░░░░` 29% _(0 = clean → 1 = heavy)_
 
 | Debt type | Count |
 |---|--:|
-| god-object | 9 |
-| dangling-link | 6 |
+| god-object | 10 |
 | high-fan-out | 4 |
 | zone-of-pain | 3 |
 | dead-code | 2 |
 
 - **Most-indebted feature:** community 0 (3 debt items)
 - **Most-indebted component:** `src/cg_graphify_bridge/cli.py` (6 debt items)
-- _score contributions: god-object 0.1125, zone-of-pain 0.1, high-fan-out 0.0667, dangling-link 0.0667, dead-code 0.0074_
+- _score contributions: god-object 0.1154, zone-of-pain 0.1, high-fan-out 0.0667, dead-code 0.0074_
 
 ## 📚 Documenting what matters
 

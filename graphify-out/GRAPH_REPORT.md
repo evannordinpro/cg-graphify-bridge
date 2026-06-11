@@ -1,7 +1,7 @@
 # Fused Graph Report (codegraph substrate + graphify overlay)
 
-- nodes: 812  edges: 1693  communities: 25
-- adapter stats: {'cg_nodes': 813, 'composite_nodes': 812, 'merges': 1, 'edges_in': 1585, 'edges_out': 1585, 'unmapped_edges': 0, 'kind_dist': {'class': 4, 'method': 6, 'function': 509, 'file': 53, 'import': 178, 'variable': 45, 'constant': 17}, 'pyast_call_edges': 400}
+- nodes: 829  edges: 1669  communities: 25
+- adapter stats: {'cg_nodes': 830, 'composite_nodes': 829, 'merges': 1, 'edges_in': 1605, 'edges_out': 1605, 'unmapped_edges': 0, 'kind_dist': {'class': 4, 'method': 6, 'function': 509, 'file': 56, 'import': 192, 'variable': 45, 'constant': 17}, 'pyast_call_edges': 362}
 
 ## God nodes
 
@@ -23,8 +23,8 @@
 
 ## Surprising connections
 
-- _build ↔ resolve
 - _doctor ↔ resolve
+- _health ↔ health
 - _materialize ↔ materialize
 - _serve ↔ materialize
 - benchmark ↔ read_layer
