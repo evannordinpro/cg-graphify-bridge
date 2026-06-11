@@ -186,7 +186,9 @@ def _status(args: argparse.Namespace) -> dict:
     advice = _refresh_cmds(repo, args.out,
                            st.get("structural", {}).get("state") == "stale",
                            st.get("semantic", {}).get("state") == "stale")
-    payload = {"repo": str(repo), "out_dir": str(out), **st, "advice": advice}
+    # FR4: flag a graphify-native semantic.json squatting on the bridge's committed overlay path.
+    warnings = [w for w in (_detect_semantic_schema_clash(out),) if w]
+    payload = {"repo": str(repo), "out_dir": str(out), **st, "advice": advice, "warnings": warnings}
     if not args.quiet:
         print(json.dumps(payload, indent=2))
     return payload
@@ -371,10 +373,109 @@ def _check_semantic(args: argparse.Namespace) -> None:
         raise SystemExit(1)
 
 
-def doctor_report(repo: Path | None) -> dict:
+# ---------- Tool-isolation conflict detectors (FR1b/FR3/FR4 — advisory, fail-open) ----------
+# The bridge composes graphify/codegraph as libraries + subprocesses, never as installed agent
+# integrations. These detect the INCOMPATIBLE behaviors we can't prevent at install time (a
+# user-global codegraph MCP, graphify's native-rebuild git hooks, a graphify-native semantic.json)
+# and warn. graphify's read/query/MCP over graph.json is COMPATIBLE and intentionally NOT flagged.
+
+_GRAPHIFY_HOOK_MARK = "# graphify-hook-start"
+
+
+def _mcp_servers(path: Path) -> dict:
+    """The `mcpServers` map from a Claude/agent JSON config; {} on any read/parse failure."""
+    try:
+        data = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+        return {}
+    srv = data.get("mcpServers") if isinstance(data, dict) else None
+    return srv if isinstance(srv, dict) else {}
+
+
+def _is_codegraph_serve(name: str, entry: object) -> bool:
+    """True iff an mcpServers (name, entry) launches codegraph's MCP — keyed by the server name
+    `codegraph` or a command/args invoking `codegraph ... serve`."""
+    if str(name).lower() == "codegraph":
+        return True
+    if not isinstance(entry, dict):
+        return False
+    cmd = str(entry.get("command", ""))
+    args = [str(a) for a in (entry.get("args") or [])]
+    mentions = "codegraph" in Path(cmd).name or any("codegraph" in a for a in args)
+    return mentions and any(a == "serve" or a.endswith("serve") for a in args)
+
+
+def _detect_codegraph_mcp(home: Path, repo: Path) -> str | None:
+    """FR1(b): a codegraph MCP registration shadows the committed graph (it serves the live
+    per-clone .codegraph db). The project-local case is hard-blocked by disabledMcpjsonServers
+    (FR1a); the user-global case can't be — warn either way."""
+    for path, label in ((home / ".claude.json", "user-global ~/.claude.json"),
+                        (repo / ".mcp.json", "project .mcp.json"),
+                        (repo / ".claude" / "mcp.json", "project .claude/mcp.json")):
+        for name, entry in _mcp_servers(path).items():
+            if _is_codegraph_serve(name, entry):
+                note = ("hard-blocked in-repo by disabledMcpjsonServers" if "project" in label
+                        else "NOT blockable by repo settings — it's user-global")
+                return (f"codegraph MCP registered in {label} ({note}): it serves the live "
+                        f".codegraph db, not the committed graph. Use the committed graph (or "
+                        f"`cg-graphify-bridge serve`); `codegraph uninstall` removes it.")
+    return None
+
+
+def _detect_graphify_rebuild_hooks(repo: Path) -> str | None:
+    """FR3: graphify's native-rebuild git hook (post-commit/post-checkout) rebuilds a
+    graphify-native graph that conflicts with the committed structural.json."""
+    for h in (repo / ".git" / "hooks" / "post-commit", repo / ".git" / "hooks" / "post-checkout",
+              repo / ".husky" / "post-commit", repo / ".husky" / "post-checkout"):
+        try:
+            if h.exists() and _GRAPHIFY_HOOK_MARK in h.read_text():
+                return (f"graphify native-rebuild git hook in {h.name} conflicts with the committed "
+                        f"structural.json — neutralize with `export GRAPHIFY_SKIP_HOOK=1` or remove "
+                        f"the hook.")
+        except OSError:
+            continue
+    return None
+
+
+def _detect_semantic_schema_clash(out: Path) -> str | None:
+    """FR4: a graphify-out/semantic.json without the bridge marker layer=="semantic" is a
+    graphify-NATIVE semantic.json that overwrote (or would overwrite) the doc->code overlay."""
+    f = out / "semantic.json"
+    try:
+        if not f.exists():
+            return None
+        data = json.loads(f.read_text())
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+        return None  # fail-open: a parse error is not a schema-clash signal
+    if isinstance(data, dict) and data.get("layer") == "semantic":
+        return None
+    return (f"{f} lacks the cg-graphify-bridge marker (layer:\"semantic\") — looks like a "
+            f"graphify-native semantic.json that can overwrite the bridge's doc->code overlay. "
+            f"Re-run `cg-graphify-bridge semantic-merge` to regenerate it.")
+
+
+def _check_conflicts(repo: Path, out: Path, home: Path | None = None) -> list[str]:
+    """Aggregate the advisory isolation detectors (D-B detect-and-warn). Each probe is fail-open:
+    one raising never suppresses the others, and findings never change a caller's exit code."""
+    home = home or Path.home()
+    findings = []
+    for probe in (lambda: _detect_codegraph_mcp(home, repo),
+                  lambda: _detect_graphify_rebuild_hooks(repo),
+                  lambda: _detect_semantic_schema_clash(out)):
+        try:
+            res = probe()
+        except Exception:
+            res = None  # fail open
+        if res:
+            findings.append(res)
+    return findings
+
+
+def doctor_report(repo: Path | None, home: Path | None = None) -> dict:
     """Probe the runtime deps the substrates need; per-dep {dep, ok, detail, hint}. Pure (no
     print/exit) so it's unit-testable. node + codegraph are global; `target typescript` is
-    repo-local — the TS extractor uses the TARGET repo's typescript, not a bundled copy (R9)."""
+    repo-local — the TS extractor uses the TARGET repo's typescript, not a bundled copy (R9).
+    When a repo is given, also surfaces advisory tool-isolation `conflicts` (never affects `ok`)."""
     checks = []
     node = shutil.which("node")
     nodev = None
@@ -394,8 +495,11 @@ def doctor_report(repo: Path | None) -> dict:
         checks.append({"dep": "target typescript", "ok": ok, "detail": str(tsdir) if ok else "absent",
                        "hint": None if ok else f"install deps in {repo} "
                                                f"(the TS extractor uses the target repo's typescript)"})
-    return {"repo": str(repo) if repo else None, "checks": checks,
-            "ok": all(c["ok"] for c in checks)}
+    report = {"repo": str(repo) if repo else None, "checks": checks,
+              "ok": all(c["ok"] for c in checks)}
+    if repo is not None:
+        report["conflicts"] = _check_conflicts(repo, repo / "graphify-out", home)
+    return report
 
 
 def _doctor(args: argparse.Namespace) -> None:
@@ -456,6 +560,14 @@ If the semantic layer is stale, run the refresh protocol below, then commit `{ou
    - you are given identity metadata + the doc text **only** — never request or emit code bodies.
 3. `cg-graphify-bridge semantic-merge . --out {out_name}` — merges the payloads into `semantic.json`
    and re-materializes the fused graph. Then `git add {out_name}/semantic.json` and commit it.
+
+**Isolation.** This graph is built by cg-graphify-bridge composing graphify + codegraph as
+*libraries*. Do **not** run `graphify install`, `codegraph install`, or `graphify hook install` in
+this repo — they install competing agent integrations: a codegraph **MCP** over the live `.codegraph`
+db (not the committed graph) and graphify **native-rebuild git hooks**. `init` sets
+`disabledMcpjsonServers: ["codegraph"]` to block a local codegraph MCP; if a graphify rebuild hook
+is present, `export GRAPHIFY_SKIP_HOOK=1`. graphify's read/query is fine — `cg-graphify-bridge serve`
+exposes graphify's MCP over the committed graph. `cg-graphify-bridge doctor .` surfaces these conflicts.
 """
     return _append_once(repo / "AGENTS.md", _AGENTS_MARK, block)
 
@@ -490,9 +602,11 @@ def _resolve_hook_cmd(sub: str, out_name: str) -> str:
 
 
 def write_claude_hooks(repo: Path, out_name: str) -> dict:
-    """Wire the SessionStart/Stop hooks into the repo's .claude/settings.json (committed, travels
-    to every dev — additive with the user's global config). Idempotent + preserves existing
-    settings: only adds an entry when no cg-graphify-bridge hook for that event is present."""
+    """Wire the SessionStart/Stop hooks into the repo's .claude/settings.json AND hard-block a
+    project-local codegraph MCP from loading (FR1a isolation — Claude Code honors
+    `disabledMcpjsonServers`; codegraph's MCP serves the live per-clone .codegraph db and must
+    never shadow the committed graph). Committed, travels to every dev, additive with the user's
+    global config. Idempotent + preserves existing settings."""
     settings = repo / ".claude" / "settings.json"
     data: dict = {}
     if settings.exists():
@@ -509,9 +623,20 @@ def write_claude_hooks(repo: Path, out_name: str) -> dict:
             continue  # already wired
         entries.append({"hooks": [{"type": "command", "command": _resolve_hook_cmd(sub, out_name)}]})
         added.append(event)
+    # FR1a: deny-list codegraph's .mcp.json MCP so a project-local `codegraph install` can't load
+    # it in this repo (the committed graph is canonical). No-op unless codegraph is registered;
+    # preserves pre-existing entries. A user-global codegraph MCP can't be gated here (doctor warns).
+    disabled = data.get("disabledMcpjsonServers")
+    if not isinstance(disabled, list):
+        disabled = []
+        data["disabledMcpjsonServers"] = disabled
+    mcp_added = []
+    if "codegraph" not in disabled:
+        disabled.append("codegraph")
+        mcp_added = ["codegraph"]
     settings.parent.mkdir(parents=True, exist_ok=True)
     settings.write_text(json.dumps(data, indent=2) + "\n")
-    return {"settings": str(settings), "added": added}
+    return {"settings": str(settings), "added": added, "disabled_mcp_added": mcp_added}
 
 
 def _merge_driver(args: argparse.Namespace) -> None:
@@ -596,6 +721,25 @@ def _materialize(args: argparse.Namespace) -> None:
     from . import driver
     repo = Path(args.repo).resolve()
     print(json.dumps(driver.materialize(repo / args.out), indent=2, default=str))
+
+
+def _serve(args: argparse.Namespace) -> None:
+    """Opt-in (FR6): launch graphify's MCP server OVER THE COMMITTED graph (materialize the fused
+    graph.json first if absent). Never auto-installed/registered — run on demand for repeat-query
+    (≥10/session) graph workflows. Serves the bridge's committed graph.json, NOT codegraph's live db."""
+    from . import driver
+    repo = Path(args.repo).resolve()
+    out = repo / args.out
+    graph = out / "graph.json"
+    if not graph.exists():
+        if not (out / "structural.json").exists():
+            raise SystemExit(f"no committed graph in {out} — run `cg-graphify-bridge build {repo}` first")
+        driver.materialize(out)
+    try:
+        from graphify import serve as gserve
+    except ImportError as e:  # graphify is a hard dep — should never happen on a real install
+        raise SystemExit(f"graphify not importable — reinstall cg-graphify-bridge ({e})")
+    gserve.serve(str(graph))
 
 
 # ---------- Claude hooks (in-process subcommands; .claude/settings.json wires them) ----------
@@ -736,6 +880,11 @@ def main() -> None:
     mz.add_argument("repo")
     mz.add_argument("--out", default="graphify-out")
     mz.set_defaults(func=_materialize)
+
+    sv = sub.add_parser("serve", help="opt-in: launch graphify's MCP over the COMMITTED graph (never auto-installed)")
+    sv.add_argument("repo")
+    sv.add_argument("--out", default="graphify-out")
+    sv.set_defaults(func=_serve)
 
     hs = sub.add_parser("hook-sessionstart", help="Claude SessionStart hook: surface freshness + materialize")
     hs.add_argument("--out", default="graphify-out")

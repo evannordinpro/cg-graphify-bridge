@@ -119,6 +119,7 @@ cg-graphify-bridge status .          # structural + semantic freshness (+ exact 
 | `status <repo>` | report structural + semantic freshness + the exact refresh command |
 | `semantic-prep <repo>` / `semantic-merge <repo>` | the dev-owned doc→code overlay refresh |
 | `materialize <repo>` | rebuild the gitignored fused `graph.json` from the committed layers |
+| `serve <repo>` | (opt-in) launch graphify's MCP over the **committed** graph for repeat-query (≥10/session) workflows — never auto-installed |
 | `check-semantic <repo> [--require-committed]` | exit non-zero if the overlay is stale (the Stop-hook gate) |
 | `install-hook <repo>` | install the git freshness hooks |
 | `hook-sessionstart` / `hook-stop` | the Claude hook entrypoints (wired by `init` into `.claude/settings.json`) |
@@ -127,7 +128,26 @@ cg-graphify-bridge status .          # structural + semantic freshness (+ exact 
 Every command takes `--out <dir>` (default `graphify-out`). Reads are offline; the semantic step
 runs locally via Claude subagents (no third-party LLM, no source egress).
 
-## 7. Troubleshooting
+## 7. Isolation — don't let graphify/codegraph installers interfere
+
+The bridge composes **graphify** and **codegraph** as *libraries + subprocesses* — it does **not**
+use their agent-integration installers. In a bridge repo, do **not** run:
+
+- **`codegraph install` / `codegraph serve`** — registers a codegraph **MCP server** that serves the
+  *live, per-clone `.codegraph` db* (often stale or absent on a fresh clone), which would shadow the
+  committed graph. `init` writes `disabledMcpjsonServers: ["codegraph"]` into `.claude/settings.json`
+  to hard-block a **project-local** codegraph MCP; a **user-global** one (in `~/.claude.json`) can't
+  be blocked by repo settings — `doctor` warns, and `codegraph uninstall` removes it.
+- **`graphify install` / `graphify hook install`** — installs graphify's CLAUDE.md section, PreToolUse
+  nudges, and **native-rebuild git hooks** (`# graphify-hook-start`) that rebuild a graphify-native
+  graph conflicting with the committed `structural.json`. If one is present, `export GRAPHIFY_SKIP_HOOK=1`
+  neutralizes the rebuild; `doctor` warns.
+
+graphify's **read/query is compatible** (it reads the bridge's `graph.json`) and is *not* blocked — in
+fact **`cg-graphify-bridge serve`** launches graphify's MCP over the *committed* graph for repeat-query
+(≥10/session) workflows. Run `cg-graphify-bridge doctor <repo>` any time to surface the conflicts above.
+
+## 8. Troubleshooting
 
 | Symptom | Cause / fix |
 |---|---|
@@ -137,6 +157,8 @@ runs locally via Claude subagents (no third-party LLM, no source egress).
 | `no structural.json … run build first` | pull the CI-built layer, or (owner) `cg-graphify-bridge build .` |
 | CI: "structural commit-back rejected" | branch protection / signed commits / read-only token — see §3 "strict protection" |
 | Claude hooks do nothing | the tool isn't on PATH in that environment — `pipx install` it |
+| `doctor` warns "codegraph MCP registered…" | a `codegraph install` ran — it shadows the committed graph; `codegraph uninstall`, or rely on the in-repo `disabledMcpjsonServers` block (local) |
+| `doctor`/`status` warns "graphify native-rebuild git hook" / "semantic.json lacks layer" | graphify's installer ran in this repo — `export GRAPHIFY_SKIP_HOOK=1` and re-run `cg-graphify-bridge semantic-merge`; see §7 |
 
 Determinism note: `build`/`init` re-exec under a pinned `PYTHONHASHSEED=0`, the clustering engine
 and codegraph version are stamped, and CI is the single authoritative builder — so `structural.json`
