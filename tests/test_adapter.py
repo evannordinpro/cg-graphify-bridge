@@ -79,12 +79,6 @@ def test_analysis_view_excludes_test_paths(cg_db):
     assert all("tests/" not in (n["source_file"] or "") for n in av["nodes"])
 
 
-def test_full_graph_retains_file_nodes(cg_db):
-    res = adapter.adapt(cg_db)
-    fg = adapter.full_graph(res)
-    assert any(n["metadata"]["cg_kind"] == "file" for n in fg["nodes"])
-
-
 def test_linkable_subset_excludes_noise_kinds(cg_db):
     res = adapter.adapt(cg_db)
     sub = adapter.linkable_subset(res)

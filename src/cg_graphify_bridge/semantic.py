@@ -13,7 +13,7 @@ import shutil
 from collections import defaultdict
 from pathlib import Path
 
-from .adapter import LINKABLE_KINDS, AdaptResult, linkable_subset
+from .adapter import LINKABLE_KINDS, AdaptResult
 
 _DOC_EXCLUDE_DIRS = {"node_modules", "dist", "build", ".git", ".codegraph", ".venv",
                      ".claude", "graphify-out", "graphify-out-cgbridge",
@@ -27,20 +27,6 @@ def _norm(s: str) -> str:
 
 def _stem_norm(label: str) -> str:
     return _norm(Path(label).stem)
-
-
-def build_subagent_context(res: AdaptResult, communities: dict | None = None,
-                           docs: list[str] | None = None) -> dict:
-    """Identity metadata + doc text only — NEVER source (R7)."""
-    return {
-        "instruction": (
-            "For each doc->code relationship, set edge.target to the EXACT composite id "
-            "from code_nodes. If unsure of the id, set target_label to the symbol name and "
-            "leave target empty; never invent ids; you are given no source code."
-        ),
-        "code_nodes": linkable_subset(res, communities=communities),
-        "docs": docs or [],
-    }
 
 
 def _label_index(res: AdaptResult) -> dict[str, list[str]]:

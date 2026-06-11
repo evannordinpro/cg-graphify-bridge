@@ -43,9 +43,9 @@ When a semantic payload edge has no exact composite id, `merge_semantic` resolve
   the function and the file stem. Such edges are pruned (reported, never guessed); pin them with
   the exact composite id in the payload. The merge prunes rather than guesses because a wrong
   doc→code edge is worse than a missing one.
-- `build_subagent_context` is the egress boundary: agents get identity metadata
-  (`{composite_id, label, file, cg_kind}` via `linkable_subset`) plus doc text — **never source
-  code** (R7).
+- The prep task files are the egress boundary: agents get identity metadata only
+  (`{id, label, file, kind}` — `curated_nodes` for degree-ranked task lists, `linkable_subset`
+  for the kind-filtered contract surface) plus doc text — **never source code** (R7).
 - **`dispatch_candidates`** turns the dead-code heuristic into curated graph data: it re-runs
   `health.dynamic_refs` over the production scope, attributes each evidence line to its
   enclosing declaration (`py_calls._caller_of` over node line spans), and writes the candidate
