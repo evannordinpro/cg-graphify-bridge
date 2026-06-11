@@ -106,7 +106,13 @@ resolve by **unique** path-suffix match over the indexed file set — two matche
 means no edge. Caller attribution reuses the node line spans (innermost enclosing def/class wins,
 file node for module-level calls), so it never re-derives codegraph's qualified-name scheme.
 
-## Layer IO and scaffolding (`driver.py`, `cli.py`)
+## Layer IO and scaffolding (`driver.py`, `scaffold.py`, `hooks.py`, `doctor.py`)
+
+`cli.py` is the composition root only — the argparse surface plus thin handlers. The
+implementations live in three stdlib-only modules: `scaffold.py` (everything `init` writes
+into a consumer repo), `hooks.py` (git-hook installers + the Claude-hook gate helpers — what
+Phase 6's faq gate will clone), and `doctor.py` (dependency probes + the tool-isolation
+conflict detectors).
 
 - **`read_layer(outdir, name)`** is the single gate for reading a committed layer: returns
   `None` when the file is absent (callers decide if that's fatal), but **raises** on corrupt
