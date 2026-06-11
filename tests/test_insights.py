@@ -75,6 +75,38 @@ def test_render_unicode_gauges(tmp_path):
     assert "█" in md or "░" in md
 
 
+def test_render_defines_each_metric(tmp_path):
+    repo, out = _setup(tmp_path)
+    md = insights.render_markdown(insights.build_insights(out, repo))
+    assert "What each metric measures" in md                  # the glossary section
+    for term in ("Token efficiency", "Instability (I)", "Abstractness (A)", "Conductance",
+                 "Betweenness", "Zone of Pain", "Zone of Uselessness", "God-node coverage",
+                 "Centrality-weighted coverage", "Dead-code review queue", "Knowledge debt",
+                 "Undocumented load-bearing risk"):
+        assert term in md, f"glossary missing definition for: {term}"
+
+
+# ---------- Phase 5: Technical Debt section ----------
+
+def test_render_has_debt_section(tmp_path):
+    repo, out = _setup(tmp_path)
+    md = insights.render_markdown(insights.build_insights(out, repo))
+    assert "## 🧹 Technical Debt" in md and "Debt score" in md
+
+
+def test_render_debt_score_gauge(tmp_path):
+    repo, out = _setup(tmp_path)
+    md = insights.render_markdown(insights.build_insights(out, repo))
+    assert "| Debt type | Count |" in md              # the by-type breakdown renders
+
+
+def test_glossary_defines_debt_terms(tmp_path):
+    repo, out = _setup(tmp_path)
+    md = insights.render_markdown(insights.build_insights(out, repo))
+    for term in ("Debt score", "God object", "Dangling link"):
+        assert term in md
+
+
 def test_render_deterministic_no_timestamp(tmp_path):
     repo, out = _setup(tmp_path)
     a = insights.render_markdown(insights.build_insights(out, repo))

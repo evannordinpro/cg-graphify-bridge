@@ -1,7 +1,7 @@
 # Fused Graph Report (codegraph substrate + graphify overlay)
 
-- nodes: 753  edges: 1194  communities: 29
-- adapter stats: {'cg_nodes': 754, 'composite_nodes': 753, 'merges': 1, 'edges_in': 1428, 'edges_out': 1428, 'unmapped_edges': 0, 'kind_dist': {'class': 3, 'method': 2, 'function': 469, 'file': 51, 'import': 173, 'variable': 38, 'constant': 17}}
+- nodes: 770  edges: 1234  communities: 27
+- adapter stats: {'cg_nodes': 771, 'composite_nodes': 770, 'merges': 1, 'edges_in': 1480, 'edges_out': 1480, 'unmapped_edges': 0, 'kind_dist': {'class': 3, 'method': 2, 'function': 483, 'file': 51, 'import': 173, 'variable': 41, 'constant': 17}}
 
 ## God nodes
 
@@ -14,7 +14,7 @@
 - **build_repo** (degree 5) `cg:164a13d5b9250633`
 - **materialize** (degree 5) `cg:663c5cfd8b221c7b`
 - **semantic_baseline** (degree 5) `cg:e14b91e4896b1cc2`
-- **row** (degree 4) `cg:24fffb15b0ba6749`
+- **health** (degree 5) `cg:feccbadca7157b45`
 - **abstractness_distance** (degree 4) `cg:41887d5560742e2d`
 - **AdaptResult** (degree 4) `cg:85c9d5757530c188`
 - **dead_code** (degree 4) `cg:989f896cddda2652`
@@ -26,10 +26,10 @@
 - _benchmark ↔ resolve
 - _build ↔ resolve
 - _check_semantic ↔ resolve
-- _doctor ↔ resolve
 - _health ↔ resolve
 - _insights ↔ resolve
 - _install_hook ↔ resolve
 - _materialize ↔ resolve
 - _query_cmd ↔ resolve
-- _serve ↔ resolve
+- _semantic_merge ↔ resolve
+- _semantic_prep ↔ resolve

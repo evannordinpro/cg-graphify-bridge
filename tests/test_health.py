@@ -192,3 +192,49 @@ def test_health_include_tests_flag(tmp_path):
     r = health.health(out, include_tests=True)
     assert r["scope"].startswith("all")
     assert r["semantic"]["code_count"] == 2                              # both counted
+
+
+# ---------- Phase 5: technical-debt assessment ----------
+
+def _debt(structural, semantic=None):
+    sm = analytics.analyze(structural)
+    sem = health.semantic_health(structural, semantic)
+    return health.debt_assessment(structural, sm, sem)
+
+
+def test_debt_by_type_counts():
+    s = _struct([_node("A", file="f1.py"), _node("B", file="f2.py"), _node("orphan")],
+                [_edge("A", "B"), _edge("B", "A")], communities={"c0": ["A", "B", "orphan"]})
+    bt = _debt(s)["by_type"]
+    assert bt.get("cycle", 0) >= 1 and bt.get("dead-code", 0) >= 1       # file cycle + orphan
+
+
+def test_debt_by_feature_rollup():
+    s = _struct([_node("o1"), _node("o2")], [], communities={"c0": ["o1"], "c1": ["o2"]})
+    feats = {f["feature"] for f in _debt(s)["by_feature"]}
+    assert {"c0", "c1"} <= feats                                        # dead-code rolled up per community
+
+
+def test_debt_by_component_rollup():
+    s = _struct([_node("o1", file="src/x.py"), _node("o2", file="src/x.py")], [],
+                communities={"c0": ["o1", "o2"]})
+    bc = _debt(s)["by_component"]
+    assert bc and bc[0]["component"] == "src/x.py" and bc[0]["debt_items"] >= 2
+
+
+def test_debt_score_shows_components():
+    d = _debt(_struct([_node("o")], [], communities={"c0": ["o"]}))
+    assert 0 <= d["score"] <= 1
+    assert d["score_components"]["dead-code"] > 0                       # never opaque — components shown
+
+
+def test_debt_empty_graph_zero():
+    d = _debt(_struct([], []))
+    assert d["score"] == 0.0 and d["total_items"] == 0
+
+
+def test_health_includes_debt(tmp_path):
+    out = tmp_path / "graphify-out"
+    _write_layers(out, [_node("o", file="src/a.py")], [], communities={"c0": ["o"]})
+    r = health.health(out)
+    assert "debt" in r and "score" in r["debt"] and "by_type" in r["debt"]

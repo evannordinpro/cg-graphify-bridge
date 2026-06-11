@@ -142,6 +142,69 @@ def knowledge_debt(sem: dict, comb: dict) -> dict | None:
             "index": round(0.6 * missing + 0.2 * min(1, dangling / 10) + 0.2 * min(1, orphans / 10), 4)}
 
 
+# Per-type debt weights + saturation constants for the transparent 0–1 score (documented here so
+# the number is never opaque). Saturation: count/(count+SAT) — a few cycles already hurt (low SAT);
+# dead-code needs many to matter (high SAT).
+_DEBT_WEIGHTS = {"cycle": 0.30, "zone-of-pain": 0.20, "god-object": 0.15,
+                 "high-fan-out": 0.15, "dead-code": 0.10, "dangling-link": 0.10}
+_DEBT_SAT = {"cycle": 2, "zone-of-pain": 3, "god-object": 3,
+             "high-fan-out": 5, "dead-code": 25, "dangling-link": 3}
+
+
+def debt_assessment(structural: dict, sm: dict, sem: dict) -> dict:
+    """Aggregate the EXISTING debt signals (cycles, Zone-of-Pain, high-fan-out, god-objects,
+    dead-code, dangling doc-links) into ranked breakdowns by TYPE / FEATURE (community) /
+    COMPONENT (file) + a transparent 0–1 score (per-type contributions shown). Composition only —
+    no new metric logic. Phase-6 FAQ reuses the by-feature / by-component rollups."""
+    import statistics
+    from collections import Counter
+
+    meta = {n["id"]: n for n in structural.get("nodes", [])}
+    comm_of = {m: cid for cid, members in structural.get("communities", {}).items() for m in members}
+    items: list[dict] = []
+
+    def _add(t, label, *, nid=None, community=None, file=None):
+        items.append({"type": t, "label": label, "id": nid, "community": community, "file": file})
+
+    for c in sm["cycles"]["module_cycles"]:
+        _add("cycle", " ↔ ".join(c["members"][:3]), file=(c["members"][0] if c["members"] else None))
+    for c in sm["abstractness"]["communities"]:
+        if c["zone"] == "pain":
+            _add("zone-of-pain", f"community {c['community']}", community=c["community"])
+    for h in sm["fan"].get("high_fan_out", []):
+        _add("high-fan-out", h.get("label", h["id"]), nid=h["id"],
+             community=comm_of.get(h["id"]), file=h.get("source_file"))
+    cent = sm["centrality"]
+    btws = [v["betweenness"] for v in cent.values()]
+    if btws:
+        thr = statistics.fmean(btws) + 2 * (statistics.pstdev(btws) if len(btws) > 1 else 0.0)
+        for nid, v in cent.items():
+            if v["betweenness"] > thr and v["betweenness"] > 0:
+                n = meta.get(nid, {})
+                _add("god-object", n.get("label", nid), nid=nid,
+                     community=comm_of.get(nid), file=n.get("source_file"))
+    for d in sm["dead_code"]:
+        _add("dead-code", d.get("label", d["id"]), nid=d["id"],
+             community=comm_of.get(d["id"]), file=d.get("source_file"))
+    if sem.get("available"):
+        for dl in sem["dangling_links"]:
+            _add("dangling-link", f"{dl['source']} → {dl['target']}")
+
+    items.sort(key=lambda i: (i["type"], i.get("file") or "", i.get("id") or i.get("label") or ""))
+    by_type = dict(sorted(Counter(i["type"] for i in items).items()))
+    feat = Counter(i["community"] for i in items if i.get("community"))
+    comp = Counter(i["file"] for i in items if i.get("file"))
+    by_feature = sorted(({"feature": k, "debt_items": v} for k, v in feat.items()),
+                        key=lambda x: (-x["debt_items"], str(x["feature"])))
+    by_component = sorted(({"component": k, "debt_items": v} for k, v in comp.items()),
+                          key=lambda x: (-x["debt_items"], x["component"]))
+    contrib = {t: round(_DEBT_WEIGHTS[t] * (by_type.get(t, 0) / (by_type.get(t, 0) + _DEBT_SAT[t])), 4)
+               for t in _DEBT_WEIGHTS}
+    return {"score": round(min(1.0, sum(contrib.values())), 4), "score_components": contrib,
+            "by_type": by_type, "by_feature": by_feature[:10], "by_component": by_component[:10],
+            "total_items": len(items), "items": items}
+
+
 def health(out: Path, *, include_tests: bool = False) -> dict:
     """Full health pass over the committed layers in `out`. Production-scoped by default
     (test files excluded uniformly from every metric); pass include_tests=True for the whole graph."""
@@ -154,9 +217,11 @@ def health(out: Path, *, include_tests: bool = False) -> dict:
     cent = sm["centrality"]
     sem = semantic_health(scoped, semantic)
     comb = combined_health(scoped, semantic, cent)
+    debt = debt_assessment(scoped, sm, sem)
     return {
         "out_dir": str(out),
         "scope": "all (incl. tests)" if include_tests else "source-only (tests excluded)",
+        "debt": debt,
         "structural": {
             "cycles": sm["cycles"],
             "leaky_communities": sm["conductance"][:5],
