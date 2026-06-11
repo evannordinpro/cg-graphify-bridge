@@ -9,6 +9,7 @@ god-node / centrality-weighted doc coverage + the undocumented-load-bearing risk
 """
 from __future__ import annotations
 
+import json
 import re
 from collections import defaultdict
 from pathlib import Path
@@ -51,26 +52,56 @@ def _code_nodes(structural: dict) -> list:
             and n.get("metadata", {}).get("cg_kind") not in ("file", "import", "module")]
 
 
+_COMMENT_MARKERS = {".py": "#", ".go": "//", ".rs": "//",
+                    ".js": "//", ".jsx": "//", ".cjs": "//", ".mjs": "//",
+                    ".ts": "//", ".tsx": "//"}
+
+
+def _code_part(line: str, marker: str) -> str:
+    """The line up to its trailing comment (quote-aware, escape-aware). Quoted names stay —
+    `getattr(mod, "name")` dispatch is real evidence; a name in a comment is not."""
+    q = None
+    i = 0
+    while i < len(line):
+        c = line[i]
+        if q:
+            if c == "\\":
+                i += 2
+                continue
+            if c == q:
+                q = None
+        elif c in "\"'":
+            q = c
+        elif line.startswith(marker, i):
+            return line[:i]
+        i += 1
+    return line
+
+
 def dynamic_refs(repo: Path, structural: dict, candidates: list) -> dict:
     """Rescue dynamically-wired symbols from the dead-code queue via a textual source scan.
 
-    A symbol dispatched dynamically produces no call edge — argparse `set_defaults(func=handler)`,
-    callback/registry tables, `getattr`-by-name strings, constants read as bare identifiers — which
-    is exactly the false-positive class the dead-code note warns about. Evidence = the symbol's
-    name occurring in any indexed source file as a VALUE: not followed by `(` (a call — the graph's
-    job), not an assignment to it, not its own def/class line, not an import line. Textual on
-    purpose: a quoted name (getattr dispatch) or a mention in a comment counts — the queue is a
-    review list, not a gate, and should err toward fewer false positives.
+    With the pyast pass emitting structural edges for value references, this heuristic is the
+    LAST tier — its remaining domain is wiring no deterministic extractor can see: quoted names
+    (`getattr`-by-name dispatch), framework-invoked methods, non-Python sources codegraph
+    under-edges. Evidence = the symbol's name occurring in any indexed source file as a VALUE:
+    not followed by `(` (a call — the graph's job), not an assignment to it, not its own
+    def/class line, not an import line, and NOT inside a comment — a comment mention rescues
+    nothing real, and the cost of a miss is a dispatch_candidates review, not a deletion.
 
     Returns {node_id: "file:line" of the first evidence}; scan order is sorted, so deterministic
     for a fixed working tree. Single-character names are skipped (they collide with everything).
     """
     texts = []
     for sf in sorted({n.get("source_file") for n in structural.get("nodes", []) if n.get("source_file")}):
+        marker = _COMMENT_MARKERS.get(Path(sf).suffix)
         try:
-            texts.append((sf, (repo / sf).read_text(errors="replace").splitlines()))
+            lines = (repo / sf).read_text(errors="replace").splitlines()
         except OSError:
             continue
+        if marker:
+            lines = [_code_part(ln, marker) for ln in lines]
+        texts.append((sf, lines))
     _import_line = re.compile(r"^\s*(?:from\s+\S+\s+)?import\s")
     hits: dict = {}
     for c in sorted(candidates, key=lambda d: d["id"]):
@@ -107,6 +138,24 @@ def _dispatch_confirmed(semantic: dict | None) -> set:
         return set()
     return {e["target"] for e in semantic.get("semantic_edges", [])
             if e.get("target") and e.get("relation") == "dispatches"}
+
+
+def _read_triage(out: Path) -> dict:
+    """<out>/triage.json — committed review verdicts keyed by composite id, so the dead-code
+    queue is INCREMENTAL: a symbol reviewed once ("keep": intentional API / framework surface)
+    stops resurfacing and moves to the report's `acknowledged` section. Composite ids survive
+    line-shifting edits, so verdicts stay attached until the symbol's file/signature changes —
+    at which point it correctly re-enters review (and the stale verdict is reported).
+    Schema: {"schema_version": 1, "verdicts": [{"id", "label", "verdict": "keep", "reason"}]}.
+    Returns {id: verdict-entry}; {} when absent/corrupt (fail-open, advisory only)."""
+    try:
+        data = json.loads((out / "triage.json").read_text())
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+        return {}
+    if not isinstance(data, dict):
+        return {}
+    return {v["id"]: v for v in data.get("verdicts", [])
+            if isinstance(v, dict) and v.get("id") and v.get("verdict") == "keep"}
 
 
 def semantic_health(structural: dict, semantic: dict | None) -> dict:
@@ -280,6 +329,14 @@ def health(out: Path, *, include_tests: bool = False, repo: Path | None = None) 
                         for d in sm["dead_code"] if d["id"] in dyn), key=lambda x: x["id"])
     if dyn:        # debt_assessment reads sm["dead_code"], so the score sees the filtered queue too
         sm["dead_code"] = [d for d in sm["dead_code"] if d["id"] not in dyn]
+    # reviewed-keep verdicts (triage.json) — acknowledged items leave the queue but stay visible;
+    # a verdict whose id no longer exists in the graph is surfaced for cleanup, not silently kept
+    triage = _read_triage(out)
+    acknowledged = sorted(({**d, "reason": triage[d["id"]].get("reason")}
+                           for d in sm["dead_code"] if d["id"] in triage), key=lambda x: x["id"])
+    if acknowledged:
+        sm["dead_code"] = [d for d in sm["dead_code"] if d["id"] not in triage]
+    triage_stale = sorted(set(triage) - {n["id"] for n in scoped.get("nodes", [])})
     cent = sm["centrality"]
     sem = semantic_health(scoped, semantic)
     comb = combined_health(scoped, semantic, cent)
@@ -303,8 +360,14 @@ def health(out: Path, *, include_tests: bool = False, repo: Path | None = None) 
                           "dispatch_confirmed_excluded": len(confirmed),
                           "dynamically_wired_excluded": len(dyn_wired),
                           "dynamically_wired": dyn_wired[:10],
+                          "acknowledged": acknowledged,
+                          "triage_stale": triage_stale,
                           "note": "static review queue — over-flags dynamic/reflection/framework-wired symbols"
                           + (f"; {len(confirmed)} excluded via confirmed `dispatches` edges" if confirmed else "")
+                          + (f"; {len(acknowledged)} acknowledged via triage.json keep-verdicts"
+                             if acknowledged else "")
+                          + (f"; {len(triage_stale)} STALE triage verdicts (ids gone; prune them)"
+                             if triage_stale else "")
                           + (f"; {len(dyn_wired)} dropped via textual value-reference evidence "
                              "(unconfirmed — see semantic-prep's dispatch_candidates.json)"
                              if dyn_wired else

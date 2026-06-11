@@ -35,8 +35,11 @@ If the semantic layer is stale, run the refresh protocol below, then commit `gra
    `evidence` (file:line): when it is real dynamic wiring (dispatch table, callback, getattr-by-
    name), add `{"source": <dispatch-site id>, "target": <candidate id>, "relation": "dispatches"}`
    to any payload (`suggested_source` is precomputed). Confirmed `dispatches` edges are
-   authoritative liveness for the dead-code queue and are NOT documentation coverage. A false
-   positive (comment/string coincidence) gets no edge — it stays in the review queue.
+   authoritative liveness for the dead-code queue and are NOT documentation coverage. A symbol
+   that is genuinely alive for a non-dispatch reason (external/public API, framework surface)
+   gets a keep-verdict in `graphify-out/triage.json` instead
+   (`{"verdicts": [{"id", "label", "verdict": "keep", "reason"}]}` — commit it). A false
+   positive gets nothing — it stays in the review queue.
 4. `cg-graphify-bridge semantic-merge . --out graphify-out` — merges the payloads into `semantic.json`
    and re-materializes the fused graph. Then `git add graphify-out/semantic.json` and commit it.
 
