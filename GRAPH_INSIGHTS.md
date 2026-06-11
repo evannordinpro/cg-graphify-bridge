@@ -4,7 +4,7 @@
 
 | 🎯 Token efficiency | 🏛️ Architecture | 📚 Documentation |
 |:--:|:--:|:--:|
-| 97% pinpoint · 96% global | 0 cycles · 2 Zone-of-Pain | hubs 100% · debt 0.3115 |
+| 97% pinpoint · 96% global | 0 cycles · 3 Zone-of-Pain | hubs 100% · debt 0.4349 |
 
 ## 🎯 Token efficiency
 
@@ -29,35 +29,36 @@ quadrantChart
     quadrant-4 Volatile leaf - ok
     "c11": [0.000, 0.000]
     "c16": [0.000, 0.000]
-    "c0": [0.750, 0.000]
+    "c0": [0.200, 0.000]
 ```
 
 - **Dependency cycles:** 0 — acyclic ✓
-- **Zone of Pain:** 2 · **Zone of Uselessness:** 0 communities
-- **Leakiest module:** community 21 (conductance 0.5)
+- **Zone of Pain:** 3 · **Zone of Uselessness:** 0 communities
+- **Leakiest module:** community 20 (conductance 0.5)
 - **Top architectural hub (betweenness):** `cg:75637ed541aa7ba9`
 - **High fan-out (SRP) candidates:** 4 · **Dead-code review queue:** 7
 
 ## 🧹 Technical Debt
 
-**Debt score** &nbsp; `██████░░░░░░░░░░░░░░` 28% _(0 = clean → 1 = heavy)_
+**Debt score** &nbsp; `███████░░░░░░░░░░░░░` 37% _(0 = clean → 1 = heavy)_
 
 | Debt type | Count |
 |---|--:|
 | god-object | 9 |
 | dead-code | 7 |
+| dangling-link | 6 |
 | high-fan-out | 4 |
-| zone-of-pain | 2 |
+| zone-of-pain | 3 |
 
-- **Most-indebted feature:** community 0 (4 debt items)
+- **Most-indebted feature:** community 0 (3 debt items)
 - **Most-indebted component:** `src/cg_graphify_bridge/cli.py` (7 debt items)
-- _score contributions: god-object 0.1125, zone-of-pain 0.08, high-fan-out 0.0667, dead-code 0.0219_
+- _score contributions: god-object 0.1125, zone-of-pain 0.1, high-fan-out 0.0667, dangling-link 0.0667, dead-code 0.0219_
 
 ## 📚 Documenting what matters
 
 - **God-node coverage** &nbsp; `████████████████████` 100%
 - **Centrality-weighted coverage** &nbsp; `██████████░░░░░░░░░░` 48% _(the gap vs raw coverage = mis-targeted doc effort)_
-- **Darkest subsystem:** community 0 (42% documented)
+- **Darkest subsystem:** community 0 (39% documented)
 
 ## ⚠️ Undocumented load-bearing — document these first
 
@@ -66,13 +67,13 @@ quadrantChart
 1. `files` — `src/cg_graphify_bridge/ts_substrate_js/extract.cjs`
 2. `_write_json` — `src/cg_graphify_bridge/driver.py`
 3. `read_manifest` — `src/cg_graphify_bridge/freshness.py`
-4. `_ver` — `src/cg_graphify_bridge/engine.py`
-5. `_meta` — `src/cg_graphify_bridge/analytics.py`
-6. `process_helper` — `sample/pkg_a/auth.py`
-7. `_read_json` — `src/cg_graphify_bridge/freshness.py`
-8. `_load_tiktoken` — `src/cg_graphify_bridge/benchmark.py`
-9. `_documented_targets` — `src/cg_graphify_bridge/health.py`
-10. `_code_nodes` — `src/cg_graphify_bridge/health.py`
+4. `_meta` — `src/cg_graphify_bridge/analytics.py`
+5. `_ver` — `src/cg_graphify_bridge/engine.py`
+6. `_is_test_node` — `src/cg_graphify_bridge/health.py`
+7. `process_helper` — `sample/pkg_a/auth.py`
+8. `_read_json` — `src/cg_graphify_bridge/freshness.py`
+9. `_load_tiktoken` — `src/cg_graphify_bridge/benchmark.py`
+10. `_is_test_path` — `src/cg_graphify_bridge/adapter.py`
 
 </details>
 
