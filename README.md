@@ -79,7 +79,9 @@ metrics opt-ins), per-developer steps, strict-repo CI limits, command reference,
   extractor), `driver` (library-composition over graphify + the layer split), `semantic`
   (doc→code overlay), `freshness` (on-demand drift), `engine` (determinism stamp), `py_calls`
   (supplemental cross-module Python call edges), `health` / `benchmark` / `insights` (metrics +
-  showcase report), `query` (callers/callees/impact), `analytics`, `cli`
+  showcase report), `query` (callers/callees/impact), `analytics`, `scaffold` / `hooks` /
+  `doctor` (init writers, hook installers + gates, dependency/conflict probes), `cli` (parser +
+  thin handlers)
 - `src/cg_graphify_bridge/templates/graph-build.yml` — the CI workflow `init` installs
 - `tests/` — pytest suite (determinism, packaging, artifact split, freshness, hooks, CI, …)
 - `overlay/SKILL_overlay.md` — the `/graphify` subagent contract (overlay mode)

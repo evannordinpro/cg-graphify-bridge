@@ -20,13 +20,36 @@ from pathlib import Path
 # NOTE: `driver` (graphify/networkx) is imported lazily inside the build/semantic
 # commands so the lightweight `status` / `install-hook` commands — which the git
 # freshness hook invokes — run on a bare python3 with no heavy deps.
-
-
-def _codegraph_bin() -> str | None:
-    env = os.environ.get("CODEGRAPH_BIN")
-    if env and Path(env).exists():
-        return env
-    return shutil.which("codegraph")
+# The split modules below are stdlib-only, so importing them keeps that property.
+# They are re-exported here (cli.<name>) as the package's historical surface; new
+# code should import doctor/hooks/scaffold directly.
+from .doctor import (  # noqa: F401
+    _check_conflicts,
+    _codegraph_bin,
+    _detect_codegraph_mcp,
+    _detect_graphify_rebuild_hooks,
+    _detect_semantic_schema_clash,
+    doctor_report,
+)
+from .hooks import (  # noqa: F401
+    _PREPUSH_MARK,
+    _hook_disabled,
+    _hook_repo,
+    install_freshness_hooks,
+    install_prepush_hook,
+)
+from .scaffold import (  # noqa: F401
+    _AGENTS_MARK,
+    _GITATTR_MARK,
+    _append_once,
+    _read_template,
+    _resolve_hook_cmd,
+    _write_agents_md,
+    _write_gitattributes,
+    configure_merge_driver,
+    write_ci_workflow,
+    write_claude_hooks,
+)
 
 
 def _substrate_version(substrate: str, repo: Path) -> str | None:
@@ -191,111 +214,10 @@ def _status(args: argparse.Namespace) -> dict:
     return payload
 
 
-_HOOK_MARK = "# cg-graphify-bridge freshness hook"
-
-
-def install_freshness_hooks(repo: Path, out_name: str, *, src: str | None = None,
-                            write_husky: bool = False) -> dict:
-    """Install (or report) the git post-commit/merge/checkout freshness hooks. Returns an info
-    dict (no printing) so both `install-hook` and `init` can use it. Raises SystemExit if not
-    a git repo."""
-    try:  # worktree-aware + honors core.hooksPath
-        hp = subprocess.run(["git", "-C", str(repo), "rev-parse", "--git-path", "hooks"],
-                            capture_output=True, text=True, check=True).stdout.strip()
-    except (subprocess.CalledProcessError, FileNotFoundError) as e:
-        raise SystemExit(f"not a git repo (or git unavailable): {repo}") from e
-    hooks_dir = Path(hp) if Path(hp).is_absolute() else (repo / hp)
-    # Portable: resolve the repo root at hook runtime via `git rev-parse`, so the committed line
-    # works on every clone. `|| true` => never blocks a git op. Default uses the pipx-installed
-    # `cg-graphify-bridge` on PATH; `--src` overrides to a `python3 -m` form for unusual setups.
-    if src:
-        cmd = (f'PYTHONPATH="{src}" python3 -m cg_graphify_bridge status '
-               f'"$(git rev-parse --show-toplevel)" --out "{out_name}" --check --quiet || true')
-    else:
-        cmd = (f'cg-graphify-bridge status "$(git rev-parse --show-toplevel)" '
-               f'--out "{out_name}" --check --quiet || true')
-    hooks = ("post-commit", "post-merge", "post-checkout")
-
-    # Husky: core.hooksPath -> .husky/_ is GENERATED (regenerated on npm install) and the durable
-    # hooks under .husky/ are committed config. Never silently rewrite that — report the snippet
-    # to add unless the caller explicitly opts in with write_husky.
-    if ".husky" in hooks_dir.parts:
-        husky_root = hooks_dir.parent if hooks_dir.name == "_" else hooks_dir
-        if not write_husky:
-            return {"repo": str(repo), "detected": "husky (core.hooksPath=.husky/_)",
-                    "action": "no files written — .husky/ is committed config you own",
-                    "to_install": {"append_to_each": [str(husky_root / h) for h in hooks], "line": cmd},
-                    "or_opt_in": "re-run with --write-husky (creates .husky/<hook>; commit them yourself)",
-                    "note": "drops <out>/.cg_stale on source drift; a later `build` consumes it"}
-        target_dir = husky_root
-    else:
-        target_dir = hooks_dir
-    target_dir.mkdir(parents=True, exist_ok=True)
-
-    block = f"\n{_HOOK_MARK}\n{cmd}\n"
-    installed, skipped = [], []
-    for name in hooks:
-        f = target_dir / name
-        existing = f.read_text() if f.exists() else ""
-        if _HOOK_MARK in existing:
-            skipped.append(name)
-            continue
-        body = existing if existing.startswith("#!") else "#!/usr/bin/env sh\n" + existing
-        f.write_text(body.rstrip("\n") + block)
-        f.chmod(0o755)
-        installed.append(name)
-    return {"repo": str(repo), "hooks_dir": str(target_dir), "installed": installed,
-            "already_present": skipped, "interpreter": "python3 (PATH)", "pythonpath": src,
-            "note": "drops <out>/.cg_stale on source drift; `build` consumes it."}
-
-
 def _install_hook(args: argparse.Namespace) -> None:
     info = install_freshness_hooks(Path(args.repo).resolve(), args.out,
                                    src=args.src, write_husky=args.write_husky)
     print(json.dumps(info, indent=2))
-
-
-_PREPUSH_MARK = "# cg-graphify-bridge semantic pre-push gate"
-
-
-def install_prepush_hook(repo: Path, out_name: str, *, write_husky: bool = False) -> dict:
-    """Optional universal (non-Claude) gate: a git pre-push that fails when the semantic overlay
-    is stale, with `git push --no-verify` as the escape (mirrors the repo's branch-name pre-push).
-    Husky-aware: reports the snippet rather than rewriting committed .husky/ unless write_husky."""
-    try:
-        hp = subprocess.run(["git", "-C", str(repo), "rev-parse", "--git-path", "hooks"],
-                            capture_output=True, text=True, check=True).stdout.strip()
-    except (subprocess.CalledProcessError, FileNotFoundError) as e:
-        raise SystemExit(f"not a git repo (or git unavailable): {repo}") from e
-    hooks_dir = Path(hp) if Path(hp).is_absolute() else (repo / hp)
-    out_flag = f" --out {out_name}" if out_name != "graphify-out" else ""
-    block = (
-        f"\n{_PREPUSH_MARK}\n"
-        f'R="$(git rev-parse --show-toplevel)"\n'
-        f'if command -v cg-graphify-bridge >/dev/null 2>&1; then CG="cg-graphify-bridge"; '
-        f'else CG=""; fi\n'
-        f'if [ -n "$CG" ]; then $CG check-semantic "$R"{out_flag} --quiet || '
-        f'{{ echo "cg-graphify-bridge: semantic overlay is stale — refresh + commit semantic.json '
-        f'(see: cg-graphify-bridge status), or push with --no-verify"; exit 1; }}; fi\n'
-    )
-    if ".husky" in hooks_dir.parts:
-        husky_root = hooks_dir.parent if hooks_dir.name == "_" else hooks_dir
-        if not write_husky:
-            return {"detected": "husky", "action": "no file written — .husky/ is committed config",
-                    "to_install": {"file": str(husky_root / "pre-push"), "append": block.strip()},
-                    "or_opt_in": "re-run init with husky opt-in / append the snippet yourself"}
-        target = husky_root
-    else:
-        target = hooks_dir
-    target.mkdir(parents=True, exist_ok=True)
-    f = target / "pre-push"
-    existing = f.read_text() if f.exists() else ""
-    if _PREPUSH_MARK in existing:
-        return {"pre_push": str(f), "action": "already present"}
-    body = existing if existing.startswith("#!") else "#!/usr/bin/env sh\n" + existing
-    f.write_text(body.rstrip("\n") + block)
-    f.chmod(0o755)
-    return {"pre_push": str(f), "action": "installed"}
 
 
 def _load_structural(out: Path) -> tuple:
@@ -373,276 +295,12 @@ def _check_semantic(args: argparse.Namespace) -> None:
         raise SystemExit(1)
 
 
-# ---------- Tool-isolation conflict detectors (FR1b/FR3/FR4 — advisory, fail-open) ----------
-# The bridge composes graphify/codegraph as libraries + subprocesses, never as installed agent
-# integrations. These detect the INCOMPATIBLE behaviors we can't prevent at install time (a
-# user-global codegraph MCP, graphify's native-rebuild git hooks, a graphify-native semantic.json)
-# and warn. graphify's read/query/MCP over graph.json is COMPATIBLE and intentionally NOT flagged.
-
-_GRAPHIFY_HOOK_MARK = "# graphify-hook-start"
-
-
-def _mcp_servers(path: Path) -> dict:
-    """The `mcpServers` map from a Claude/agent JSON config; {} on any read/parse failure."""
-    try:
-        data = json.loads(path.read_text())
-    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
-        return {}
-    srv = data.get("mcpServers") if isinstance(data, dict) else None
-    return srv if isinstance(srv, dict) else {}
-
-
-def _is_codegraph_serve(name: str, entry: object) -> bool:
-    """True iff an mcpServers (name, entry) launches codegraph's MCP — keyed by the server name
-    `codegraph` or a command/args invoking `codegraph ... serve`."""
-    if str(name).lower() == "codegraph":
-        return True
-    if not isinstance(entry, dict):
-        return False
-    cmd = str(entry.get("command", ""))
-    args = [str(a) for a in (entry.get("args") or [])]
-    mentions = "codegraph" in Path(cmd).name or any("codegraph" in a for a in args)
-    return mentions and any(a == "serve" or a.endswith("serve") for a in args)
-
-
-def _detect_codegraph_mcp(home: Path, repo: Path) -> str | None:
-    """FR1(b): a codegraph MCP registration shadows the committed graph (it serves the live
-    per-clone .codegraph db). The project-local case is hard-blocked by disabledMcpjsonServers
-    (FR1a); the user-global case can't be — warn either way."""
-    for path, label in ((home / ".claude.json", "user-global ~/.claude.json"),
-                        (repo / ".mcp.json", "project .mcp.json"),
-                        (repo / ".claude" / "mcp.json", "project .claude/mcp.json")):
-        for name, entry in _mcp_servers(path).items():
-            if _is_codegraph_serve(name, entry):
-                note = ("hard-blocked in-repo by disabledMcpjsonServers" if "project" in label
-                        else "NOT blockable by repo settings — it's user-global")
-                return (f"codegraph MCP registered in {label} ({note}): it serves the live "
-                        f".codegraph db, not the committed graph. Use the committed graph (or "
-                        f"`cg-graphify-bridge serve`); `codegraph uninstall` removes it.")
-    return None
-
-
-def _detect_graphify_rebuild_hooks(repo: Path) -> str | None:
-    """FR3: graphify's native-rebuild git hook (post-commit/post-checkout) rebuilds a
-    graphify-native graph that conflicts with the committed structural.json."""
-    for h in (repo / ".git" / "hooks" / "post-commit", repo / ".git" / "hooks" / "post-checkout",
-              repo / ".husky" / "post-commit", repo / ".husky" / "post-checkout"):
-        try:
-            if h.exists() and _GRAPHIFY_HOOK_MARK in h.read_text():
-                return (f"graphify native-rebuild git hook in {h.name} conflicts with the committed "
-                        f"structural.json — neutralize with `export GRAPHIFY_SKIP_HOOK=1` or remove "
-                        f"the hook.")
-        except OSError:
-            continue
-    return None
-
-
-def _detect_semantic_schema_clash(out: Path) -> str | None:
-    """FR4: a graphify-out/semantic.json without the bridge marker layer=="semantic" is a
-    graphify-NATIVE semantic.json that overwrote (or would overwrite) the doc->code overlay."""
-    f = out / "semantic.json"
-    try:
-        if not f.exists():
-            return None
-        data = json.loads(f.read_text())
-    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
-        return None  # fail-open: a parse error is not a schema-clash signal
-    if isinstance(data, dict) and data.get("layer") == "semantic":
-        return None
-    return (f"{f} lacks the cg-graphify-bridge marker (layer:\"semantic\") — looks like a "
-            f"graphify-native semantic.json that can overwrite the bridge's doc->code overlay. "
-            f"Re-run `cg-graphify-bridge semantic-merge` to regenerate it.")
-
-
-def _check_conflicts(repo: Path, out: Path, home: Path | None = None) -> list[str]:
-    """Aggregate the advisory isolation detectors (D-B detect-and-warn). Each probe is fail-open:
-    one raising never suppresses the others, and findings never change a caller's exit code."""
-    home = home or Path.home()
-    findings = []
-    for probe in (lambda: _detect_codegraph_mcp(home, repo),
-                  lambda: _detect_graphify_rebuild_hooks(repo),
-                  lambda: _detect_semantic_schema_clash(out)):
-        try:
-            res = probe()
-        except Exception:
-            res = None  # fail open
-        if res:
-            findings.append(res)
-    return findings
-
-
-def doctor_report(repo: Path | None, home: Path | None = None) -> dict:
-    """Probe the runtime deps the substrates need; per-dep {dep, ok, detail, hint}. Pure (no
-    print/exit) so it's unit-testable. node + codegraph are global; `target typescript` is
-    repo-local — the TS extractor uses the TARGET repo's typescript, not a bundled copy (R9).
-    When a repo is given, also surfaces advisory tool-isolation `conflicts` (never affects `ok`)."""
-    checks = []
-    node = shutil.which("node")
-    nodev = None
-    if node:
-        try:
-            nodev = subprocess.run([node, "--version"], capture_output=True, text=True).stdout.strip()
-        except OSError:
-            pass
-    checks.append({"dep": "node", "ok": bool(node), "detail": nodev or "not found",
-                   "hint": None if node else "install Node.js (nodejs.org) — required for the TS substrate"})
-    cg = _codegraph_bin()
-    checks.append({"dep": "codegraph", "ok": bool(cg), "detail": cg or "not found",
-                   "hint": None if cg else "npm i -g @colbymchenry/codegraph (or set $CODEGRAPH_BIN) — for non-TS repos"})
-    if repo is not None:
-        tsdir = repo / "node_modules" / "typescript"
-        ok = tsdir.is_dir()
-        checks.append({"dep": "target typescript", "ok": ok, "detail": str(tsdir) if ok else "absent",
-                       "hint": None if ok else f"install deps in {repo} "
-                                               f"(the TS extractor uses the target repo's typescript)"})
-    report = {"repo": str(repo) if repo else None, "checks": checks,
-              "ok": all(c["ok"] for c in checks)}
-    if repo is not None:
-        report["conflicts"] = _check_conflicts(repo, repo / "graphify-out", home)
-    return report
-
-
 def _doctor(args: argparse.Namespace) -> None:
     repo = Path(args.repo).resolve() if args.repo else None
     rep = doctor_report(repo)
     print(json.dumps(rep, indent=2))
     if args.strict and not rep["ok"]:
         raise SystemExit(1)
-
-
-_AGENTS_MARK = "<!-- cg-graphify-bridge:graph-consumption-contract -->"
-_GITATTR_MARK = "# cg-graphify-bridge: semantic.json union/rebuild merge driver"
-
-
-def _append_once(path: Path, marker: str, block: str) -> Path:
-    """Idempotently append `block` (which contains `marker`) — never duplicate, never clobber
-    pre-existing content."""
-    existing = path.read_text() if path.exists() else ""
-    if marker in existing:
-        return path
-    path.write_text((existing.rstrip("\n") + "\n\n" + block) if existing.strip() else block)
-    return path
-
-
-def _write_agents_md(repo: Path, out_name: str) -> Path:
-    block = f"""{_AGENTS_MARK}
-## Knowledge graph (`{out_name}/`)
-
-This repo ships a committed code knowledge graph built by **cg-graphify-bridge**. Consult it
-*before* broad file scans for "where is X / how does Y work / what touches Z".
-
-**Committed layers:**
-- `{out_name}/structural.json` — CI-owned deterministic code graph (nodes + edges + communities). Do not hand-edit; CI rebuilds it on every PR and commits it onto the PR's own branch.
-- `{out_name}/semantic.json` — dev-owned doc->code overlay. Refresh locally when you change docs or linked code, and commit it with your change-set.
-- `{out_name}/GRAPH_REPORT.md` — human-browsable structural summary (god nodes, communities).
-- `{out_name}/.cg_manifest.json` — engine stamp + freshness baseline.
-
-**Derived (gitignored, local):**
-- `{out_name}/graph.json` — the fused view (structural + semantic) the graph consumer reads. Lazily materialized; if absent, run `cg-graphify-bridge materialize .` (or it is rebuilt on session start).
-
-**Check freshness before relying on the graph:**
-```
-cg-graphify-bridge status . --out {out_name}
-```
-If the semantic layer is stale, run the refresh protocol below, then commit `{out_name}/semantic.json`.
-
-**Refreshing the semantic overlay (agent protocol).** The doc->code edges are produced by an AGENT
-(not a script), in three steps:
-1. `cg-graphify-bridge semantic-prep . --out {out_name}` — writes one task per doc under
-   `{out_name}/.cache/semantic/tasks/<id>.json`, each `{{doc, code_nodes}}` where code_nodes are
-   `{{composite_id, label, file, cg_kind}}` — **no source code** is included.
-2. For EACH task, read its doc + code_nodes and write
-   `{out_name}/.cache/semantic/payloads/<id>.json` =
-   `{{"nodes": [<doc/concept nodes>], "edges": [{{"source": "<doc_node_id>", "target": "<composite_id>", "relation": "references|documents|..."}}]}}`:
-   - set `target` to the **EXACT** composite id from THAT task's code_nodes — never invent ids;
-   - if you know the symbol name but not its id, set `target_label` and leave `target` empty — the
-     bridge resolves it by unique label or prunes + reports it (no silent dangling edges);
-   - you are given identity metadata + the doc text **only** — never request or emit code bodies.
-3. If `{out_name}/.cache/semantic/dispatch_candidates.json` exists, review each candidate's
-   `evidence` (file:line): when it is real dynamic wiring (dispatch table, callback, getattr-by-
-   name), add `{{"source": <dispatch-site id>, "target": <candidate id>, "relation": "dispatches"}}`
-   to any payload (`suggested_source` is precomputed). Confirmed `dispatches` edges are
-   authoritative liveness for the dead-code queue and are NOT documentation coverage. A false
-   positive (comment/string coincidence) gets no edge — it stays in the review queue.
-4. `cg-graphify-bridge semantic-merge . --out {out_name}` — merges the payloads into `semantic.json`
-   and re-materializes the fused graph. Then `git add {out_name}/semantic.json` and commit it.
-
-**Isolation.** This graph is built by cg-graphify-bridge composing graphify + codegraph as
-*libraries*. Do **not** run `graphify install`, `codegraph install`, or `graphify hook install` in
-this repo — they install competing agent integrations: a codegraph **MCP** over the live `.codegraph`
-db (not the committed graph) and graphify **native-rebuild git hooks**. `init` sets
-`disabledMcpjsonServers: ["codegraph"]` to block a local codegraph MCP; if a graphify rebuild hook
-is present, `export GRAPHIFY_SKIP_HOOK=1`. graphify's read/query is fine — `cg-graphify-bridge serve`
-exposes graphify's MCP over the committed graph. `cg-graphify-bridge doctor .` surfaces these conflicts.
-"""
-    return _append_once(repo / "AGENTS.md", _AGENTS_MARK, block)
-
-
-def _write_gitattributes(repo: Path, out_name: str) -> Path:
-    block = (f"{_GITATTR_MARK}\n"
-             f"{out_name}/semantic.json merge=cg-semantic\n")
-    return _append_once(repo / ".gitattributes", _GITATTR_MARK, block)
-
-
-def _read_template(name: str) -> str:
-    from importlib.resources import files
-    return files("cg_graphify_bridge.templates").joinpath(name).read_text()
-
-
-def write_ci_workflow(repo: Path) -> dict:
-    """Install the build-on-PR-branch GitHub Actions workflow (KD13). Idempotent: never clobber
-    an existing graph-build.yml (a repo may have customized the install line / trigger paths)."""
-    dest = repo / ".github" / "workflows" / "graph-build.yml"
-    if dest.exists():
-        return {"path": str(dest), "action": "exists (left as-is)"}
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(_read_template("graph-build.yml"))
-    return {"path": str(dest), "action": "installed"}
-
-
-def _resolve_hook_cmd(sub: str, out_name: str) -> str:
-    """The command committed into .claude/settings.json for a hook subcommand — the pipx-installed
-    `cg-graphify-bridge` on PATH (every consumer installs the tool)."""
-    flag = f" --out {out_name}" if out_name != "graphify-out" else ""
-    return f"cg-graphify-bridge {sub}{flag}"
-
-
-def write_claude_hooks(repo: Path, out_name: str) -> dict:
-    """Wire the SessionStart/Stop hooks into the repo's .claude/settings.json AND hard-block a
-    project-local codegraph MCP from loading (FR1a isolation — Claude Code honors
-    `disabledMcpjsonServers`; codegraph's MCP serves the live per-clone .codegraph db and must
-    never shadow the committed graph). Committed, travels to every dev, additive with the user's
-    global config. Idempotent + preserves existing settings."""
-    settings = repo / ".claude" / "settings.json"
-    data: dict = {}
-    if settings.exists():
-        try:
-            data = json.loads(settings.read_text())
-        except (json.JSONDecodeError, OSError):
-            data = {}
-    hooks = data.setdefault("hooks", {})
-    added = []
-    for event, sub in (("SessionStart", "hook-sessionstart"), ("Stop", "hook-stop")):
-        entries = hooks.setdefault(event, [])
-        if any("cg_graphify_bridge" in json.dumps(e) or "cg-graphify-bridge" in json.dumps(e)
-               for e in entries):
-            continue  # already wired
-        entries.append({"hooks": [{"type": "command", "command": _resolve_hook_cmd(sub, out_name)}]})
-        added.append(event)
-    # FR1a: deny-list codegraph's .mcp.json MCP so a project-local `codegraph install` can't load
-    # it in this repo (the committed graph is canonical). No-op unless codegraph is registered;
-    # preserves pre-existing entries. A user-global codegraph MCP can't be gated here (doctor warns).
-    disabled = data.get("disabledMcpjsonServers")
-    if not isinstance(disabled, list):
-        disabled = []
-        data["disabledMcpjsonServers"] = disabled
-    mcp_added = []
-    if "codegraph" not in disabled:
-        disabled.append("codegraph")
-        mcp_added = ["codegraph"]
-    settings.parent.mkdir(parents=True, exist_ok=True)
-    settings.write_text(json.dumps(data, indent=2) + "\n")
-    return {"settings": str(settings), "added": added, "disabled_mcp_added": mcp_added}
 
 
 def _merge_driver(args: argparse.Namespace) -> None:
@@ -676,23 +334,6 @@ def _merge_driver(args: argparse.Namespace) -> None:
     }
     Path(args.ours).write_text(json.dumps(merged, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
     # exit 0 -> git treats the conflict as resolved
-
-
-def configure_merge_driver(repo: Path, out_name: str) -> dict:
-    """Register the cg-semantic merge driver in the repo's LOCAL git config (the .gitattributes
-    `merge=cg-semantic` line is committed; the driver definition is per-clone, so init sets it).
-    Best-effort — returns a skip note when git is unavailable."""
-    driver_cmd = _resolve_hook_cmd("merge-driver", out_name).replace(
-        " merge-driver", " merge-driver %A %B")
-    try:
-        subprocess.run(["git", "-C", str(repo), "config", "merge.cg-semantic.name",
-                        "cg-graphify-bridge semantic-overlay union"], check=True,
-                       capture_output=True, text=True)
-        subprocess.run(["git", "-C", str(repo), "config", "merge.cg-semantic.driver", driver_cmd],
-                       check=True, capture_output=True, text=True)
-    except (subprocess.CalledProcessError, FileNotFoundError) as e:
-        return {"configured": False, "note": f"git unavailable: {e}"}
-    return {"configured": True, "driver": driver_cmd}
 
 
 def _init(args: argparse.Namespace) -> None:
@@ -766,7 +407,8 @@ def _benchmark(args: argparse.Namespace) -> None:
 
 def _query_cmd(args: argparse.Namespace) -> None:
     """callers / callees / impact over the committed graph. Ambiguous or unknown symbol exits 2."""
-    from . import driver, query as _q
+    from . import driver
+    from . import query as _q
     repo = Path(args.repo).resolve()
     structural = driver.read_layer(repo / args.out, "structural")
     if structural is None:
@@ -795,21 +437,6 @@ def _insights(args: argparse.Namespace) -> None:
 # ---------- Claude hooks (in-process subcommands; .claude/settings.json wires them) ----------
 # Thin: SessionStart surfaces freshness, Stop gates on a stale/uncommitted overlay. Both honor
 # the escape hatch and FAIL OPEN — a guard that errors must never brick a session (R7/R10).
-
-def _hook_disabled() -> bool:
-    return bool(os.environ.get("CG_BRIDGE_DISABLE")) or \
-        (Path.home() / ".claude" / "state" / "cg-bridge" / "OFF").exists()
-
-
-def _hook_repo() -> Path:
-    try:
-        r = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
-        if r.returncode == 0 and r.stdout.strip():
-            return Path(r.stdout.strip())
-    except (OSError, FileNotFoundError):
-        pass
-    return Path.cwd()
-
 
 def _hook_sessionstart(args: argparse.Namespace) -> None:
     if _hook_disabled():

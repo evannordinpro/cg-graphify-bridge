@@ -195,11 +195,6 @@
     {
       "relation": "documents",
       "source": "doc:docsinternalsmd",
-      "target": "cg:0dd00320414efe86"
-    },
-    {
-      "relation": "documents",
-      "source": "doc:docsinternalsmd",
       "target": "cg:0e178b2e6dfd5890"
     },
     {
@@ -273,6 +268,11 @@
       "target": "cg:58ef467ddedc767f"
     },
     {
+      "relation": "documents",
+      "source": "doc:docsinternalsmd",
+      "target": "cg:5cfd19845e94ba15"
+    },
+    {
       "relation": "references",
       "source": "doc:docsinternalsmd",
       "target": "cg:5dc2a9c13ae8c1b6"
@@ -310,12 +310,12 @@
     {
       "relation": "documents",
       "source": "doc:docsinternalsmd",
-      "target": "cg:93c13c10dd027ae3"
+      "target": "cg:9779ddbba3d406d0"
     },
     {
       "relation": "documents",
       "source": "doc:docsinternalsmd",
-      "target": "cg:9779ddbba3d406d0"
+      "target": "cg:9af622d7c88e94ad"
     },
     {
       "relation": "references",
@@ -368,11 +368,6 @@
       "target": "cg:fb2f09c4fd4309b8"
     },
     {
-      "relation": "references",
-      "source": "doc:docssetupmd",
-      "target": "cg:0b09fca3dddc2d15"
-    },
-    {
       "relation": "documents",
       "source": "doc:docssetupmd",
       "target": "cg:164a13d5b9250633"
@@ -386,6 +381,11 @@
       "relation": "references",
       "source": "doc:docssetupmd",
       "target": "cg:18af856fd7b86ad8"
+    },
+    {
+      "relation": "references",
+      "source": "doc:docssetupmd",
+      "target": "cg:2266fd7eaa1dbec8"
     },
     {
       "relation": "documents",
@@ -420,6 +420,11 @@
     {
       "relation": "references",
       "source": "doc:docssetupmd",
+      "target": "cg:402a4ea9131eacf2"
+    },
+    {
+      "relation": "references",
+      "source": "doc:docssetupmd",
       "target": "cg:41887d5560742e2d"
     },
     {
@@ -443,11 +448,6 @@
       "target": "cg:4c3f0d72f38071e3"
     },
     {
-      "relation": "references",
-      "source": "doc:docssetupmd",
-      "target": "cg:569117df0d7952d9"
-    },
-    {
       "relation": "documents",
       "source": "doc:docssetupmd",
       "target": "cg:663c5cfd8b221c7b"
@@ -455,17 +455,12 @@
     {
       "relation": "references",
       "source": "doc:docssetupmd",
-      "target": "cg:6d17ce09b4fa2f20"
+      "target": "cg:754cb6ff1ee1aef5"
     },
     {
       "relation": "documents",
       "source": "doc:docssetupmd",
       "target": "cg:75637ed541aa7ba9"
-    },
-    {
-      "relation": "references",
-      "source": "doc:docssetupmd",
-      "target": "cg:7a567b547a024dd8"
     },
     {
       "relation": "documents",
@@ -536,6 +531,11 @@
       "relation": "references",
       "source": "doc:docssetupmd",
       "target": "cg:adaada7f446a45e7"
+    },
+    {
+      "relation": "references",
+      "source": "doc:docssetupmd",
+      "target": "cg:b388ba64f429d189"
     },
     {
       "relation": "documents",
@@ -800,12 +800,12 @@
     {
       "relation": "references",
       "source": "doc:nextimplementationmd",
-      "target": "cg:4345f93363f0fc37"
+      "target": "cg:402a4ea9131eacf2"
     },
     {
       "relation": "references",
       "source": "doc:nextimplementationmd",
-      "target": "cg:569117df0d7952d9"
+      "target": "cg:4345f93363f0fc37"
     },
     {
       "relation": "references",
@@ -885,6 +885,11 @@
     {
       "relation": "documents",
       "source": "doc:readmemd",
+      "target": "cg:2266fd7eaa1dbec8"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:readmemd",
       "target": "cg:3671ce95e1a767f3"
     },
     {
@@ -916,11 +921,6 @@
       "relation": "documents",
       "source": "doc:readmemd",
       "target": "cg:663c5cfd8b221c7b"
-    },
-    {
-      "relation": "documents",
-      "source": "doc:readmemd",
-      "target": "cg:6d17ce09b4fa2f20"
     },
     {
       "relation": "references",
@@ -1089,6 +1089,7 @@
     "dangling": 0,
     "fallback": 0,
     "kept": 207,
+    "note": "post-split id re-point (direct write)",
     "payloads": 10
   }
 }
