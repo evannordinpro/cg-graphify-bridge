@@ -1,17 +1,17 @@
 # 📊 Graph Insights — cg-graphify-bridge
 
-> **95% less context** to answer a pinpoint code question · **0** dependency cycles · **20%** of architectural hubs documented
+> **97% less context** to answer a pinpoint code question · **0** dependency cycles · **40%** of architectural hubs documented
 
 | 🎯 Token efficiency | 🏛️ Architecture | 📚 Documentation |
 |:--:|:--:|:--:|
-| 95% pinpoint · 92% global | 0 cycles · 3 Zone-of-Pain | hubs 20% · debt 0.5542 |
+| 97% pinpoint · 96% global | 0 cycles · 2 Zone-of-Pain | hubs 40% · debt 0.5523 |
 
 ## 🎯 Token efficiency
 
 Graph-guided retrieval (node identity + neighbourhood) vs reading whole source files:
 
-- **pinpoint** &nbsp; `███████████████████░` 95%
-- **global** &nbsp;&nbsp;&nbsp; `██████████████████░░` 92%
+- **pinpoint** &nbsp; `███████████████████░` 97%
+- **global** &nbsp;&nbsp;&nbsp; `███████████████████░` 96%
 
 > GraphRAG reports **26–97% fewer tokens** for graph-guided retrieval ([arXiv:2404.16130](https://arxiv.org/abs/2404.16130)) — this repo lands in-band.
 > _Tokenizer: chars/4 estimate (install tiktoken for exact counts); baseline: naive full-file read of the source files a query's nodes live in._
@@ -27,39 +27,39 @@ quadrantChart
     quadrant-2 Ideal - abstract and stable
     quadrant-3 Zone of Pain
     quadrant-4 Volatile leaf - ok
-    "c13": [0.000, 0.000]
-    "c18": [0.000, 0.000]
-    "c4": [0.000, 0.000]
+    "c11": [0.000, 0.000]
+    "c16": [0.000, 0.000]
+    "c0": [0.750, 0.000]
 ```
 
 - **Dependency cycles:** 0 — acyclic ✓
-- **Zone of Pain:** 3 · **Zone of Uselessness:** 0 communities
-- **Leakiest module:** community 23 (conductance 0.5)
+- **Zone of Pain:** 2 · **Zone of Uselessness:** 0 communities
+- **Leakiest module:** community 21 (conductance 0.5)
 - **Top architectural hub (betweenness):** `cg:75637ed541aa7ba9`
-- **High fan-out (SRP) candidates:** 2 · **Dead-code review queue:** 22
+- **High fan-out (SRP) candidates:** 4 · **Dead-code review queue:** 7
 
 ## 🧹 Technical Debt
 
-**Debt score** &nbsp; `███████░░░░░░░░░░░░░` 33% _(0 = clean → 1 = heavy)_
+**Debt score** &nbsp; `██████░░░░░░░░░░░░░░` 31% _(0 = clean → 1 = heavy)_
 
 | Debt type | Count |
 |---|--:|
-| dead-code | 22 |
-| god-object | 11 |
-| zone-of-pain | 3 |
-| high-fan-out | 2 |
+| god-object | 9 |
+| dead-code | 7 |
+| high-fan-out | 4 |
+| zone-of-pain | 2 |
 | dangling-link | 1 |
 
-- **Most-indebted feature:** community 4 (8 debt items)
+- **Most-indebted feature:** community 0 (4 debt items)
 - **Most-indebted component:** `src/cg_graphify_bridge/cli.py` (7 debt items)
-- _score contributions: god-object 0.1179, zone-of-pain 0.1, dead-code 0.0468, high-fan-out 0.0429, dangling-link 0.025_
+- _score contributions: god-object 0.1125, zone-of-pain 0.08, high-fan-out 0.0667, dangling-link 0.025, dead-code 0.0219_
 
 ## 📚 Documenting what matters
 
-- **God-node coverage** &nbsp; `████░░░░░░░░░░░░░░░░` 20%
+- **God-node coverage** &nbsp; `████████░░░░░░░░░░░░` 40%
 - **Centrality-weighted coverage** &nbsp; `██░░░░░░░░░░░░░░░░░░` 11% _(the gap vs raw coverage = mis-targeted doc effort)_
-- **Undocumented hubs:** `resolve`, `visit`, `analyze`, `build_digraph`, `health`, `_traverse`, `semantic_baseline`, `AdaptResult`, `_meta`, `abstractness_distance`
-- **Darkest subsystem:** community 5 (0% documented)
+- **Undocumented hubs:** `resolve`, `health`, `analyze`, `visit`, `build_digraph`, `_traverse`, `benchmark`, `_semantic_merge`, `AdaptResult`
+- **Darkest subsystem:** community 1 (0% documented)
 
 ## ⚠️ Undocumented load-bearing — document these first
 
@@ -68,13 +68,13 @@ quadrantChart
 1. `resolve` — `src/cg_graphify_bridge/query.py`
 2. `srt` — `src/cg_graphify_bridge/query.py`
 3. `build_digraph` — `src/cg_graphify_bridge/analytics.py`
-4. `_norm` — `src/cg_graphify_bridge/semantic.py`
-5. `_codegraph_bin` — `src/cg_graphify_bridge/cli.py`
+4. `AdaptResult` — `src/cg_graphify_bridge/adapter.py`
+5. `_norm` — `src/cg_graphify_bridge/semantic.py`
 6. `files` — `src/cg_graphify_bridge/ts_substrate_js/extract.cjs`
-7. `_traverse` — `src/cg_graphify_bridge/query.py`
-8. `AdaptResult` — `src/cg_graphify_bridge/adapter.py`
-9. `_iter_sources` — `src/cg_graphify_bridge/freshness.py`
-10. `rel` — `src/cg_graphify_bridge/ts_substrate_js/extract.cjs`
+7. `_codegraph_bin` — `src/cg_graphify_bridge/cli.py`
+8. `_traverse` — `src/cg_graphify_bridge/query.py`
+9. `read_layer` — `src/cg_graphify_bridge/driver.py`
+10. `_iter_sources` — `src/cg_graphify_bridge/freshness.py`
 
 </details>
 
