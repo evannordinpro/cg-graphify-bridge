@@ -4,7 +4,7 @@
 
 | 🎯 Token efficiency | 🏛️ Architecture | 📚 Documentation |
 |:--:|:--:|:--:|
-| 95% pinpoint · 92% global | 0 cycles · 3 Zone-of-Pain | hubs 20% · debt 0.5541 |
+| 95% pinpoint · 92% global | 0 cycles · 3 Zone-of-Pain | hubs 20% · debt 0.5542 |
 
 ## 🎯 Token efficiency
 
@@ -34,31 +34,31 @@ quadrantChart
 
 - **Dependency cycles:** 0 — acyclic ✓
 - **Zone of Pain:** 3 · **Zone of Uselessness:** 0 communities
-- **Leakiest module:** community 22 (conductance 0.5)
+- **Leakiest module:** community 23 (conductance 0.5)
 - **Top architectural hub (betweenness):** `cg:75637ed541aa7ba9`
-- **High fan-out (SRP) candidates:** 2 · **Dead-code review queue:** 97
+- **High fan-out (SRP) candidates:** 2 · **Dead-code review queue:** 22
 
 ## 🧹 Technical Debt
 
-**Debt score** &nbsp; `███████░░░░░░░░░░░░░` 37% _(0 = clean → 1 = heavy)_
+**Debt score** &nbsp; `███████░░░░░░░░░░░░░` 33% _(0 = clean → 1 = heavy)_
 
 | Debt type | Count |
 |---|--:|
-| dead-code | 97 |
+| dead-code | 22 |
 | god-object | 11 |
 | zone-of-pain | 3 |
 | high-fan-out | 2 |
 | dangling-link | 1 |
 
-- **Most-indebted feature:** community 4 (10 debt items)
-- **Most-indebted component:** `src/cg_graphify_bridge/cli.py` (30 debt items)
-- _score contributions: god-object 0.1179, zone-of-pain 0.1, dead-code 0.0795, high-fan-out 0.0429, dangling-link 0.025_
+- **Most-indebted feature:** community 4 (8 debt items)
+- **Most-indebted component:** `src/cg_graphify_bridge/cli.py` (7 debt items)
+- _score contributions: god-object 0.1179, zone-of-pain 0.1, dead-code 0.0468, high-fan-out 0.0429, dangling-link 0.025_
 
 ## 📚 Documenting what matters
 
 - **God-node coverage** &nbsp; `████░░░░░░░░░░░░░░░░` 20%
 - **Centrality-weighted coverage** &nbsp; `██░░░░░░░░░░░░░░░░░░` 11% _(the gap vs raw coverage = mis-targeted doc effort)_
-- **Undocumented hubs:** `resolve`, `visit`, `analyze`, `build_digraph`, `_traverse`, `semantic_baseline`, `health`, `AdaptResult`, `_meta`, `abstractness_distance`
+- **Undocumented hubs:** `resolve`, `visit`, `analyze`, `build_digraph`, `health`, `_traverse`, `semantic_baseline`, `AdaptResult`, `_meta`, `abstractness_distance`
 - **Darkest subsystem:** community 5 (0% documented)
 
 ## ⚠️ Undocumented load-bearing — document these first
@@ -90,7 +90,7 @@ quadrantChart
 - **Conductance (leakiest module)** — the share of a community's connections that cross its boundary — high = a leaky module not cleanly separated from the rest.
 - **Betweenness (top hub)** — how often a symbol lies on the shortest path between other symbols — a high value is an architectural chokepoint the system routes through.
 - **High fan-out** — symbols that depend on an unusually large number of others — a single-responsibility smell / refactor candidate.
-- **Dead-code review queue** — symbols nothing else references (excluding entry points & exports) — a *review* list only; static analysis over-flags reflection/dynamic dispatch, so never auto-delete.
+- **Dead-code review queue** — symbols nothing else references (excluding entry points, exports, and dynamically-wired symbols — names referenced as values, e.g. argparse `set_defaults(func=…)`, callbacks, `getattr` strings) — a *review* list only; never auto-delete.
 - **God-node coverage** — of the most-connected hub symbols, the % that have at least one documentation link.
 - **Centrality-weighted coverage** — documentation coverage weighted by each symbol's importance — the gap vs raw coverage reveals whether the docs cover what actually matters.
 - **Undocumented hubs** — central hub symbols with no documentation — the doc backlog, ordered by importance.
