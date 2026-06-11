@@ -18,7 +18,9 @@ already uses it**. For *consuming* the graph once it exists, see
 | target repo's **typescript** | TS repos only | run the repo's package install (`npm ci`) so `node_modules/typescript` exists |
 
 The extractor auto-routes: a repo with a `tsconfig` + real `.ts` sources → the type-aware TS
-substrate; otherwise → codegraph.
+substrate; otherwise → codegraph. For Python, the bridge supplements codegraph (which resolves
+same-file calls only) with a deterministic stdlib-AST pass that adds cross-module call edges —
+resolved through import aliases, stamped `context: "pyast"` in the committed artifact.
 
 ## 2. Install the tool
 

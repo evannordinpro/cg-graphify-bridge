@@ -62,9 +62,9 @@ limits, command reference, troubleshooting: **[`docs/setup.md`](docs/setup.md)**
 ## Layout
 - `src/cg_graphify_bridge/` — `adapter` (codegraph DB → nodes/edges), `ts_substrate` (type-aware TS
   extractor), `driver` (library-composition over graphify + the layer split), `semantic`
-  (doc→code overlay), `freshness` (on-demand drift), `engine` (determinism stamp), `health` /
-  `benchmark` / `insights` (metrics + showcase report), `query` (callers/callees/impact),
-  `analytics`, `cli`
+  (doc→code overlay), `freshness` (on-demand drift), `engine` (determinism stamp), `py_calls`
+  (supplemental cross-module Python call edges), `health` / `benchmark` / `insights` (metrics +
+  showcase report), `query` (callers/callees/impact), `analytics`, `cli`
 - `src/cg_graphify_bridge/templates/graph-build.yml` — the CI workflow `init` installs
 - `tests/` — pytest suite (determinism, packaging, artifact split, freshness, hooks, CI, …)
 - `overlay/SKILL_overlay.md` — the `/graphify` subagent contract (overlay mode)
