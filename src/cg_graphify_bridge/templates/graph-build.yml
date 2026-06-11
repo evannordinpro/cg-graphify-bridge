@@ -70,14 +70,21 @@ jobs:
       - run: npm i -g @colbymchenry/codegraph@0.9.9 || true   # PIN the substrate version (it's stamped + drift-checked); bump deliberately
       - name: Build structural graph (the tool pins PYTHONHASHSEED -> byte-deterministic)
         run: cg-graphify-bridge build . --out graphify-out
+      # OPT-IN versioned showcase: set repo variable CG_INSIGHTS=true to render + commit a beautiful
+      # GRAPH_INSIGHTS.md at the repo root (content-deterministic -> rides the diff-gate).
+      - name: Render insights showcase (opt-in -> GRAPH_INSIGHTS.md)
+        if: ${{ vars.CG_INSIGHTS == 'true' }}
+        run: cg-graphify-bridge insights . --out-file GRAPH_INSIGHTS.md
       - name: Commit + push ONLY if structural changed (diff-gated = loop backstop)
         if: ${{ !github.event.pull_request.head.repo.fork }}
         env:
           CG_GRAPH_COMMIT_MSG: ${{ vars.CG_GRAPH_COMMIT_MSG }}   # optional: set this repo variable to override the bot commit message
+          CG_INSIGHTS: ${{ vars.CG_INSIGHTS }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           layers="graphify-out/structural.json graphify-out/GRAPH_REPORT.md graphify-out/.cg_manifest.json"
+          if [ "${CG_INSIGHTS}" = "true" ] && [ -f GRAPH_INSIGHTS.md ]; then layers="$layers GRAPH_INSIGHTS.md"; fi
           if git diff --quiet -- $layers; then
             echo "structural unchanged — deterministic rebuild, nothing to push."; exit 0
           fi

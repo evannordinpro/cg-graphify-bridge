@@ -91,7 +91,10 @@ Determinism is non-negotiable: `build`/`init` re-exec under a pinned `PYTHONHASH
   operators (reading the report, the composite-id model, the freshness gate, a worked example).
 - **[`AGENTS.md`](AGENTS.md)** — the terse agent contract `init` ships into every consumer:
   how to *consume* the graph **and** the step-by-step protocol to *refresh* the semantic overlay.
-- This repo is self-hosted — `graphify-out/` is a live example of the tool's own output.
+- **[`GRAPH_INSIGHTS.md`](GRAPH_INSIGHTS.md)** — the auto-generated, versioned showcase: token
+  efficiency, the Martin Zone-of-Pain/Uselessness quadrant, doc coverage, and the risk queue for
+  this very repo (rebuilt by CI each graph build).
+- This repo is self-hosted — `graphify-out/` and `GRAPH_INSIGHTS.md` are live examples of the tool's own output.
 
 ## License
 [Apache-2.0](LICENSE).

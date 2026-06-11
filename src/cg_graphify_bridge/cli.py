@@ -758,6 +758,34 @@ def _benchmark(args: argparse.Namespace) -> None:
     print(json.dumps(res, indent=2, default=str) if args.json else _b.render_report(res))
 
 
+def _query_cmd(args: argparse.Namespace) -> None:
+    """callers / callees / impact over the committed graph. Ambiguous or unknown symbol exits 2."""
+    from . import driver, query as _q
+    repo = Path(args.repo).resolve()
+    structural = driver.read_layer(repo / args.out, "structural")
+    if structural is None:
+        raise SystemExit(f"no structural.json in {repo / args.out} — build the graph first (or pull it)")
+    fn = {"callers": _q.callers, "callees": _q.callees, "impact": _q.impact}[args.cmd]
+    res = fn(structural, args.symbol, depth=args.depth)
+    print(json.dumps(res, indent=2, default=str) if args.json else _q.render(res))
+    if res["candidates"] or res["resolved"] is None:   # ambiguous / not found -> non-zero
+        raise SystemExit(2)
+
+
+def _insights(args: argparse.Namespace) -> None:
+    """Render the versioned showcase report (health + benchmark) as GitHub-native markdown."""
+    from . import insights as _i
+    repo = Path(args.repo).resolve()
+    md = _i.render_markdown(_i.build_insights(repo / args.out, repo))
+    if args.out_file:
+        dest = Path(args.out_file)
+        dest = dest if dest.is_absolute() else repo / dest
+        dest.write_text(md)
+        print(f"wrote {dest}")
+    else:
+        print(md)
+
+
 # ---------- Claude hooks (in-process subcommands; .claude/settings.json wires them) ----------
 # Thin: SessionStart surfaces freshness, Stop gates on a stale/uncommitted overlay. Both honor
 # the escape hatch and FAIL OPEN — a guard that errors must never brick a session (R7/R10).
@@ -915,6 +943,27 @@ def main() -> None:
     bm.add_argument("--out", default="graphify-out")
     bm.add_argument("--json", action="store_true", help="emit machine-readable JSON instead of the report")
     bm.set_defaults(func=_benchmark)
+
+    # Navigation over the committed graph (callers/callees/impact) — analytics digraph spine.
+    for _name, _ddepth, _help in (
+        ("callers", 1, "symbols that depend on SYMBOL (committed graph)"),
+        ("callees", 1, "symbols SYMBOL depends on (committed graph)"),
+        ("impact", None, "transitive blast radius if SYMBOL changes (committed graph)")):
+        q = sub.add_parser(_name, help=_help)
+        q.add_argument("repo")
+        q.add_argument("symbol")
+        q.add_argument("--out", default="graphify-out")
+        q.add_argument("--depth", type=int, default=_ddepth,
+                       help="hops to traverse" + (" (default: unbounded)" if _ddepth is None
+                                                  else f" (default: {_ddepth})"))
+        q.add_argument("--json", action="store_true")
+        q.set_defaults(func=_query_cmd)
+
+    ins = sub.add_parser("insights", help="render the versioned showcase report (health + benchmark) as markdown")
+    ins.add_argument("repo")
+    ins.add_argument("--out", default="graphify-out")
+    ins.add_argument("--out-file", default=None, help="write markdown to this path (default: stdout)")
+    ins.set_defaults(func=_insights)
 
     hs = sub.add_parser("hook-sessionstart", help="Claude SessionStart hook: surface freshness + materialize")
     hs.add_argument("--out", default="graphify-out")
