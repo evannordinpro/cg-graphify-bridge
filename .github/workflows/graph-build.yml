@@ -87,3 +87,9 @@ jobs:
             echo "::error::cg-graphify-bridge: structural commit-back rejected — likely branch protection (required status checks / signed commits) or a read-only GITHUB_TOKEN. Relax that rule for the PR branch, or build structural locally and commit it in the PR." >&2
             exit 1
           fi
+      # OPT-IN, NON-BLOCKING health advisory: set repo variable CG_HEALTH_ADVISORY=true to surface
+      # structural+semantic+combined health drift in the run summary. Never gates the build.
+      - name: Health advisory (opt-in; never blocks)
+        if: ${{ vars.CG_HEALTH_ADVISORY == 'true' }}
+        continue-on-error: true
+        run: cg-graphify-bridge health . --out graphify-out >> "$GITHUB_STEP_SUMMARY" 2>&1 || true

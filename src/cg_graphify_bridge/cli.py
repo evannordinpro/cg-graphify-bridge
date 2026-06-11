@@ -742,6 +742,22 @@ def _serve(args: argparse.Namespace) -> None:
     gserve.serve(str(graph))
 
 
+def _health(args: argparse.Namespace) -> None:
+    """Structural + semantic + combined health metrics over the committed graph (advisory)."""
+    from . import health as _h
+    repo = Path(args.repo).resolve()
+    res = _h.health(repo / args.out, include_tests=args.include_tests)
+    print(json.dumps(res, indent=2, default=str) if args.json else _h.render_report(res))
+
+
+def _benchmark(args: argparse.Namespace) -> None:
+    """Token-reduction of graph-guided retrieval vs a naive file-read baseline, per query class."""
+    from . import benchmark as _b
+    repo = Path(args.repo).resolve()
+    res = _b.benchmark(repo / args.out, repo)
+    print(json.dumps(res, indent=2, default=str) if args.json else _b.render_report(res))
+
+
 # ---------- Claude hooks (in-process subcommands; .claude/settings.json wires them) ----------
 # Thin: SessionStart surfaces freshness, Stop gates on a stale/uncommitted overlay. Both honor
 # the escape hatch and FAIL OPEN — a guard that errors must never brick a session (R7/R10).
@@ -885,6 +901,20 @@ def main() -> None:
     sv.add_argument("repo")
     sv.add_argument("--out", default="graphify-out")
     sv.set_defaults(func=_serve)
+
+    hl = sub.add_parser("health", help="structural + semantic + combined codebase-health metrics (advisory)")
+    hl.add_argument("repo")
+    hl.add_argument("--out", default="graphify-out")
+    hl.add_argument("--json", action="store_true", help="emit machine-readable JSON instead of the report")
+    hl.add_argument("--include-tests", action="store_true",
+                    help="include test files (default: production code only)")
+    hl.set_defaults(func=_health)
+
+    bm = sub.add_parser("benchmark", help="token-reduction of graph-guided retrieval vs naive file-read (per query class)")
+    bm.add_argument("repo")
+    bm.add_argument("--out", default="graphify-out")
+    bm.add_argument("--json", action="store_true", help="emit machine-readable JSON instead of the report")
+    bm.set_defaults(func=_benchmark)
 
     hs = sub.add_parser("hook-sessionstart", help="Claude SessionStart hook: surface freshness + materialize")
     hs.add_argument("--out", default="graphify-out")

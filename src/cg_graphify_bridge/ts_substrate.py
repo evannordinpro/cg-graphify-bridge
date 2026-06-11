@@ -65,7 +65,10 @@ def adapt_ts(repo, scopes: list[str]) -> AdaptResult:
             "source_file": n["file_path"], "source_location": f"L{n['line']}",
             "metadata": {"cg_kind": n["kind"], "origin": "ts-substrate",
                          "qualified_name": n["qualified_name"], "signature": n.get("signature"),
-                         "language": "typescript", "start_line": n["line"], "cg_merged_ids": []},
+                         "language": "typescript", "start_line": n["line"],
+                         "is_abstract": bool(n.get("is_abstract", False)),
+                         "is_exported": bool(n.get("is_exported", False)),
+                         "visibility": n.get("visibility"), "cg_merged_ids": []},
         }
     edges: list[dict] = []
     unmapped = 0

@@ -120,6 +120,8 @@ cg-graphify-bridge status .          # structural + semantic freshness (+ exact 
 | `semantic-prep <repo>` / `semantic-merge <repo>` | the dev-owned doc→code overlay refresh |
 | `materialize <repo>` | rebuild the gitignored fused `graph.json` from the committed layers |
 | `serve <repo>` | (opt-in) launch graphify's MCP over the **committed** graph for repeat-query (≥10/session) workflows — never auto-installed |
+| `health <repo> [--json] [--include-tests]` | structural + semantic + combined codebase-health metrics (advisory; never gates; production-scoped by default) |
+| `benchmark <repo> [--json]` | token-reduction of graph-guided retrieval vs naive file-read, per query class |
 | `check-semantic <repo> [--require-committed]` | exit non-zero if the overlay is stale (the Stop-hook gate) |
 | `install-hook <repo>` | install the git freshness hooks |
 | `hook-sessionstart` / `hook-stop` | the Claude hook entrypoints (wired by `init` into `.claude/settings.json`) |
@@ -127,6 +129,30 @@ cg-graphify-bridge status .          # structural + semantic freshness (+ exact 
 
 Every command takes `--out <dir>` (default `graphify-out`). Reads are offline; the semantic step
 runs locally via Claude subagents (no third-party LLM, no source egress).
+
+### Health & benchmarks
+`cg-graphify-bridge health <repo>` reads the committed graph (offline, no rebuild) and reports three
+layers, each with the action it implies:
+- **Structural** — dependency cycles (with a suggested cut), leaky communities (conductance),
+  betweenness hubs, Martin Instability/Abstractness/Distance + Zone-of-Pain/Uselessness, fan-out
+  smells, dead-code review queue.
+- **Semantic** — doc coverage (overall / by-kind / public-API via `is_exported`), dangling links,
+  orphan docs, a knowledge-debt index (shown with its components).
+- **Combined** (the differentiator) — **god-node / centrality-weighted doc coverage** ("are we
+  documenting what matters") and an **undocumented-load-bearing risk queue** (`centrality × (1−documented)`).
+
+`health` is **production-scoped by default** — test files (`tests/`, `*_test.*`, `test_*`, `*.spec.*`)
+are excluded from every metric (coverage denominators, centrality, cycles, the risk queue) since
+codegraph indexes the whole repo; pass `--include-tests` to analyze everything.
+
+`cg-graphify-bridge benchmark <repo>` reports graph-guided **token reduction** vs a naive
+full-file-read baseline, per query class (pinpoint vs global). Uses `tiktoken` for exact counts if
+installed, else a labelled `chars/4` estimate. Both commands add `--json` for machine output.
+
+To surface health in CI **non-blockingly**, set the repo variable **`CG_HEALTH_ADVISORY=true`** — the
+workflow then writes the report to the run summary (it never gates the build). Abstractness needs the
+`is_abstract` stamp the current extractor emits; a graph built by an older tool version shows a caveat
+until CI rebuilds it.
 
 ## 7. Isolation — don't let graphify/codegraph installers interfere
 
