@@ -106,13 +106,40 @@ def write_faq(faq: dict, out: Path) -> dict:
     return {"faq": str(out / "faq.json"), "features": len(data["features"])}
 
 
+def _align_narratives(faq: dict, feats: list, structural: dict) -> tuple[dict, list, list]:
+    """Re-key narratives onto the current feature anchors. Anchors move whenever a re-cluster
+    reshuffles community membership — but an old anchor is still a NODE in the graph, and the
+    community that node lives in NOW is the feature its narrative belongs to. Returns
+    (by_current_anchor, remapped [(old, new)], orphaned [old]); a narrative is orphaned only
+    when its anchor node left the graph entirely or its target feature already has a narrative
+    (first-keyed wins, deterministically)."""
+    anchor_of_comm = {f["community"]: f["anchor"] for f in feats}
+    comm_of = {m: cid for cid, members in structural.get("communities", {}).items()
+               for m in members}
+    anchors = set(anchor_of_comm.values())
+    by_anchor: dict = {}
+    remapped, orphaned = [], []
+    for f in sorted(faq.get("features", []), key=lambda x: x["anchor"]):
+        a = f["anchor"]
+        if a in anchors:
+            by_anchor.setdefault(a, f)
+            continue
+        new = anchor_of_comm.get(comm_of.get(a))
+        if new and new not in by_anchor:
+            by_anchor[new] = {**f, "anchor": new}
+            remapped.append((a, new))
+        else:
+            orphaned.append(a)
+    return by_anchor, remapped, orphaned
+
+
 def faq_state(out: Path, repo: Path, structural: dict) -> dict:
     """Per-feature narrative state vs the manifest baseline: missing / stale / fresh, plus
     narratives whose anchors vanished (orphaned). Pure read — the gate and prep share it."""
     out, repo = Path(out), Path(repo)
     feats = feature_map(structural)
     faq = read_faq(out)
-    by_anchor = {f["anchor"]: f for f in faq.get("features", [])}
+    by_anchor, remapped, orphaned = _align_narratives(faq, feats, structural)
     base = (freshness.read_manifest(out) or {}).get("faq", {}).get("features", {})
     missing, stale, fresh = [], [], []
     for feat in feats:
@@ -122,11 +149,10 @@ def faq_state(out: Path, repo: Path, structural: dict) -> dict:
             stale.append(feat)
         else:
             fresh.append(feat)
-    anchors = {f["anchor"] for f in feats}
-    orphaned = sorted(a for a in by_anchor if a not in anchors)
     return {"adopted": bool(faq.get("features") or faq.get("project")),
             "project_missing": not faq.get("project"),
-            "missing": missing, "stale": stale, "fresh": fresh, "orphaned": orphaned}
+            "missing": missing, "stale": stale, "fresh": fresh,
+            "remapped": remapped, "orphaned": orphaned}
 
 
 # ---------- prep -> payloads -> merge (mirrors the semantic overlay loop) ----------
@@ -138,7 +164,7 @@ def prep_faq(out: Path, repo: Path, structural: dict) -> dict:
     out, repo = Path(out), Path(repo)
     state = faq_state(out, repo, structural)
     faq = read_faq(out)
-    by_anchor = {f["anchor"]: f for f in faq.get("features", [])}
+    by_anchor, _, _ = _align_narratives(faq, feature_map(structural), structural)
     base = out / ".cache" / "faq"
     if base.exists():
         shutil.rmtree(base)
@@ -173,16 +199,16 @@ def prep_faq(out: Path, repo: Path, structural: dict) -> dict:
 
 def merge_faq(out: Path, repo: Path, structural: dict) -> dict:
     """Merge <out>/.cache/faq/payloads/*.json into faq.json: project narrative replaces wholesale;
-    feature narratives upsert by anchor (unknown anchors are reported, never merged); orphaned
-    narratives (anchor gone from the graph) are dropped + reported. Stamps the per-feature
-    baseline into the manifest and deletes the scratch (never-touches-main contract)."""
+    feature narratives upsert by anchor (unknown anchors are reported, never merged). Existing
+    narratives whose anchor moved with a re-cluster are REMAPPED to their node's current feature
+    (_align_narratives); only a narrative whose anchor left the graph (or lost the remap race) is
+    dropped + reported. Stamps the per-feature baseline into the manifest and deletes the scratch
+    (never-touches-main contract)."""
     out, repo = Path(out), Path(repo)
     feats = feature_map(structural)
     anchors = {f["anchor"]: f for f in feats}
     faq = read_faq(out)
-    by_anchor = {f["anchor"]: f for f in faq.get("features", []) if f["anchor"] in anchors}
-    dropped_orphans = sorted(f["anchor"] for f in faq.get("features", [])
-                             if f["anchor"] not in anchors)
+    by_anchor, remapped, dropped_orphans = _align_narratives(faq, feats, structural)
     pdir = out / ".cache" / "faq" / "payloads"
     unknown, merged = [], 0
     for pf in sorted(pdir.glob("*.json")) if pdir.exists() else []:
@@ -203,7 +229,7 @@ def merge_faq(out: Path, repo: Path, structural: dict) -> dict:
     faq["features"] = list(by_anchor.values())
     faq["stats"] = {"features": len(by_anchor), "merged": merged,
                     "unknown_anchors": sorted(set(a for a in unknown if a)),
-                    "dropped_orphans": dropped_orphans}
+                    "remapped": len(remapped), "dropped_orphans": dropped_orphans}
     written = write_faq(faq, out)
     m = freshness.read_manifest(out) or {}
     # baseline carries the FILE LISTS too, so the pre-push/Stop gates can recompute staleness

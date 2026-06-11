@@ -112,3 +112,19 @@ def test_render_deterministic_with_pending_placeholders(tmp_path):
     assert "### Core — 2 components" in md1 and "The core." in md1
     assert "_(narrative pending)_" in md1             # c1 has no narrative yet
     assert "**Public surface:** `A`" in md1 and "**Depends on:**" in md1
+
+
+def test_recluster_remaps_narrative_to_anchor_nodes_new_feature(tmp_path):
+    st = _structural(tmp_path)
+    out = tmp_path / "graphify-out"
+    out.mkdir()
+    # narrative keyed at cg:b — a NODE that still exists but is no longer any feature's anchor
+    # (as after a re-cluster); its community c0 is now anchored at cg:a
+    faq.write_faq({"project": {}, "features": [
+        {"anchor": "cg:b", "name": "Core", "concept": "x"}]}, out)
+    res = faq.merge_faq(out, tmp_path, st)
+    assert res["remapped"] == 1 and res["dropped_orphans"] == []
+    data = json.loads((out / "faq.json").read_text())
+    assert data["features"][0]["anchor"] == "cg:a" and data["features"][0]["name"] == "Core"
+    state = faq.faq_state(out, tmp_path, st)
+    assert state["orphaned"] == []           # nothing lost in the reshuffle

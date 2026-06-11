@@ -73,18 +73,6 @@
       "name": "Structural analytics"
     },
     {
-      "anchor": "cg:13dc2f72e26c825e",
-      "concept": "Deterministic serialization of the two committed layers.",
-      "functionality": "write_structural/write_semantic emit byte-stable JSON (sorted keys, stable ordering), plus GRAPH_REPORT.md and the gitignore block that keeps derived caches local.",
-      "name": "Committed-layer writers"
-    },
-    {
-      "anchor": "cg:164a13d5b9250633",
-      "concept": "The build path and the determinism guards around it.",
-      "functionality": "build_repo routes to the right substrate, re-execs under a pinned PYTHONHASHSEED, stamps engine/substrate versions, and refuses to overwrite a graph built by a different clustering engine — CI stays the single authoritative builder.",
-      "name": "Build orchestration & engine guard"
-    },
-    {
       "anchor": "cg:172e861885ac849c",
       "concept": "Test fixture: the BillingService half of the sample repo.",
       "functionality": "Paired with the auth fixture to give cross-module edges and doc links a stable target.",
@@ -103,10 +91,22 @@
       "name": "CI workflow scaffolding"
     },
     {
+      "anchor": "cg:23371da28ee0a292",
+      "concept": "The Phase 6 narrative layer: deterministic feature facts + dev-owned prose.",
+      "functionality": "feature_map derives features from Leiden communities (members, neighbors, public surfaces, external deps); prep_faq/merge_faq run the agent narrative loop into committed faq.json with per-feature staleness and anchor remapping across re-clusters; render_faq emits the content-deterministic PROJECT_FAQ.md that CI commits.",
+      "name": "PROJECT_FAQ machinery"
+    },
+    {
       "anchor": "cg:2ebb71d28baf1251",
       "concept": "Pass 2 of the TypeScript extractor: type-checker-resolved references.",
       "functionality": "Every identifier resolves through the compiler's symbol table (alias-following) back to a pass-1 declaration — dense, import-proof cross-file calls/references plus heritage edges.",
       "name": "TS substrate — reference pass"
+    },
+    {
+      "anchor": "cg:3391343d51ca2dda",
+      "concept": "The determinism contract around the committed artifact.",
+      "functionality": "detect_engine stamps the clustering engine and dependency versions into the manifest; check_engine_compat refuses to overwrite a graph built by a different engine; check_substrate_drift warns when the extraction substrate version changed — CI stays the single authoritative builder.",
+      "name": "Engine stamp & determinism guard"
     },
     {
       "anchor": "cg:387ecfaf791671b2",
@@ -131,12 +131,6 @@
       "concept": "The semantic and combined halves of health.",
       "functionality": "Doc coverage overall/by-kind/public-API, dangling links and orphan docs, god-node and centrality-weighted coverage, dark subsystems, and the undocumented-load-bearing risk queue — 'are we documenting what matters'.",
       "name": "Doc-coverage metrics"
-    },
-    {
-      "anchor": "cg:5d10fed5e715b75b",
-      "concept": "Library composition over graphify: cluster, fold, curate.",
-      "functionality": "build_fused clusters the analysis view and computes god nodes; singleton folding keeps community structure meaningful; linkable_subset curates the node list handed to overlay agents.",
-      "name": "Graph fusion & curation"
     },
     {
       "anchor": "cg:8396d267d045de15",
@@ -172,8 +166,9 @@
   "schema_version": 1,
   "stats": {
     "dropped_orphans": [],
-    "features": 27,
-    "merged": 27,
+    "features": 26,
+    "merged": 2,
+    "remapped": 0,
     "unknown_anchors": []
   }
 }
