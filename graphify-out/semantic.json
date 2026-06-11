@@ -883,53 +883,39 @@
       "target": "cg:415bbd0517d5f316"
     },
     {
-      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:projectfaqmd",
-      "target": "cg:4345f93363f0fc37",
-      "target_label": "debt_assessment"
+      "target": "cg:4345f93363f0fc37"
     },
     {
-      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:projectfaqmd",
-      "target": "cg:704840e57f8a0d92",
-      "target_label": "faq_state"
+      "target": "cg:704840e57f8a0d92"
     },
     {
-      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:projectfaqmd",
-      "target": "cg:7db8dd21f0962a61",
-      "target_label": "render_faq"
+      "target": "cg:7db8dd21f0962a61"
     },
     {
-      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:projectfaqmd",
-      "target": "cg:987766e9481df715",
-      "target_label": "coupling_instability"
+      "target": "cg:987766e9481df715"
     },
     {
-      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:projectfaqmd",
-      "target": "cg:b681b2427365bdfd",
-      "target_label": "prep_faq"
+      "target": "cg:b681b2427365bdfd"
     },
     {
-      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:projectfaqmd",
-      "target": "cg:e51cb93617c84e08",
-      "target_label": "feature_map"
+      "target": "cg:e51cb93617c84e08"
     },
     {
-      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:projectfaqmd",
-      "target": "cg:e75972a4fcdd1284",
-      "target_label": "merge_faq"
+      "target": "cg:e75972a4fcdd1284"
     },
     {
       "relation": "documents",
@@ -1155,9 +1141,9 @@
     }
   ],
   "stats": {
-    "dangling": 1,
-    "fallback": 7,
-    "kept": 216,
+    "dangling": 0,
+    "fallback": 0,
+    "kept": 217,
     "payloads": 11
   }
 }
