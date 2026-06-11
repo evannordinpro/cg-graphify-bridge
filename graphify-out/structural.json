@@ -1,21 +1,48 @@
 {
   "communities": {
     "0": [
-      "cg:1667e4445b9afd01",
-      "cg:31d33461328524c2",
-      "cg:37d69353cf030a92",
-      "cg:497ab28f9bf8e1e9",
-      "cg:4ac385fe1953ec53",
-      "cg:5862dcd011da9a62",
-      "cg:7710cdba33660ff6",
-      "cg:77d082937c5fb343",
-      "cg:7af7daeeb499bcf8",
-      "cg:8aaf8e1ba47784ae",
-      "cg:9f1d9a9683b00885",
-      "cg:a135ab201a903149",
-      "cg:bcfd9dce1525740e",
-      "cg:166448311ebac559",
+      "cg:0ce1b293fd5fffda",
+      "cg:18a50e2794ff840f",
+      "cg:34ca1b7369e952f9",
+      "cg:538debc562e34083",
+      "cg:9779ddbba3d406d0",
+      "cg:ab9ea4153013df41",
+      "cg:b4ba05c0e7173a19",
+      "cg:d9e19842db5ccb97",
+      "cg:e14b91e4896b1cc2",
+      "cg:e7a781fb1be06490",
+      "cg:f5d5b1334f01d799",
+      "cg:fb2f09c4fd4309b8",
+      "cg:f2f476b6fc92261e"
+    ],
+    "1": [
+      "cg:13dc2f72e26c825e",
+      "cg:2642007368476433",
+      "cg:2a3c1fccfd0f1dc4",
+      "cg:3671ce95e1a767f3",
+      "cg:6394d9acbae1c4d9",
+      "cg:65f023aa16b8fcd7",
+      "cg:663c5cfd8b221c7b",
+      "cg:6f2b5a299533d0a7",
+      "cg:9349b9bbb90aacf2",
+      "cg:9ce80306eb323e2a",
+      "cg:a471ead850a1a415",
+      "cg:d29d39a748be57b7",
+      "cg:bdae85d16b34745c"
+    ],
+    "2": [
+      "cg:164a13d5b9250633",
       "cg:18af856fd7b86ad8",
+      "cg:21df032e5277d8f0",
+      "cg:2375f6cb30ceb906",
+      "cg:58cc9fd421c894bb",
+      "cg:6d9e07fbee0241eb",
+      "cg:7a567b547a024dd8",
+      "cg:83ead499cdb65df1",
+      "cg:adaada7f446a45e7",
+      "cg:b8342ab2a94d09a7",
+      "cg:cdf4fc1043bf068e",
+      "cg:166448311ebac559",
       "cg:569117df0d7952d9",
       "cg:8dbc9c38220fe1d7",
       "cg:a644b0f4b4844fcb",
@@ -23,7 +50,7 @@
       "cg:f6329320a51f4b05",
       "cg:ff9bce62be77e00d"
     ],
-    "1": [
+    "3": [
       "cg:22eb5f1cc9104bad",
       "cg:41887d5560742e2d",
       "cg:987766e9481df715",
@@ -38,7 +65,7 @@
       "cg:13818f941c857325",
       "cg:7eef688a72fea582"
     ],
-    "2": [
+    "4": [
       "cg:0862bd793b5e3ae3",
       "cg:1a0dfa28bf7d3c3c",
       "cg:23da24030d37beb4",
@@ -52,19 +79,32 @@
       "cg:57d091dc29d5c61c",
       "cg:5ed01d084ec9039c"
     ],
-    "3": [
+    "5": [
       "cg:08c9e7cc40e515f6",
-      "cg:164a13d5b9250633",
-      "cg:21df032e5277d8f0",
-      "cg:6d9e07fbee0241eb",
-      "cg:7a567b547a024dd8",
-      "cg:83ead499cdb65df1",
+      "cg:37d69353cf030a92",
+      "cg:497ab28f9bf8e1e9",
+      "cg:5862dcd011da9a62",
+      "cg:75637ed541aa7ba9",
+      "cg:7710cdba33660ff6",
+      "cg:77d082937c5fb343",
+      "cg:9f1d9a9683b00885",
       "cg:a7a4b64251b0aabd",
-      "cg:adaada7f446a45e7",
-      "cg:b8342ab2a94d09a7",
-      "cg:cdf4fc1043bf068e"
+      "cg:bcfd9dce1525740e"
     ],
-    "4": [
+    "6": [
+      "cg:1c5ad3670475265f",
+      "cg:23e318e7c72e30e7",
+      "cg:4345f93363f0fc37",
+      "cg:4b9f00f91cbbe45a",
+      "cg:8b0d99befd1aa704",
+      "cg:a7bb40605658988d",
+      "cg:b0f72733dfe9b7e2",
+      "cg:b8845832111a5e7c",
+      "cg:fc38f5364d9423a8",
+      "cg:feccbadca7157b45",
+      "cg:8396d267d045de15"
+    ],
+    "7": [
       "cg:066198be9b8b4e30",
       "cg:20071d980a7de331",
       "cg:36bde4dbca0de9e3",
@@ -74,7 +114,7 @@
       "cg:e44e1bf9d91fd0a1",
       "cg:f58a69b570aedaae"
     ],
-    "5": [
+    "8": [
       "cg:13375cbfb9decc97",
       "cg:24fffb15b0ba6749",
       "cg:48fbeb19dd754d5c",
@@ -85,60 +125,27 @@
       "cg:c0c64cdfe0cebcb3",
       "cg:56daa1135478e8b4"
     ],
-    "6": [
-      "cg:1c5ad3670475265f",
-      "cg:23e318e7c72e30e7",
-      "cg:4b9f00f91cbbe45a",
-      "cg:8b0d99befd1aa704",
-      "cg:a7bb40605658988d",
-      "cg:b0f72733dfe9b7e2",
-      "cg:b8845832111a5e7c",
-      "cg:feccbadca7157b45",
-      "cg:8396d267d045de15"
-    ],
-    "7": [
-      "cg:34ca1b7369e952f9",
-      "cg:538debc562e34083",
-      "cg:9779ddbba3d406d0",
-      "cg:ab9ea4153013df41",
-      "cg:b4ba05c0e7173a19",
-      "cg:d9e19842db5ccb97",
-      "cg:e14b91e4896b1cc2",
-      "cg:e7a781fb1be06490",
-      "cg:0ce1b293fd5fffda",
-      "cg:f2f476b6fc92261e",
-      "cg:f5d5b1334f01d799"
-    ],
-    "8": [
-      "cg:13dc2f72e26c825e",
-      "cg:2642007368476433",
-      "cg:3671ce95e1a767f3",
-      "cg:6394d9acbae1c4d9",
-      "cg:663c5cfd8b221c7b",
-      "cg:9349b9bbb90aacf2",
-      "cg:a471ead850a1a415",
-      "cg:2a3c1fccfd0f1dc4",
-      "cg:65f023aa16b8fcd7",
-      "cg:6f2b5a299533d0a7",
-      "cg:bdae85d16b34745c"
-    ],
     "9": [
-      "cg:0b09fca3dddc2d15",
-      "cg:4b026770080bab32",
-      "cg:93c13c10dd027ae3",
-      "cg:e088c0baf177a262"
+      "cg:1667e4445b9afd01",
+      "cg:31d33461328524c2",
+      "cg:4ac385fe1953ec53",
+      "cg:7af7daeeb499bcf8",
+      "cg:8aaf8e1ba47784ae",
+      "cg:a135ab201a903149"
     ],
     "10": [
-      "cg:0d39c310d578fb02",
-      "cg:683289e269fa6be6",
-      "cg:ea5761eac89f83b9",
-      "cg:ea87dac7d04078d1"
+      "cg:392bd1abb7456ac1",
+      "cg:7e64ea00f314b764",
+      "cg:bb506f5983bf18f7",
+      "cg:c89c5d12c862375b",
+      "cg:cc47825ef5431795",
+      "cg:e29379bb6bb9cf48"
     ],
     "11": [
+      "cg:06811a89d0cabd02",
       "cg:0e178b2e6dfd5890",
-      "cg:2ebb71d28baf1251",
-      "cg:36e6857522e5ffb7",
-      "cg:b8e6e6755ac15a0f",
+      "cg:368f854e8a073006",
+      "cg:5e99e55f0d49e3d3",
       "cg:04b6fa245e986ced",
       "cg:30da4b677d61fd76",
       "cg:37093ba65e1487fd",
@@ -148,51 +155,55 @@
       "cg:eed1dd9a5106c79e"
     ],
     "12": [
-      "cg:311c26dd9f180e0e",
-      "cg:75637ed541aa7ba9",
-      "cg:ace5dbd5b16b7cee",
-      "cg:efb02b5771958f3a"
+      "cg:0b09fca3dddc2d15",
+      "cg:4b026770080bab32",
+      "cg:93c13c10dd027ae3",
+      "cg:e088c0baf177a262"
     ],
     "13": [
+      "cg:0d39c310d578fb02",
+      "cg:683289e269fa6be6",
+      "cg:ea5761eac89f83b9",
+      "cg:ea87dac7d04078d1"
+    ],
+    "14": [
       "cg:3391343d51ca2dda",
       "cg:39fe57db003167c3",
       "cg:3f6110f9295ffd21",
       "cg:6a000a569a9e7516",
       "cg:4c3f0d72f38071e3"
     ],
-    "14": [
-      "cg:7e64ea00f314b764",
-      "cg:bb506f5983bf18f7",
-      "cg:c89c5d12c862375b",
-      "cg:cc47825ef5431795",
-      "cg:e29379bb6bb9cf48"
-    ],
     "15": [
-      "cg:06811a89d0cabd02",
-      "cg:368f854e8a073006",
-      "cg:5e99e55f0d49e3d3"
-    ],
-    "16": [
       "cg:07dc31970361d343",
       "cg:37e1fb59471497e8",
       "cg:a085bd0a3baa9888"
     ],
-    "17": [
+    "16": [
       "cg:0c34e25529c134e9",
       "cg:4b1559b6f6e0f7ea",
       "cg:864183784e4f00cf"
     ],
-    "18": [
+    "17": [
       "cg:0dd00320414efe86",
       "cg:7267d6c43bbfe7f4",
       "cg:bbc5e34a192d8214"
     ],
-    "19": [
+    "18": [
       "cg:172e861885ac849c",
       "cg:8b856cba5e1d8cbd",
       "cg:c5b83cbad5fcb865"
     ],
+    "19": [
+      "cg:2ebb71d28baf1251",
+      "cg:36e6857522e5ffb7",
+      "cg:b8e6e6755ac15a0f"
+    ],
     "20": [
+      "cg:311c26dd9f180e0e",
+      "cg:ace5dbd5b16b7cee",
+      "cg:efb02b5771958f3a"
+    ],
+    "21": [
       "cg:042ead92d3771de9",
       "cg:f4c94ff00d911c15",
       "cg:269428e7185ee0d2",
@@ -202,35 +213,23 @@
       "cg:8a0dda05dc1e6c4f",
       "cg:b405ba996d23800b"
     ],
-    "21": [
-      "cg:18a50e2794ff840f",
-      "cg:fb2f09c4fd4309b8"
-    ],
     "22": [
-      "cg:2375f6cb30ceb906",
-      "cg:58cc9fd421c894bb"
-    ],
-    "23": [
       "cg:387ecfaf791671b2",
       "cg:9976198b2e6fa63a"
     ],
-    "24": [
+    "23": [
       "cg:4626ede89c8f1831",
       "cg:5dc2a9c13ae8c1b6"
     ],
-    "25": [
+    "24": [
       "cg:5d10fed5e715b75b",
       "cg:633e36035dade769"
     ],
-    "26": [
+    "25": [
       "cg:6d17ce09b4fa2f20",
       "cg:f656cd86899ac513"
     ],
-    "27": [
-      "cg:9ce80306eb323e2a",
-      "cg:d29d39a748be57b7"
-    ],
-    "28": [
+    "26": [
       "cg:aad5f15d80bae04e",
       "cg:ffc27133f3dc4eec"
     ]
@@ -584,6 +583,16 @@
       "source_file": "",
       "source_location": "",
       "target": "cg:93c13c10dd027ae3",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:0bdd22a6d702b5c4",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:1a1e7115a4795c97",
       "weight": 1.0
     },
     {
@@ -4070,10 +4079,100 @@
       "confidence": "EXTRACTED",
       "context": "calls",
       "relation": "calls",
+      "source": "cg:42b4bac5b4b16394",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:10d01d5db33ca457",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:42b4bac5b4b16394",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:e6d6f7d4ec55ce8b",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
       "source": "cg:4300d46c7922e376",
       "source_file": "",
       "source_location": "",
       "target": "cg:7ac4afa66290741f",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:4345f93363f0fc37",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:fc38f5364d9423a8",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:4345f93363f0fc37",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:fc38f5364d9423a8",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:4345f93363f0fc37",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:fc38f5364d9423a8",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:4345f93363f0fc37",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:fc38f5364d9423a8",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:4345f93363f0fc37",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:fc38f5364d9423a8",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:4345f93363f0fc37",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:fc38f5364d9423a8",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:4345f93363f0fc37",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:fc38f5364d9423a8",
       "weight": 1.0
     },
     {
@@ -6364,6 +6463,16 @@
       "source_file": "",
       "source_location": "",
       "target": "cg:835130d855bf2289",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:698a740711c18805",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:1a1e7115a4795c97",
       "weight": 1.0
     },
     {
@@ -8780,6 +8889,46 @@
       "confidence": "EXTRACTED",
       "context": "calls",
       "relation": "calls",
+      "source": "cg:9c7df573f24dfeb5",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:10d01d5db33ca457",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:9c7df573f24dfeb5",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:78cacccb38c4a318",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:9c7df573f24dfeb5",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:78cacccb38c4a318",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:9c7df573f24dfeb5",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:e6d6f7d4ec55ce8b",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
       "source": "cg:9cb77f21e34bb961",
       "source_file": "",
       "source_location": "",
@@ -8824,6 +8973,16 @@
       "source_file": "",
       "source_location": "",
       "target": "cg:22fadf59f0c7597a",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:9d611d6ac17b5d79",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:392bd1abb7456ac1",
       "weight": 1.0
     },
     {
@@ -8924,6 +9083,16 @@
       "source_file": "",
       "source_location": "",
       "target": "cg:cd907be86c01996e",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:9d611d6ac17b5d79",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:d471b8874ca26c9b",
       "weight": 1.0
     },
     {
@@ -9273,6 +9442,16 @@
       "source": "cg:a5d750d06195a8ae",
       "source_file": "",
       "source_location": "",
+      "target": "cg:0bdd22a6d702b5c4",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:a5d750d06195a8ae",
+      "source_file": "",
+      "source_location": "",
       "target": "cg:1a1e7115a4795c97",
       "weight": 1.0
     },
@@ -9304,6 +9483,16 @@
       "source_file": "",
       "source_location": "",
       "target": "cg:5e39514e4ce3ae43",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:a5d750d06195a8ae",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:698a740711c18805",
       "weight": 1.0
     },
     {
@@ -9374,6 +9563,16 @@
       "source_file": "",
       "source_location": "",
       "target": "cg:9257afbbea34f379",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:a5d750d06195a8ae",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:adb90c8a0159bdf3",
       "weight": 1.0
     },
     {
@@ -9454,6 +9653,16 @@
       "source_file": "",
       "source_location": "",
       "target": "cg:def71c6a3d9847e8",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:a5d750d06195a8ae",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:e05cc17e344430ae",
       "weight": 1.0
     },
     {
@@ -9820,6 +10029,36 @@
       "confidence": "EXTRACTED",
       "context": "calls",
       "relation": "calls",
+      "source": "cg:a98f1cbdd709e3ab",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:10d01d5db33ca457",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:a98f1cbdd709e3ab",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:78cacccb38c4a318",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:a98f1cbdd709e3ab",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:e6d6f7d4ec55ce8b",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
       "source": "cg:a9be05f62a4ddc60",
       "source_file": "",
       "source_location": "",
@@ -9964,6 +10203,16 @@
       "source_file": "",
       "source_location": "",
       "target": "cg:21df032e5277d8f0",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:adb90c8a0159bdf3",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:1a1e7115a4795c97",
       "weight": 1.0
     },
     {
@@ -10893,7 +11142,27 @@
       "source": "cg:bb506f5983bf18f7",
       "source_file": "",
       "source_location": "",
+      "target": "cg:392bd1abb7456ac1",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:bb506f5983bf18f7",
+      "source_file": "",
+      "source_location": "",
       "target": "cg:7e64ea00f314b764",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:bb506f5983bf18f7",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:c89c5d12c862375b",
       "weight": 1.0
     },
     {
@@ -11958,6 +12227,46 @@
     },
     {
       "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:cede2bc1f4536289",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:10d01d5db33ca457",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:cede2bc1f4536289",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:78cacccb38c4a318",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:cede2bc1f4536289",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:78cacccb38c4a318",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:cede2bc1f4536289",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:e6d6f7d4ec55ce8b",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
       "context": "contains",
       "relation": "contains",
       "source": "cg:cf66a1ba8afebd62",
@@ -12483,6 +12792,16 @@
       "source": "cg:d661e1b67e04bebd",
       "source_file": "",
       "source_location": "",
+      "target": "cg:42b4bac5b4b16394",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:d661e1b67e04bebd",
+      "source_file": "",
+      "source_location": "",
       "target": "cg:5d2ca758b9b7e4bb",
       "weight": 1.0
     },
@@ -12593,6 +12912,26 @@
       "source": "cg:d661e1b67e04bebd",
       "source_file": "",
       "source_location": "",
+      "target": "cg:9c7df573f24dfeb5",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:d661e1b67e04bebd",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:a98f1cbdd709e3ab",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:d661e1b67e04bebd",
+      "source_file": "",
+      "source_location": "",
       "target": "cg:a9be05f62a4ddc60",
       "weight": 1.0
     },
@@ -12653,6 +12992,16 @@
       "source": "cg:d661e1b67e04bebd",
       "source_file": "",
       "source_location": "",
+      "target": "cg:cede2bc1f4536289",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:d661e1b67e04bebd",
+      "source_file": "",
+      "source_location": "",
       "target": "cg:d1cb89f2dbec4f84",
       "weight": 1.0
     },
@@ -12663,7 +13012,37 @@
       "source": "cg:d661e1b67e04bebd",
       "source_file": "",
       "source_location": "",
+      "target": "cg:d6e52399259978e2",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:d661e1b67e04bebd",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:dbfc5fc2462fa579",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:d661e1b67e04bebd",
+      "source_file": "",
+      "source_location": "",
       "target": "cg:e2a336022a1deecd",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:d661e1b67e04bebd",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:e6d6f7d4ec55ce8b",
       "weight": 1.0
     },
     {
@@ -12694,6 +13073,76 @@
       "source_file": "",
       "source_location": "",
       "target": "cg:f9cde7cad13f5319",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:d6e52399259978e2",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:10d01d5db33ca457",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:d6e52399259978e2",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:78cacccb38c4a318",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:d6e52399259978e2",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:78cacccb38c4a318",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:d6e52399259978e2",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:78cacccb38c4a318",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:d6e52399259978e2",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:835130d855bf2289",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:d6e52399259978e2",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:835130d855bf2289",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:d6e52399259978e2",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:e6d6f7d4ec55ce8b",
       "weight": 1.0
     },
     {
@@ -12860,6 +13309,26 @@
       "confidence": "EXTRACTED",
       "context": "calls",
       "relation": "calls",
+      "source": "cg:dbfc5fc2462fa579",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:68db8933705b007f",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:dbfc5fc2462fa579",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:78cacccb38c4a318",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
       "source": "cg:dc4d26b0c8ddb442",
       "source_file": "",
       "source_location": "",
@@ -12894,6 +13363,16 @@
       "source_file": "",
       "source_location": "",
       "target": "cg:85c9d5757530c188",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:e05cc17e344430ae",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:1a1e7115a4795c97",
       "weight": 1.0
     },
     {
@@ -13663,7 +14142,27 @@
       "source": "cg:e93065d140d97868",
       "source_file": "",
       "source_location": "",
+      "target": "cg:4345f93363f0fc37",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:e93065d140d97868",
+      "source_file": "",
+      "source_location": "",
       "target": "cg:4b9f00f91cbbe45a",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:e93065d140d97868",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:4c7759732ce71f3b",
       "weight": 1.0
     },
     {
@@ -13764,6 +14263,16 @@
       "source_file": "",
       "source_location": "",
       "target": "cg:b8845832111a5e7c",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "contains",
+      "relation": "contains",
+      "source": "cg:e93065d140d97868",
+      "source_file": "",
+      "source_location": "",
+      "target": "cg:d31ba65872ceb05a",
       "weight": 1.0
     },
     {
@@ -14423,6 +14932,16 @@
       "source": "cg:feccbadca7157b45",
       "source_file": "",
       "source_location": "",
+      "target": "cg:4345f93363f0fc37",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "context": "calls",
+      "relation": "calls",
+      "source": "cg:feccbadca7157b45",
+      "source_file": "",
+      "source_location": "",
       "target": "cg:4b9f00f91cbbe45a",
       "weight": 1.0
     },
@@ -14564,6 +15083,11 @@
       "label": "semantic_baseline"
     },
     {
+      "degree": 5,
+      "id": "cg:feccbadca7157b45",
+      "label": "health"
+    },
+    {
       "degree": 4,
       "id": "cg:85c9d5757530c188",
       "label": "AdaptResult"
@@ -14587,11 +15111,6 @@
       "degree": 4,
       "id": "cg:ce550017ac803453",
       "label": "fan_distribution"
-    },
-    {
-      "degree": 4,
-      "id": "cg:24fffb15b0ba6749",
-      "label": "row"
     }
   ],
   "layer": "structural",
@@ -15175,6 +15694,26 @@
       },
       "source_file": "tests/test_engine.py",
       "source_location": "L16"
+    },
+    {
+      "file_type": "code",
+      "id": "cg:0bdd22a6d702b5c4",
+      "label": "test_render_defines_each_metric",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 86,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "test_render_defines_each_metric",
+        "signature": "(tmp_path)",
+        "start_line": 78,
+        "visibility": null
+      },
+      "source_file": "tests/test_insights.py",
+      "source_location": "L78"
     },
     {
       "file_type": "code",
@@ -17960,6 +18499,26 @@
     },
     {
       "file_type": "code",
+      "id": "cg:392bd1abb7456ac1",
+      "label": "_glossary",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 129,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "_glossary",
+        "signature": "() -> list",
+        "start_line": 125,
+        "visibility": null
+      },
+      "source_file": "src/cg_graphify_bridge/insights.py",
+      "source_location": "L125"
+    },
+    {
+      "file_type": "code",
       "id": "cg:39350a28020e539f",
       "label": "test_callers_depth2",
       "metadata": {
@@ -18440,6 +18999,26 @@
     },
     {
       "file_type": "code",
+      "id": "cg:42b4bac5b4b16394",
+      "label": "test_debt_empty_graph_zero",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 233,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "test_debt_empty_graph_zero",
+        "signature": "()",
+        "start_line": 231,
+        "visibility": null
+      },
+      "source_file": "tests/test_health.py",
+      "source_location": "L231"
+    },
+    {
+      "file_type": "code",
       "id": "cg:4300d46c7922e376",
       "label": "test_base_deps_exclude_graspologic",
       "metadata": {
@@ -18457,6 +19036,26 @@
       },
       "source_file": "tests/test_packaging.py",
       "source_location": "L78"
+    },
+    {
+      "file_type": "code",
+      "id": "cg:4345f93363f0fc37",
+      "label": "debt_assessment",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 205,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "debt_assessment",
+        "signature": "(structural: dict, sm: dict, sem: dict) -> dict",
+        "start_line": 154,
+        "visibility": null
+      },
+      "source_file": "src/cg_graphify_bridge/health.py",
+      "source_location": "L154"
     },
     {
       "file_type": "code",
@@ -19137,6 +19736,26 @@
       },
       "source_file": "tests/test_isolation.py",
       "source_location": "L24"
+    },
+    {
+      "file_type": "code",
+      "id": "cg:4c7759732ce71f3b",
+      "label": "_DEBT_SAT",
+      "metadata": {
+        "cg_kind": "variable",
+        "cg_merged_ids": [],
+        "end_line": 151,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "_DEBT_SAT",
+        "signature": "= {\"cycle\": 2, \"zone-of-pain\": 3, \"god-object\": 3,\n             \"high-fan-out\": 5, \"dead-code\": 25, \"d...",
+        "start_line": 150,
+        "visibility": null
+      },
+      "source_file": "src/cg_graphify_bridge/health.py",
+      "source_location": "L150"
     },
     {
       "file_type": "code",
@@ -19945,18 +20564,18 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 111,
+        "end_line": 143,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "test_template_insights_opt_in_gated",
         "signature": "()",
-        "start_line": 108,
+        "start_line": 140,
         "visibility": null
       },
       "source_file": "tests/test_insights.py",
-      "source_location": "L108"
+      "source_location": "L140"
     },
     {
       "file_type": "code",
@@ -20680,6 +21299,26 @@
     },
     {
       "file_type": "code",
+      "id": "cg:698a740711c18805",
+      "label": "test_glossary_defines_debt_terms",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 107,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "test_glossary_defines_debt_terms",
+        "signature": "(tmp_path)",
+        "start_line": 103,
+        "visibility": null
+      },
+      "source_file": "tests/test_insights.py",
+      "source_location": "L103"
+    },
+    {
+      "file_type": "code",
       "id": "cg:6a000a569a9e7516",
       "label": "_installed",
       "metadata": {
@@ -21145,18 +21784,18 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 83,
+        "end_line": 115,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "test_render_deterministic_no_timestamp",
         "signature": "(tmp_path)",
-        "start_line": 78,
+        "start_line": 110,
         "visibility": null
       },
       "source_file": "tests/test_insights.py",
-      "source_location": "L78"
+      "source_location": "L110"
     },
     {
       "file_type": "code",
@@ -21965,18 +22604,18 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 105,
+        "end_line": 137,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "test_tool_workflow_generates_insights",
         "signature": "()",
-        "start_line": 102,
+        "start_line": 134,
         "visibility": null
       },
       "source_file": "tests/test_insights.py",
-      "source_location": "L102"
+      "source_location": "L134"
     },
     {
       "file_type": "code",
@@ -22125,18 +22764,18 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 244,
+        "end_line": 309,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "render_report",
         "signature": "(r: dict) -> str",
-        "start_line": 180,
+        "start_line": 245,
         "visibility": null
       },
       "source_file": "src/cg_graphify_bridge/health.py",
-      "source_location": "L180"
+      "source_location": "L245"
     },
     {
       "file_type": "code",
@@ -22445,18 +23084,18 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 118,
+        "end_line": 150,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "test_setup_documents_insights",
         "signature": "()",
-        "start_line": 116,
+        "start_line": 148,
         "visibility": null
       },
       "source_file": "tests/test_insights.py",
-      "source_location": "L116"
+      "source_location": "L148"
     },
     {
       "file_type": "code",
@@ -23480,6 +24119,26 @@
     },
     {
       "file_type": "code",
+      "id": "cg:9c7df573f24dfeb5",
+      "label": "test_debt_by_feature_rollup",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 215,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "test_debt_by_feature_rollup",
+        "signature": "()",
+        "start_line": 212,
+        "visibility": null
+      },
+      "source_file": "tests/test_health.py",
+      "source_location": "L212"
+    },
+    {
+      "file_type": "code",
       "id": "cg:9cb77f21e34bb961",
       "label": "test_report_god_nodes_tiebreak_by_id",
       "metadata": {
@@ -23565,7 +24224,7 @@
       "metadata": {
         "cg_kind": "file",
         "cg_merged_ids": [],
-        "end_line": 142,
+        "end_line": 231,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
@@ -24205,7 +24864,7 @@
       "metadata": {
         "cg_kind": "file",
         "cg_merged_ids": [],
-        "end_line": 119,
+        "end_line": 151,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
@@ -24457,6 +25116,26 @@
       },
       "source_file": "src/cg_graphify_bridge/health.py",
       "source_location": "L12"
+    },
+    {
+      "file_type": "code",
+      "id": "cg:a98f1cbdd709e3ab",
+      "label": "test_debt_score_shows_components",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 228,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "test_debt_score_shows_components",
+        "signature": "()",
+        "start_line": 225,
+        "visibility": null
+      },
+      "source_file": "tests/test_health.py",
+      "source_location": "L225"
     },
     {
       "file_type": "code",
@@ -24720,6 +25399,26 @@
     },
     {
       "file_type": "code",
+      "id": "cg:adb90c8a0159bdf3",
+      "label": "test_render_has_debt_section",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 94,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "test_render_has_debt_section",
+        "signature": "(tmp_path)",
+        "start_line": 91,
+        "visibility": null
+      },
+      "source_file": "tests/test_insights.py",
+      "source_location": "L91"
+    },
+    {
+      "file_type": "code",
       "id": "cg:ae18e9fb46d3c18b",
       "label": "test_init_preserves_existing_settings_and_hooks",
       "metadata": {
@@ -24925,18 +25624,18 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 97,
+        "end_line": 129,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "test_cli_insights_out_file_writes",
         "signature": "(tmp_path)",
-        "start_line": 94,
+        "start_line": 126,
         "visibility": null
       },
       "source_file": "tests/test_insights.py",
-      "source_location": "L94"
+      "source_location": "L126"
     },
     {
       "file_type": "code",
@@ -25745,18 +26444,18 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 141,
+        "end_line": 230,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "render_markdown",
         "signature": "(ins: dict) -> str",
-        "start_line": 66,
+        "start_line": 132,
         "visibility": null
       },
       "source_file": "src/cg_graphify_bridge/insights.py",
-      "source_location": "L66"
+      "source_location": "L132"
     },
     {
       "file_type": "code",
@@ -26940,6 +27639,26 @@
     },
     {
       "file_type": "code",
+      "id": "cg:cede2bc1f4536289",
+      "label": "test_debt_by_component_rollup",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 222,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "test_debt_by_component_rollup",
+        "signature": "()",
+        "start_line": 218,
+        "visibility": null
+      },
+      "source_file": "tests/test_health.py",
+      "source_location": "L218"
+    },
+    {
+      "file_type": "code",
       "id": "cg:cefd41c7d63452b2",
       "label": "subprocess",
       "metadata": {
@@ -27160,6 +27879,26 @@
     },
     {
       "file_type": "code",
+      "id": "cg:d31ba65872ceb05a",
+      "label": "_DEBT_WEIGHTS",
+      "metadata": {
+        "cg_kind": "variable",
+        "cg_merged_ids": [],
+        "end_line": 149,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "_DEBT_WEIGHTS",
+        "signature": "= {\"cycle\": 0.30, \"zone-of-pain\": 0.20, \"god-object\": 0.15,\n                 \"high-fan-out\": 0.15, \"de...",
+        "start_line": 148,
+        "visibility": null
+      },
+      "source_file": "src/cg_graphify_bridge/health.py",
+      "source_location": "L148"
+    },
+    {
+      "file_type": "code",
       "id": "cg:d32c5d3d7cde3c45",
       "label": "test_init_preserves_existing_agents_md",
       "metadata": {
@@ -27220,6 +27959,26 @@
     },
     {
       "file_type": "code",
+      "id": "cg:d471b8874ca26c9b",
+      "label": "_GLOSSARY",
+      "metadata": {
+        "cg_kind": "variable",
+        "cg_merged_ids": [],
+        "end_line": 122,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "_GLOSSARY",
+        "signature": "= [\n    (\"Token efficiency (pinpoint / global)\",\n     \"the % fewer tokens an agent reads to answer a q...",
+        "start_line": 67,
+        "visibility": null
+      },
+      "source_file": "src/cg_graphify_bridge/insights.py",
+      "source_location": "L67"
+    },
+    {
+      "file_type": "code",
       "id": "cg:d65ea8ed053358f5",
       "label": "test_check_conflicts_aggregates",
       "metadata": {
@@ -27245,7 +28004,7 @@
       "metadata": {
         "cg_kind": "file",
         "cg_merged_ids": [],
-        "end_line": 195,
+        "end_line": 241,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
@@ -27277,6 +28036,26 @@
       },
       "source_file": "src/cg_graphify_bridge/engine.py",
       "source_location": "L19"
+    },
+    {
+      "file_type": "code",
+      "id": "cg:d6e52399259978e2",
+      "label": "test_debt_by_type_counts",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 209,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "test_debt_by_type_counts",
+        "signature": "()",
+        "start_line": 205,
+        "visibility": null
+      },
+      "source_file": "tests/test_health.py",
+      "source_location": "L205"
     },
     {
       "file_type": "code",
@@ -27405,18 +28184,18 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 91,
+        "end_line": 123,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "test_cli_insights_stdout",
         "signature": "(tmp_path, capsys)",
-        "start_line": 88,
+        "start_line": 120,
         "visibility": null
       },
       "source_file": "tests/test_insights.py",
-      "source_location": "L88"
+      "source_location": "L120"
     },
     {
       "file_type": "code",
@@ -27537,6 +28316,26 @@
       },
       "source_file": "src/cg_graphify_bridge/analytics.py",
       "source_location": "L225"
+    },
+    {
+      "file_type": "code",
+      "id": "cg:dbfc5fc2462fa579",
+      "label": "test_health_includes_debt",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 240,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "test_health_includes_debt",
+        "signature": "(tmp_path)",
+        "start_line": 236,
+        "visibility": null
+      },
+      "source_file": "tests/test_health.py",
+      "source_location": "L236"
     },
     {
       "file_type": "code",
@@ -27717,6 +28516,26 @@
       },
       "source_file": "tests/test_determinism.py",
       "source_location": "L20"
+    },
+    {
+      "file_type": "code",
+      "id": "cg:e05cc17e344430ae",
+      "label": "test_render_debt_score_gauge",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 100,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "test_render_debt_score_gauge",
+        "signature": "(tmp_path)",
+        "start_line": 97,
+        "visibility": null
+      },
+      "source_file": "tests/test_insights.py",
+      "source_location": "L97"
     },
     {
       "file_type": "code",
@@ -28080,6 +28899,26 @@
     },
     {
       "file_type": "code",
+      "id": "cg:e6d6f7d4ec55ce8b",
+      "label": "_debt",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 202,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "_debt",
+        "signature": "(structural, semantic=None)",
+        "start_line": 199,
+        "visibility": null
+      },
+      "source_file": "tests/test_health.py",
+      "source_location": "L199"
+    },
+    {
+      "file_type": "code",
       "id": "cg:e711fb81e307a159",
       "label": "_ROOT",
       "metadata": {
@@ -28205,7 +29044,7 @@
       "metadata": {
         "cg_kind": "file",
         "cg_merged_ids": [],
-        "end_line": 245,
+        "end_line": 310,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
@@ -29380,6 +30219,26 @@
     },
     {
       "file_type": "code",
+      "id": "cg:fc38f5364d9423a8",
+      "label": "_add",
+      "metadata": {
+        "cg_kind": "function",
+        "cg_merged_ids": [],
+        "end_line": 167,
+        "is_abstract": false,
+        "is_exported": false,
+        "language": "python",
+        "origin": "codegraph",
+        "qualified_name": "debt_assessment::_add",
+        "signature": "(t, label, *, nid=None, community=None, file=None)",
+        "start_line": 166,
+        "visibility": null
+      },
+      "source_file": "src/cg_graphify_bridge/health.py",
+      "source_location": "L166"
+    },
+    {
+      "file_type": "code",
       "id": "cg:fc5aa9e944f7835b",
       "label": "shutil",
       "metadata": {
@@ -29525,18 +30384,18 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 177,
+        "end_line": 242,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "health",
         "signature": "(out: Path, *, include_tests: bool = False) -> dict",
-        "start_line": 145,
+        "start_line": 208,
         "visibility": null
       },
       "source_file": "src/cg_graphify_bridge/health.py",
-      "source_location": "L145"
+      "source_location": "L208"
     },
     {
       "file_type": "code",
@@ -29661,18 +30520,18 @@
   ],
   "schema_version": 1,
   "stats": {
-    "cg_nodes": 754,
-    "composite_nodes": 753,
-    "edges_in": 1428,
-    "edges_out": 1428,
+    "cg_nodes": 771,
+    "composite_nodes": 770,
+    "edges_in": 1480,
+    "edges_out": 1480,
     "kind_dist": {
       "class": 3,
       "constant": 17,
       "file": 51,
-      "function": 469,
+      "function": 483,
       "import": 173,
       "method": 2,
-      "variable": 38
+      "variable": 41
     },
     "merges": 1,
     "unmapped_edges": 0
@@ -29710,17 +30569,6 @@
       ],
       "target": "resolve",
       "why": "bridges separate communities; peripheral node `_check_semantic` unexpectedly reaches hub `resolve`"
-    },
-    {
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "source": "_doctor",
-      "source_files": [
-        "src/cg_graphify_bridge/cli.py",
-        "src/cg_graphify_bridge/query.py"
-      ],
-      "target": "resolve",
-      "why": "bridges separate communities; peripheral node `_doctor` unexpectedly reaches hub `resolve`"
     },
     {
       "confidence": "EXTRACTED",
@@ -29780,13 +30628,24 @@
     {
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "source": "_serve",
+      "source": "_semantic_merge",
       "source_files": [
         "src/cg_graphify_bridge/cli.py",
         "src/cg_graphify_bridge/query.py"
       ],
       "target": "resolve",
-      "why": "bridges separate communities; peripheral node `_serve` unexpectedly reaches hub `resolve`"
+      "why": "bridges separate communities; peripheral node `_semantic_merge` unexpectedly reaches hub `resolve`"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "source": "_semantic_prep",
+      "source_files": [
+        "src/cg_graphify_bridge/cli.py",
+        "src/cg_graphify_bridge/query.py"
+      ],
+      "target": "resolve",
+      "why": "bridges separate communities; peripheral node `_semantic_prep` unexpectedly reaches hub `resolve`"
     }
   ]
 }
