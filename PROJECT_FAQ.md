@@ -12,28 +12,39 @@ _Deterministic graph facts + committed narrative ([how this file is produced](do
 
 ## What are the features?
 
-### CLI dispatch & freshness status — 23 components (community 2)
+### Substrate adapters & id model — 25 components (community 0)
+
+codegraph/TS output → graphify nodes/edges, keyed by the composite id.
+
+The composite id hashes (file, qualified_name, kind, signature) so it survives line-shifting edits; adapt maps the codegraph SQLite db, adapt_ts the TS extractor, and py_calls.enrich supplements Python cross-module call and value-reference edges.
+
+- **Key components:** `AdaptResult`, `adapt`, `enrich`, `build_repo`, `build_fused`, `analysis_view`
+- **Used by:** Layer IO & health core (5), Repo adoption scaffolding (1), CLI dispatch & freshness status (1), Structural analytics (1), query / faq (1)
+- **Depends on:** engine (3), CLI dispatch & freshness status (3), Doctor & isolation checks (2), Semantic overlay machinery (1)
+- **Public surface:** `AdaptResult`, `adapt`, `analysis_view`, `apply_communities`, `build_fused`, `composite_id`, `fold_singleton_communities`, `linkable_subset`
+- **External dependencies:** `ANALYSIS_EXCLUDE_KINDS`, `ANALYSIS_EXCLUDE_RELATIONS`, `EDGE_RELATION`, `LINKABLE_KINDS`, `PROV_CONFIDENCE`, `TS_EDGE_RELATION`
+
+### CLI dispatch & freshness status — 24 components (community 2)
 
 The argparse composition root plus the status/freshness surface.
 
 main wires every subcommand; compute_status reports per-layer freshness (structural = source hash vs build baseline, semantic = docs+linked files vs merge baseline) with exact refresh commands; the Stop hook blocks ending a session on a stale or uncommitted layer, fail-open with an escape hatch.
 
-- **Key components:** `resolve`, `main`, `write_manifest`, `compute_status`, `_hook_stop`, `_hook_sessionstart`
-- **Used by:** Build orchestration & engine guard (3), Insights & benchmark showcase (2), Repo adoption scaffolding (2), Semantic overlay machinery (2), Graph query engine (2)
-- **Depends on:** Layer IO & health core (4), Insights & benchmark showcase (2), Semantic overlay machinery (2), Doctor & isolation checks (2), Graph query engine (2)
+- **Key components:** `main`, `write_manifest`, `compute_status`, `_hook_stop`, `_hook_sessionstart`, `read_manifest`
+- **Used by:** Substrate adapters & id model (3), query / faq (2), Repo adoption scaffolding (1), Semantic overlay machinery (1)
+- **Depends on:** query / faq (11), Semantic overlay machinery (5), Insights & benchmark showcase (2), Doctor & isolation checks (2), Substrate adapters & id model (1)
 - **External dependencies:** `MANIFEST`, `SCAN_EXT`, `SKIP_DIRS`, `STALE`, `_COMMON_SCOPES`, `_PREPUSH_MARK`
 
-### Layer IO & health core — 20 components (community 0)
+### Structural analytics — 22 components (community 3)
 
-The shared core: committed-layer reading, fused materialization, and the health pass.
+The pure, offline metric spine over the committed structural layer.
 
-read_layer validates schema and rejects corrupt layers loudly; materialize fuses the committed layers into the gitignored graph.json consumers read; health computes the structural/semantic/combined metrics with the layered dead-code tiers (dispatches edges, triage verdicts, dynamic_refs heuristic).
+One digraph builder feeds centrality, cycles (with suggested cuts), conductance, Martin coupling/instability with the cross-community neighbor map, abstractness/distance, fan-out, and the dead-code review queue with its entry-point filter.
 
-- **Key components:** `AdaptResult`, `health`, `materialize`, `read_layer`, `dynamic_refs`, `prep_tasks`
-- **Used by:** Semantic overlay machinery (5), Graph fusion & curation (4), CLI dispatch & freshness status (4), Substrate adapters & id model (4), Insights & benchmark showcase (2)
-- **Depends on:** Doc-coverage metrics (2), Structural analytics (2), Committed-layer writers (2), CLI dispatch & freshness status (1), Technical-debt assessment (1)
-- **Public surface:** `AdaptResult`, `degree_graph`, `from_structural`, `materialize`, `read_layer`
-- **External dependencies:** `LINKABLE_KINDS`, `SCHEMA_VERSION`, `_COMMENT_MARKERS`, `_DOC_EXCLUDE_DIRS`, `_TEST_DIRS`, `_build_fg`
+- **Key components:** `health`, `build_digraph`, `analyze`, `abstractness_distance`, `centrality`, `dynamic_refs`
+- **Used by:** query / faq (3), Insights & benchmark showcase (1), Health report rendering (1), Layer IO & health core (1), Graph query engine (1)
+- **Depends on:** Doc-coverage metrics (2), Substrate adapters & id model (1), Technical-debt assessment (1), query / faq (1)
+- **External dependencies:** `_COMMENT_MARKERS`, `_CONTAINMENT`, `_TEST_DIRS`, `_TYPE_KINDS`, `_caller_of`, `combined_health`
 
 ### Insights & benchmark showcase — 17 components (community 1)
 
@@ -43,41 +54,30 @@ Composes health and benchmark into a content-deterministic, GitHub-native report
 
 - **Key components:** `render_markdown`, `build_insights`, `benchmark`, `_insights`, `row`, `_tokenizer`
 - **Used by:** CLI dispatch & freshness status (2)
-- **Depends on:** Layer IO & health core (2), CLI dispatch & freshness status (2)
+- **Depends on:** query / faq (3), Structural analytics (1)
 - **External dependencies:** `_GLOSSARY`, `health`, `read_layer`, `resolve`
 
-### Substrate adapters & id model — 15 components (community 3)
-
-codegraph/TS output → graphify nodes/edges, keyed by the composite id.
-
-The composite id hashes (file, qualified_name, kind, signature) so it survives line-shifting edits; adapt maps the codegraph SQLite db, adapt_ts the TS extractor, and py_calls.enrich supplements Python cross-module call and value-reference edges.
-
-- **Key components:** `adapt`, `enrich`, `composite_id`, `_adapt_repo`, `adapt_ts`, `read_codegraph_db`
-- **Used by:** Graph fusion & curation (1), Build orchestration & engine guard (1)
-- **Depends on:** Layer IO & health core (4), Doctor & isolation checks (1)
-- **Public surface:** `adapt`, `composite_id`, `read_codegraph_db`
-- **External dependencies:** `AdaptResult`, `EDGE_RELATION`, `PROV_CONFIDENCE`, `TS_EDGE_RELATION`, `_CALL_KINDS`, `_REF_KINDS`
-
-### Structural analytics — 13 components (community 4)
-
-The pure, offline metric spine over the committed structural layer.
-
-One digraph builder feeds centrality, cycles (with suggested cuts), conductance, Martin coupling/instability with the cross-community neighbor map, abstractness/distance, fan-out, and the dead-code review queue with its entry-point filter.
-
-- **Key components:** `analyze`, `abstractness_distance`, `centrality`, `build_digraph`, `dead_code`, `cycles`
-- **Used by:** Layer IO & health core (2), Graph query engine (1)
-- **External dependencies:** `_CONTAINMENT`, `_TYPE_KINDS`
-
-### Semantic overlay machinery — 12 components (community 5)
+### Semantic overlay machinery — 16 components (community 5)
 
 The dev-owned doc→code layer: prep → agent payloads → merge.
 
 prep_tasks writes per-doc tasks (identity metadata only, never source); merge_semantic validates every edge endpoint, resolves target_label by unique normalized label, and prunes ambiguity rather than guessing; the baseline stamp makes doc/linked-code edits surface as staleness.
 
-- **Key components:** `merge_semantic`, `write_semantic_freshness`, `_semantic_merge`, `_label_index`, `semantic_baseline`, `merge_payloads`
-- **Used by:** CLI dispatch & freshness status (2), Layer IO & health core (1)
-- **Depends on:** Layer IO & health core (5), CLI dispatch & freshness status (2), Committed-layer writers (1)
-- **External dependencies:** `AdaptResult`, `MANIFEST`, `SKIP_DIRS`, `_STEM_KINDS`, `_load_structural`, `materialize`
+- **Key components:** `write_structural`, `write_semantic`, `materialize`, `write_artifact`, `write_semantic_freshness`, `_semantic_merge`
+- **Used by:** CLI dispatch & freshness status (5), Substrate adapters & id model (1), Consumer read & degradation (1), query / faq (1)
+- **Depends on:** query / faq (4), CLI dispatch & freshness status (1), Layer IO & health core (1)
+- **Public surface:** `materialize`, `write_artifact`, `write_semantic`, `write_structural`
+- **External dependencies:** `MANIFEST`, `SCHEMA_VERSION`, `SKIP_DIRS`, `_GITIGNORE_MARK`, `_hash_paths`, `_load_structural`
+
+### query / faq — 16 components (community 4)
+
+_(narrative pending)_
+
+- **Key components:** `resolve`, `merge_faq`, `read_layer`, `_load_structural`, `faq_state`, `render_faq`
+- **Used by:** CLI dispatch & freshness status (11), Semantic overlay machinery (4), Insights & benchmark showcase (3), Graph query engine (3), Layer IO & health core (2)
+- **Depends on:** Structural analytics (3), CLI dispatch & freshness status (2), Substrate adapters & id model (1), Semantic overlay machinery (1), Graph query engine (1)
+- **Public surface:** `from_structural`, `read_layer`
+- **External dependencies:** `AdaptResult`, `MANIFEST`, `SCHEMA_VERSION`, `_NARRATIVE_KEYS`, `_PROJECT_KEYS`, `build_digraph`
 
 ### Doctor & isolation checks — 11 components (community 6)
 
@@ -86,11 +86,11 @@ Runtime-dependency probes and tool-isolation conflict detectors.
 Verifies node/codegraph/typescript availability with actionable hints, and warns when a codegraph MCP, graphify rebuild hook, or schema clash would shadow the committed graph. Advisory and fail-open — findings never change an exit code.
 
 - **Key components:** `_check_conflicts`, `_substrate_version`, `_detect_codegraph_mcp`, `doctor_report`, `_codegraph_bin`, `_detect_graphify_rebuild_hooks`
-- **Used by:** CLI dispatch & freshness status (2), Build orchestration & engine guard (1), Substrate adapters & id model (1)
-- **Depends on:** CLI dispatch & freshness status (1)
+- **Used by:** Substrate adapters & id model (2), CLI dispatch & freshness status (2)
+- **Depends on:** query / faq (1)
 - **External dependencies:** `_GRAPHIFY_HOOK_MARK`, `resolve`
 
-### TS substrate — declaration pass — 11 components (community 13)
+### TS substrate — declaration pass — 11 components (community 11)
 
 Pass 1 of the type-aware TypeScript extractor.
 
@@ -100,28 +100,28 @@ Walks each source file with a scope stack emitting one node per declaration (qua
 - **Depends on:** TS substrate — reference pass (2)
 - **External dependencies:** `containerId`, `rel`
 
-### Graph query engine — 9 components (community 7)
+### Layer IO & health core — 10 components (community 7)
+
+The shared core: committed-layer reading, fused materialization, and the health pass.
+
+read_layer validates schema and rejects corrupt layers loudly; materialize fuses the committed layers into the gitignored graph.json consumers read; health computes the structural/semantic/combined metrics with the layered dead-code tiers (dispatches edges, triage verdicts, dynamic_refs heuristic).
+
+- **Key components:** `merge_semantic`, `prep_tasks`, `_label_index`, `_semantic_prep`, `merge_payloads`, `_norm`
+- **Used by:** CLI dispatch & freshness status (1), Semantic overlay machinery (1)
+- **Depends on:** Substrate adapters & id model (5), query / faq (2), Structural analytics (1)
+- **Public surface:** `degree_graph`
+- **External dependencies:** `AdaptResult`, `LINKABLE_KINDS`, `_DOC_EXCLUDE_DIRS`, `_STEM_KINDS`, `_load_structural`, `dispatch_candidates`
+
+### Graph query engine — 9 components (community 8)
 
 Offline callers/callees/impact navigation over the committed graph.
 
 Resolves a human-typed name (label → qualified name → suffix, ambiguity surfaced), then BFS-traverses the dependency digraph by hop, annotating direct hits with their concrete relations. Works on a fresh clone with no index — unlike codegraph's own live-db query.
 
 - **Key components:** `_query_cmd`, `_traverse`, `callers`, `impact`, `callees`, `_relation_map`
-- **Used by:** CLI dispatch & freshness status (2)
-- **Depends on:** CLI dispatch & freshness status (2), Layer IO & health core (1), Structural analytics (1)
+- **Used by:** CLI dispatch & freshness status (1), query / faq (1)
+- **Depends on:** query / faq (3), Structural analytics (1)
 - **External dependencies:** `build_digraph`, `read_layer`, `resolve`
-
-### Committed-layer writers — 8 components (community 8)
-
-Deterministic serialization of the two committed layers.
-
-write_structural/write_semantic emit byte-stable JSON (sorted keys, stable ordering), plus GRAPH_REPORT.md and the gitignore block that keeps derived caches local.
-
-- **Key components:** `write_structural`, `write_semantic`, `write_artifact`, `_write_json`, `_write_gitignore`, `_write_graph_json`
-- **Used by:** Layer IO & health core (2), Build orchestration & engine guard (1), Semantic overlay machinery (1)
-- **Depends on:** Layer IO & health core (1)
-- **Public surface:** `write_artifact`, `write_semantic`, `write_structural`
-- **External dependencies:** `SCHEMA_VERSION`, `_GITIGNORE_MARK`, `materialize`
 
 ### Python value-reference extraction — 7 components (community 9)
 
@@ -131,30 +131,15 @@ Calls resolve through import aliases; bare names, kwarg function refs, and const
 
 - **Key components:** `_root_ref`, `visit_Call`, `_shadowed`, `_dotted`, `visit_Attribute`, `visit_Name`
 
-### Graph fusion & curation — 7 components (community 10)
+### engine — 5 components (community 13)
 
-Library composition over graphify: cluster, fold, curate.
+_(narrative pending)_
 
-build_fused clusters the analysis view and computes god nodes; singleton folding keeps community structure meaningful; linkable_subset curates the node list handed to overlay agents.
+- **Key components:** `detect_engine`, `check_engine_compat`, `check_substrate_drift`, `_ver`, `_installed`
+- **Used by:** Substrate adapters & id model (3)
+- **External dependencies:** `SCHEMA_VERSION`
 
-- **Key components:** `build_fused`, `analysis_view`, `fold_singleton_communities`, `linkable_subset`, `prune_orphans`, `_is_test_path`
-- **Used by:** Build orchestration & engine guard (1)
-- **Depends on:** Layer IO & health core (4), Substrate adapters & id model (1)
-- **Public surface:** `analysis_view`, `apply_communities`, `build_fused`, `fold_singleton_communities`, `linkable_subset`, `prune_orphans`
-- **External dependencies:** `ANALYSIS_EXCLUDE_KINDS`, `ANALYSIS_EXCLUDE_RELATIONS`, `AdaptResult`, `LINKABLE_KINDS`, `adapt`
-
-### Build orchestration & engine guard — 6 components (community 11)
-
-The build path and the determinism guards around it.
-
-build_repo routes to the right substrate, re-execs under a pinned PYTHONHASHSEED, stamps engine/substrate versions, and refuses to overwrite a graph built by a different clustering engine — CI stays the single authoritative builder.
-
-- **Key components:** `detect_engine`, `build_repo`, `check_engine_compat`, `check_substrate_drift`, `_ver`, `_installed`
-- **Used by:** Repo adoption scaffolding (1), CLI dispatch & freshness status (1)
-- **Depends on:** CLI dispatch & freshness status (3), Graph fusion & curation (1), Substrate adapters & id model (1), Doctor & isolation checks (1), Committed-layer writers (1)
-- **External dependencies:** `SCHEMA_VERSION`, `_adapt_repo`, `_default_scopes`, `_substrate_version`, `build_fused`, `read_manifest`
-
-### Repo adoption scaffolding — 4 components (community 12)
+### Repo adoption scaffolding — 4 components (community 10)
 
 Everything `init` wires into a consumer repo's Claude/git config.
 
@@ -162,10 +147,10 @@ Writes the SessionStart/Stop hooks into committed .claude/settings.json, hard-bl
 
 - **Key components:** `_init`, `configure_merge_driver`, `write_claude_hooks`, `_resolve_hook_cmd`
 - **Used by:** CLI dispatch & freshness status (1)
-- **Depends on:** CLI dispatch & freshness status (2), Contract-file writers (2), Build orchestration & engine guard (1), CI workflow scaffolding (1), Git freshness hooks (1)
+- **Depends on:** Contract-file writers (2), Substrate adapters & id model (1), CLI dispatch & freshness status (1), CI workflow scaffolding (1), Git freshness hooks (1)
 - **External dependencies:** `_write_agents_md`, `_write_gitattributes`, `build_repo`, `install_freshness_hooks`, `install_prepush_hook`, `resolve`
 
-### Sample fixture — auth — 4 components (community 14)
+### Sample fixture — auth — 4 components (community 12)
 
 Test fixture: the AuthService half of the sample repo.
 
@@ -173,16 +158,16 @@ Exists so codegraph-backed tests and the overlay protocol have a tiny real codeb
 
 - **Key components:** `process`, `login`, `process_helper`, `AuthService`
 
-### Doc-coverage metrics — 4 components (community 15)
+### Doc-coverage metrics — 4 components (community 14)
 
 The semantic and combined halves of health.
 
 Doc coverage overall/by-kind/public-API, dangling links and orphan docs, god-node and centrality-weighted coverage, dark subsystems, and the undocumented-load-bearing risk queue — 'are we documenting what matters'.
 
 - **Key components:** `semantic_health`, `combined_health`, `_documented_targets`, `_code_nodes`
-- **Used by:** Layer IO & health core (2)
+- **Used by:** Structural analytics (2)
 
-### Semantic union merge driver — 3 components (community 16)
+### Semantic union merge driver — 3 components (community 15)
 
 The git merge driver for two branches that both extended the overlay.
 
@@ -192,7 +177,7 @@ Unions semantic_nodes by id and edges by (source, target, relation), determinist
 - **Used by:** CLI dispatch & freshness status (1)
 - **External dependencies:** `SCHEMA_VERSION`
 
-### Sample fixture — billing — 3 components (community 17)
+### Sample fixture — billing — 3 components (community 16)
 
 Test fixture: the BillingService half of the sample repo.
 
@@ -200,7 +185,7 @@ Paired with the auth fixture to give cross-module edges and doc links a stable t
 
 - **Key components:** `process`, `charge`, `BillingService`
 
-### Python import resolution — 3 components (community 18)
+### Python import resolution — 3 components (community 17)
 
 The alias tables behind the Python edge supplement.
 
@@ -208,7 +193,7 @@ Resolves relative imports against the importing file's package and absolute impo
 
 - **Key components:** `_resolve_module`, `visit_Import`, `visit_ImportFrom`
 
-### TS substrate — reference pass — 3 components (community 19)
+### TS substrate — reference pass — 3 components (community 18)
 
 Pass 2 of the TypeScript extractor: type-checker-resolved references.
 
@@ -217,7 +202,7 @@ Every identifier resolves through the compiler's symbol table (alias-following) 
 - **Key components:** `rel`, `emitFile`, `containerId`
 - **Used by:** TS substrate — declaration pass (2)
 
-### Contract-file writers — 3 components (community 20)
+### Contract-file writers — 3 components (community 19)
 
 AGENTS.md and .gitattributes scaffolding.
 
@@ -227,7 +212,7 @@ Marker-based idempotent appends ship the agent contract and the semantic merge-d
 - **Used by:** Repo adoption scaffolding (2)
 - **External dependencies:** `_AGENTS_MARK`, `_GITATTR_MARK`
 
-### CI workflow scaffolding — 2 components (community 21)
+### CI workflow scaffolding — 2 components (community 20)
 
 Installs the build-on-PR-branch GitHub Actions workflow.
 
@@ -237,7 +222,7 @@ Ships the template that rebuilds structural on every PR and commits it onto the 
 - **Used by:** Repo adoption scaffolding (1)
 - **External dependencies:** `files`
 
-### Git freshness hooks — 2 components (community 22)
+### Git freshness hooks — 2 components (community 21)
 
 The universal (non-Claude) freshness reminders.
 
@@ -245,20 +230,20 @@ Installs post-commit/merge/checkout hooks that recompute the source hash and dro
 
 - **Key components:** `install_freshness_hooks`, `_install_hook`
 - **Used by:** Repo adoption scaffolding (1), CLI dispatch & freshness status (1)
-- **Depends on:** CLI dispatch & freshness status (1)
+- **Depends on:** query / faq (1)
 - **External dependencies:** `_HOOK_MARK`, `resolve`
 
-### Technical-debt assessment — 2 components (community 23)
+### Technical-debt assessment — 2 components (community 22)
 
 The transparent 0–1 debt roll-up.
 
 Aggregates existing signals (cycles, zone-of-pain, god-objects, fan-out, dead code, dangling links) into ranked by-type/by-feature/by-component breakdowns with per-type score contributions — never an opaque number.
 
 - **Key components:** `debt_assessment`, `_add`
-- **Used by:** Layer IO & health core (1)
+- **Used by:** Structural analytics (1)
 - **External dependencies:** `_DEBT_SAT`, `_DEBT_WEIGHTS`
 
-### Health report rendering — 2 components (community 24)
+### Health report rendering — 2 components (community 23)
 
 The human-readable markdown render of the health pass.
 
@@ -266,10 +251,10 @@ Formats structural/semantic/combined findings with the actions they imply, match
 
 - **Key components:** `_health`, `render_report`
 - **Used by:** CLI dispatch & freshness status (1)
-- **Depends on:** Layer IO & health core (1), CLI dispatch & freshness status (1)
+- **Depends on:** Structural analytics (1), query / faq (1)
 - **External dependencies:** `health`, `resolve`
 
-### Python scope shadowing — 2 components (community 25)
+### Python scope shadowing — 2 components (community 24)
 
 The conservatism guard for bare-name resolution.
 
@@ -277,40 +262,40 @@ Collects params and assignment targets per function scope (global/nonlocal un-sh
 
 - **Key components:** `_local_names`, `_scoped`
 
-### Consumer read & degradation — 2 components (community 26)
+### Consumer read & degradation — 2 components (community 25)
 
 The never-block read path for graph consumers.
 
 load_fused prefers the materialized graph.json, re-materializes from committed layers when missing or corrupt, and degrades to best-effort raw-layer reads — the graph is an accelerator, never a dependency.
 
 - **Key components:** `load_fused`, `_file_read_fallback`
-- **Depends on:** Layer IO & health core (1)
+- **Depends on:** Semantic overlay machinery (1)
 - **Public surface:** `load_fused`
 - **External dependencies:** `materialize`
 
 ## Where is the technical debt?
 
-**Score 0.311** (0 = clean → 1 = heavy) · god-object: 14 · high-fan-out: 7 · zone-of-pain: 3
+**Score 0.2923** (0 = clean → 1 = heavy) · god-object: 12 · high-fan-out: 8 · zone-of-pain: 2
 
 | Feature | Debt items |
 |---|--:|
-| Layer IO & health core | 7 |
-| CLI dispatch & freshness status | 3 |
-| Build orchestration & engine guard | 2 |
+| Substrate adapters & id model | 5 |
+| query / faq | 3 |
 | Repo adoption scaffolding | 2 |
-| Substrate adapters & id model | 2 |
+| CLI dispatch & freshness status | 2 |
+| Structural analytics | 2 |
 | TS substrate — declaration pass | 1 |
 | Sample fixture — auth | 1 |
 | Sample fixture — billing | 1 |
 
 | Component | Debt items |
 |---|--:|
-| `src/cg_graphify_bridge/cli.py` | 11 |
+| `src/cg_graphify_bridge/cli.py` | 10 |
 | `src/cg_graphify_bridge/health.py` | 2 |
-| `src/cg_graphify_bridge/semantic.py` | 2 |
 | `src/cg_graphify_bridge/adapter.py` | 1 |
 | `src/cg_graphify_bridge/driver.py` | 1 |
 | `src/cg_graphify_bridge/engine.py` | 1 |
+| `src/cg_graphify_bridge/faq.py` | 1 |
 | `src/cg_graphify_bridge/py_calls.py` | 1 |
 | `src/cg_graphify_bridge/query.py` | 1 |
 

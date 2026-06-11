@@ -1,17 +1,17 @@
 # 📊 Graph Insights — cg-graphify-bridge
 
-> **96% less context** to answer a pinpoint code question · **0** dependency cycles · **93%** of architectural hubs documented
+> **96% less context** to answer a pinpoint code question · **0** dependency cycles · **87%** of architectural hubs documented
 
 | 🎯 Token efficiency | 🏛️ Architecture | 📚 Documentation |
 |:--:|:--:|:--:|
-| 96% pinpoint · 96% global | 0 cycles · 3 Zone-of-Pain | hubs 93% · debt 0.3458 |
+| 96% pinpoint · 97% global | 0 cycles · 2 Zone-of-Pain | hubs 87% · debt 0.378 |
 
 ## 🎯 Token efficiency
 
 Graph-guided retrieval (node identity + neighbourhood) vs reading whole source files:
 
 - **pinpoint** &nbsp; `███████████████████░` 96%
-- **global** &nbsp;&nbsp;&nbsp; `███████████████████░` 96%
+- **global** &nbsp;&nbsp;&nbsp; `███████████████████░` 97%
 
 > GraphRAG reports **26–97% fewer tokens** for graph-guided retrieval ([arXiv:2404.16130](https://arxiv.org/abs/2404.16130)) — this repo lands in-band.
 > _Tokenizer: chars/4 estimate (install tiktoken for exact counts); baseline: naive full-file read of the source files a query's nodes live in._
@@ -27,53 +27,52 @@ quadrantChart
     quadrant-2 Ideal - abstract and stable
     quadrant-3 Zone of Pain
     quadrant-4 Volatile leaf - ok
-    "c14": [0.000, 0.000]
-    "c17": [0.000, 0.000]
-    "c0": [0.281, 0.000]
-    "c3": [0.714, 0.000]
+    "c12": [0.000, 0.000]
+    "c16": [0.000, 0.000]
+    "c0": [0.500, 0.000]
 ```
 
 - **Dependency cycles:** 0 — acyclic ✓
-- **Zone of Pain:** 3 · **Zone of Uselessness:** 0 communities
-- **Leakiest module:** community 22 (conductance 0.7143)
+- **Zone of Pain:** 2 · **Zone of Uselessness:** 0 communities
+- **Leakiest module:** community 21 (conductance 0.7143)
 - **Top architectural hub (betweenness):** `cg:4b1559b6f6e0f7ea`
-- **High fan-out (SRP) candidates:** 7 · **Dead-code review queue:** 0
+- **High fan-out (SRP) candidates:** 8 · **Dead-code review queue:** 0
 
 ## 🧹 Technical Debt
 
-**Debt score** &nbsp; `██████░░░░░░░░░░░░░░` 31% _(0 = clean → 1 = heavy)_
+**Debt score** &nbsp; `██████░░░░░░░░░░░░░░` 29% _(0 = clean → 1 = heavy)_
 
 | Debt type | Count |
 |---|--:|
-| god-object | 14 |
-| high-fan-out | 7 |
-| zone-of-pain | 3 |
+| god-object | 12 |
+| high-fan-out | 8 |
+| zone-of-pain | 2 |
 
-- **Most-indebted feature:** community 0 (7 debt items)
-- **Most-indebted component:** `src/cg_graphify_bridge/cli.py` (11 debt items)
-- _score contributions: god-object 0.1235, zone-of-pain 0.1, high-fan-out 0.0875_
+- **Most-indebted feature:** community 0 (5 debt items)
+- **Most-indebted component:** `src/cg_graphify_bridge/cli.py` (10 debt items)
+- _score contributions: god-object 0.12, high-fan-out 0.0923, zone-of-pain 0.08_
 
 ## 📚 Documenting what matters
 
-- **God-node coverage** &nbsp; `███████████████████░` 93%
-- **Centrality-weighted coverage** &nbsp; `████████░░░░░░░░░░░░` 42% _(the gap vs raw coverage = mis-targeted doc effort)_
-- **Undocumented hubs:** `main`
-- **Darkest subsystem:** community 0 (50% documented)
+- **God-node coverage** &nbsp; `█████████████████░░░` 87%
+- **Centrality-weighted coverage** &nbsp; `████████░░░░░░░░░░░░` 40% _(the gap vs raw coverage = mis-targeted doc effort)_
+- **Undocumented hubs:** `main`, `_load_structural`
+- **Darkest subsystem:** community 4 (12% documented)
 
 ## ⚠️ Undocumented load-bearing — document these first
 
 <details><summary>Top risk = centrality × (1 − documented)</summary>
 
-1. `_CONTAINMENT` — `src/cg_graphify_bridge/analytics.py`
-2. `SCHEMA_VERSION` — `src/cg_graphify_bridge/engine.py`
-3. `files` — `src/cg_graphify_bridge/ts_substrate_js/extract.cjs`
-4. `MANIFEST` — `src/cg_graphify_bridge/freshness.py`
-5. `_shadowed` — `src/cg_graphify_bridge/py_calls.py`
-6. `_TEST_DIRS` — `src/cg_graphify_bridge/health.py`
-7. `SKIP_DIRS` — `src/cg_graphify_bridge/freshness.py`
-8. `_HOOK_MARK` — `src/cg_graphify_bridge/hooks.py`
-9. `_UNIT` — `src/cg_graphify_bridge/adapter.py`
-10. `_meta` — `src/cg_graphify_bridge/analytics.py`
+1. `SCHEMA_VERSION` — `src/cg_graphify_bridge/engine.py`
+2. `_CONTAINMENT` — `src/cg_graphify_bridge/analytics.py`
+3. `MANIFEST` — `src/cg_graphify_bridge/freshness.py`
+4. `files` — `src/cg_graphify_bridge/ts_substrate_js/extract.cjs`
+5. `_hash_paths` — `src/cg_graphify_bridge/freshness.py`
+6. `_shadowed` — `src/cg_graphify_bridge/py_calls.py`
+7. `read_manifest` — `src/cg_graphify_bridge/freshness.py`
+8. `_write_json` — `src/cg_graphify_bridge/driver.py`
+9. `_TEST_DIRS` — `src/cg_graphify_bridge/health.py`
+10. `SKIP_DIRS` — `src/cg_graphify_bridge/freshness.py`
 
 </details>
 
