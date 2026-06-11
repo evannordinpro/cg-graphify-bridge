@@ -12,9 +12,9 @@
   "substrate": "codegraph",
   "substrate_version": "codegraph@0.9.9",
   "semantic": {
-    "docs_hash": "7a7a3353e6217a0e848cec8a8e42ccee1773da5751493cb7e086ec1cf02f389c",
-    "docs_count": 5,
-    "linked_hash": "fb3d36c44ea77ce39a1fd892e2910cd13966d33a8679886f2b3d222eddbf4e48",
-    "linked_count": 9
+    "docs_hash": "6dd7b2747ffff87ca979726f49904c3de71e7e4f90983bcbf6ae5219561341f6",
+    "docs_count": 8,
+    "linked_hash": "c92fdeb07843a2288270cff503dfc95d12003d5ba22622a01327aaffdfa0ba83",
+    "linked_count": 15
   }
 }
