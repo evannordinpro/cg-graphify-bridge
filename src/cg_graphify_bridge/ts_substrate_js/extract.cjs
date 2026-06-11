@@ -72,11 +72,16 @@ function sigOf(n) {
   } catch (e) { /* noop */ }
   return "";
 }
+// Martin-metric inputs (Phase2 FR0): abstractness + public-API surface. Interfaces are abstract
+// by definition; classes/methods via the `abstract` modifier; export via the `export` modifier.
+const modOf = (n) => { try { return ts.getCombinedModifierFlags(n); } catch (e) { return 0; } };
+const isAbstractOf = (n, kind) => kind === "interface" || (modOf(n) & ts.ModifierFlags.Abstract) !== 0;
+const isExportedOf = (n) => (modOf(n) & ts.ModifierFlags.Export) !== 0;
 function emitFile(sf) {
   const r = rel(sf.fileName);
   if (fileNode.has(r)) return fileNode.get(r);
   const id = nid++;
-  nodes.push({ id, kind: "file", name: path.basename(r), qualified_name: r, file_path: r, signature: "", line: 1 });
+  nodes.push({ id, kind: "file", name: path.basename(r), qualified_name: r, file_path: r, signature: "", line: 1, is_abstract: false, is_exported: false });
   fileNode.set(r, id);
   return id;
 }
@@ -98,7 +103,8 @@ for (const sf of program.getSourceFiles()) {
       myId = nid++;
       const qn = stack.map((s) => s.name).concat(name).join(".");
       nodes.push({ id: myId, kind, name, qualified_name: rel(sf.fileName) + "::" + qn,
-        file_path: rel(sf.fileName), signature: sigOf(node), line: lineOf(node) });
+        file_path: rel(sf.fileName), signature: sigOf(node), line: lineOf(node),
+        is_abstract: isAbstractOf(node, kind), is_exported: isExportedOf(node) });
       byDecl.set(node, myId);
       addEdge(stack.length ? stack[stack.length - 1].id : fId, myId, "contains");
     }

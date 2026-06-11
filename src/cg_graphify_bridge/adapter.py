@@ -77,9 +77,14 @@ def read_codegraph_db(db_path) -> tuple[list, list]:
     try:
         # KD2: deterministic, content-based row order (NOT sqlite rowid order, which is
         # unstable across re-index) so the adapted node/edge order is reproducible.
+        # is_abstract/is_exported/visibility exist in codegraph >=0.9.9 (Martin-metric inputs, FR0)
+        # but degrade gracefully if a DB variant lacks them — select only what's present.
+        cols = {row[1] for row in con.execute("PRAGMA table_info(nodes)").fetchall()}
+        opt = [c for c in ("is_abstract", "is_exported", "visibility") if c in cols]
         nodes = con.execute(
-            "SELECT id,kind,name,qualified_name,file_path,signature,start_line,end_line,language "
-            "FROM nodes ORDER BY file_path, qualified_name, kind, signature, start_line, id"
+            "SELECT id,kind,name,qualified_name,file_path,signature,start_line,end_line,language"
+            + ("," + ",".join(opt) if opt else "")
+            + " FROM nodes ORDER BY file_path, qualified_name, kind, signature, start_line, id"
         ).fetchall()
         edges = con.execute(
             "SELECT source,target,kind,provenance FROM edges "
@@ -102,22 +107,25 @@ def adapt(db_path) -> AdaptResult:
             merges += 1
             by_comp[cid]["metadata"]["cg_merged_ids"].append(r["id"])
             continue
+        md = {
+            "cg_kind": r["kind"], "origin": "codegraph",
+            "qualified_name": r["qualified_name"], "signature": r["signature"],
+            "language": r["language"], "start_line": r["start_line"],
+            "end_line": r["end_line"], "cg_merged_ids": [],
+        }
+        # Martin-metric inputs (FR0) — stamped ONLY when the codegraph DB provides the column, so a
+        # legacy DB's absence stays detectable (abstractness caveat) instead of silently reading False.
+        rkeys = r.keys()
+        if "is_abstract" in rkeys:
+            md["is_abstract"] = bool(r["is_abstract"])
+        if "is_exported" in rkeys:
+            md["is_exported"] = bool(r["is_exported"])
+        if "visibility" in rkeys:
+            md["visibility"] = r["visibility"]
         by_comp[cid] = {
-            "id": cid,
-            "label": r["name"],
-            "file_type": "code",
-            "source_file": r["file_path"],
-            "source_location": f"L{r['start_line']}",
-            "metadata": {
-                "cg_kind": r["kind"],
-                "origin": "codegraph",
-                "qualified_name": r["qualified_name"],
-                "signature": r["signature"],
-                "language": r["language"],
-                "start_line": r["start_line"],
-                "end_line": r["end_line"],
-                "cg_merged_ids": [],
-            },
+            "id": cid, "label": r["name"], "file_type": "code",
+            "source_file": r["file_path"], "source_location": f"L{r['start_line']}",
+            "metadata": md,
         }
     edges: list[dict] = []
     unmapped = 0
