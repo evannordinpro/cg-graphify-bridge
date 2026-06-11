@@ -42,6 +42,9 @@ cg-graphify-bridge semantic-prep .          # → Claude fills payloads (/graphi
 cg-graphify-bridge semantic-merge .         # … then commit graphify-out/semantic.json
 ```
 
+→ **Full setup** — runtime deps, **enabling CI write access**, per-developer steps, strict-repo CI
+limits, command reference, troubleshooting: **[`docs/setup.md`](docs/setup.md)**.
+
 ## Committed artifact model (`graphify-out/`)
 
 | File | Owner | Tracked |
@@ -80,9 +83,12 @@ Codegraph-dependent tests skip cleanly when `CODEGRAPH_BIN` is unset (pure-unit 
 Determinism is non-negotiable: `build`/`init` re-exec under a pinned `PYTHONHASHSEED=0` so
 `structural.json` is byte-identical across machines and reruns.
 
-## Consuming the output
-- **[`docs/using-the-graph.md`](docs/using-the-graph.md)** — full walkthrough for human **and** agent
-  operators (reading the report, the composite-id model, the freshness gate, the worked example).
+## Docs
+- **[`docs/setup.md`](docs/setup.md)** — complete setup for every aspect: runtime deps, install,
+  adopting the tool in a repo (incl. **enabling CI write access**), per-developer setup, the CI
+  strict-protection limits, a full command reference, and troubleshooting.
+- **[`docs/using-the-graph.md`](docs/using-the-graph.md)** — walkthrough for human **and** agent
+  operators (reading the report, the composite-id model, the freshness gate, a worked example).
 - **[`AGENTS.md`](AGENTS.md)** — the terse agent contract `init` ships into every consumer:
   how to *consume* the graph **and** the step-by-step protocol to *refresh* the semantic overlay.
 - This repo is self-hosted — `graphify-out/` is a live example of the tool's own output.
