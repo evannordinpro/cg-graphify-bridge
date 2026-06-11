@@ -96,15 +96,20 @@ The type-aware extractor for TS repos — the reason TS doesn't need the `py_cal
   `containerId` attributes each reference to its innermost enclosing declaration (file node
   fallback).
 
-## Python call-edge supplement (`py_calls.py`)
+## Python edge supplement (`py_calls.py`)
 
-codegraph resolves same-file Python calls only, so `enrich` adds the cross-module ones (full
-rationale in [`setup.md`](setup.md) §1). The piece worth knowing internally is
-**`_resolve_module`**: relative imports resolve against the importing file's package directory
+codegraph resolves same-file Python calls only, so `enrich` adds what's missing (full rationale
+in [`setup.md`](setup.md) §1): cross-module `calls`, value-position `references` (kwarg function
+refs, constant reads — imported, `mod.CONST`, or same-file module-level), `from x import name`
+as a reference, and `is_exported` stamps from module-level `__all__`. Pieces worth knowing:
+**`_resolve_module`** — relative imports resolve against the importing file's package directory
 (walking up `level-1` dirs, then trying `<path>.py` and `<path>/__init__.py`); absolute imports
 resolve by **unique** path-suffix match over the indexed file set — two matches means ambiguous
-means no edge. Caller attribution reuses the node line spans (innermost enclosing def/class wins,
-file node for module-level calls), so it never re-derives codegraph's qualified-name scheme.
+means no edge. **Shadow tracking** — bare-name value refs resolve only when no enclosing
+function scope binds the name (`_local_names` collects params + assignment targets,
+over-collecting nested defs on purpose; `global`/`nonlocal` un-shadow). Caller attribution
+reuses the node line spans (innermost enclosing def/class wins, file node for module-level
+sites), so it never re-derives codegraph's qualified-name scheme.
 
 ## Layer IO and scaffolding (`driver.py`, `scaffold.py`, `hooks.py`, `doctor.py`)
 

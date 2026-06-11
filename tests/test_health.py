@@ -3,6 +3,8 @@
 Pure functions tested with synthetic structural/semantic dicts; health.health() tested as an
 integration over layers written to disk via driver (the real read path).
 """
+import json
+
 from cg_graphify_bridge import analytics, driver, health
 from cg_graphify_bridge.adapter import AdaptResult
 
@@ -308,3 +310,42 @@ def test_dispatches_edges_do_not_count_as_doc_coverage(tmp_path):
                   sem_edges=[{"source": "doc:d", "target": "H", "relation": "dispatches"}])
     r = health.health(out)
     assert r["semantic"]["coverage_overall"] == 0.0   # liveness wiring is not documentation
+
+
+# ---------- comment-aware heuristic + stateful triage ----------
+
+def test_comment_mention_is_not_dynamic_evidence(tmp_path):
+    _src(tmp_path, "src/a.py",
+         "def victim():\n    pass\n\n# we stopped calling victim here\nx = 1  # victim was removed\n")
+    st = _struct([_node("V", label="victim", file="src/a.py")], [])
+    assert health.dynamic_refs(tmp_path, st, [{"id": "V", "label": "victim",
+                                               "source_file": "src/a.py"}]) == {}
+
+
+def test_quoted_name_still_counts_as_dispatch_evidence(tmp_path):
+    _src(tmp_path, "src/a.py",
+         'def victim():\n    pass\n\ndef go(mod):\n    return getattr(mod, "victim")()\n')
+    st = _struct([_node("V", label="victim", file="src/a.py")], [])
+    dyn = health.dynamic_refs(tmp_path, st, [{"id": "V", "label": "victim",
+                                              "source_file": "src/a.py"}])
+    assert dyn == {"V": "src/a.py:5"}
+
+
+def test_triage_keep_verdict_acknowledges_queue_item(tmp_path):
+    out = tmp_path / "graphify-out"
+    _write_layers(out, [_node("K", label="keeper", file="src/a.py")], [])
+    (out / "triage.json").write_text(json.dumps({"schema_version": 1, "verdicts": [
+        {"id": "K", "label": "keeper", "verdict": "keep", "reason": "external API"}]}))
+    dc = health.health(out)["structural"]["dead_code"]
+    assert dc["count"] == 0
+    assert dc["acknowledged"][0]["id"] == "K" and dc["acknowledged"][0]["reason"] == "external API"
+    assert dc["triage_stale"] == []
+
+
+def test_triage_stale_verdict_surfaced(tmp_path):
+    out = tmp_path / "graphify-out"
+    _write_layers(out, [_node("A", label="alive", file="src/a.py")], [])
+    (out / "triage.json").write_text(json.dumps({"schema_version": 1, "verdicts": [
+        {"id": "cg:gone", "label": "gone", "verdict": "keep", "reason": "old"}]}))
+    dc = health.health(out)["structural"]["dead_code"]
+    assert dc["triage_stale"] == ["cg:gone"] and "STALE" in dc["note"]

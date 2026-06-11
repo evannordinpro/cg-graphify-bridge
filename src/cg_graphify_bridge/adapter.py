@@ -11,6 +11,11 @@ import sqlite3
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 
+# The adapter's public surface (see driver.__all__ for the rationale): `linkable_subset` is the
+# D17 curated-list contract consumed by overlay tooling, not by in-repo code.
+__all__ = ["composite_id", "AdaptResult", "read_codegraph_db", "adapt", "from_structural",
+           "analysis_view", "prune_orphans", "fold_singleton_communities", "linkable_subset"]
+
 _UNIT = "\x1f"
 
 # codegraph EdgeKind (12) -> graphify relation

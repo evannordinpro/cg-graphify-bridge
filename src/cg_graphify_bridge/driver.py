@@ -20,6 +20,11 @@ from graphify import analyze, build, cluster
 from . import adapter
 from .engine import SCHEMA_VERSION
 
+# The library surface external consumers may call (the dead-code entry-point filter excludes
+# exported symbols — `load_fused` & co. have no in-repo callers BY DESIGN, not by rot).
+__all__ = ["apply_communities", "build_fused", "write_structural", "write_semantic",
+           "write_artifact", "materialize", "load_fused", "read_layer", "degree_graph"]
+
 
 def apply_communities(G, communities: dict) -> None:
     """cluster.cluster() returns {cid:[node_ids]} but does NOT mutate G (D16)."""

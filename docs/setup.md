@@ -193,16 +193,23 @@ layers, each with the action it implies:
 are excluded from every metric (coverage denominators, centrality, cycles, the risk queue) since
 codegraph indexes the whole repo; pass `--include-tests` to analyze everything.
 
-The **dead-code queue filters dynamically-wired symbols**, two tiers:
+The **dead-code queue is layered** — every liveness claim is either a deterministic graph edge,
+a committed verdict, or (last resort) a heuristic:
+- **Structural (deterministic):** the pyast pass emits `calls` AND `references` edges — value-
+  position reads (`set_defaults(func=…)`, constants as bare identifiers, `mod.CONST`), plus
+  `from x import name` itself — so ordinary wiring never looks dead in the first place. Symbols
+  in a module-level `__all__` are stamped `is_exported` and excluded as declared public API.
 - **Confirmed (authoritative):** `dispatches` edges in the semantic overlay — code→code edges an
   agent confirmed from evidence during the overlay refresh (`semantic-prep` writes
-  `dispatch_candidates.json`; the protocol is in `AGENTS.md`). These never count as
-  documentation coverage.
-- **Heuristic (advisory):** a zero-reference symbol whose name appears in the indexed sources as
-  a *value* (argparse `set_defaults(func=…)`, callback/registry tables, `getattr`-by-name
-  strings, constants read as bare identifiers) is treated as an entry point, not dead code — the
-  JSON output lists what was dropped with `file:line` evidence, which is exactly what the next
-  `semantic-prep` surfaces for confirmation.
+  `dispatch_candidates.json`; the protocol is in `AGENTS.md`). Never counted as doc coverage.
+- **Reviewed (stateful):** keep-verdicts in the committed `graphify-out/triage.json`
+  (`{"verdicts": [{"id", "label", "verdict": "keep", "reason"}]}`, keyed by composite id so they
+  survive line edits). Acknowledged items leave the queue but stay listed; a verdict whose id no
+  longer exists is flagged STALE for pruning. The queue is incremental — review once.
+- **Heuristic (advisory, last tier):** a zero-reference symbol whose name appears in the indexed
+  sources as a *value* — quoted (`getattr`-by-name dispatch) or bare — outside comments, is
+  dropped with `file:line` evidence, which is exactly what the next `semantic-prep` surfaces
+  for confirmation.
 
 `cg-graphify-bridge benchmark <repo>` reports graph-guided **token reduction** vs a naive
 full-file-read baseline, per query class (pinpoint vs global). Uses `tiktoken` for exact counts if
