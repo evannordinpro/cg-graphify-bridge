@@ -1,7 +1,7 @@
 # Fused Graph Report (codegraph substrate + graphify overlay)
 
-- nodes: 522  edges: 719  communities: 24
-- adapter stats: {'cg_nodes': 523, 'composite_nodes': 522, 'merges': 1, 'edges_in': 841, 'edges_out': 841, 'unmapped_edges': 0, 'kind_dist': {'class': 3, 'method': 2, 'function': 292, 'file': 40, 'import': 136, 'variable': 32, 'constant': 17}}
+- nodes: 565  edges: 778  communities: 24
+- adapter stats: {'cg_nodes': 566, 'composite_nodes': 565, 'merges': 1, 'edges_in': 904, 'edges_out': 904, 'unmapped_edges': 0, 'kind_dist': {'class': 3, 'method': 2, 'function': 326, 'file': 41, 'import': 142, 'variable': 34, 'constant': 17}}
 
 ## God nodes
 
@@ -16,10 +16,10 @@
 - **_norm** (degree 4) `cg:36bde4dbca0de9e3`
 - **AdaptResult** (degree 4) `cg:85c9d5757530c188`
 - **source_hash** (degree 4) `cg:9779ddbba3d406d0`
+- **_check_conflicts** (degree 4) `cg:9f1d9a9683b00885`
 - **_adapt_repo** (degree 4) `cg:b8342ab2a94d09a7`
 - **adapt** (degree 3) `cg:52ed65910189769a`
 - **_codegraph_bin** (degree 3) `cg:7a567b547a024dd8`
-- **_hook_sessionstart** (degree 3) `cg:8aaf8e1ba47784ae`
 
 ## Surprising connections
 

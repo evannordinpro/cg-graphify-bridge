@@ -33,3 +33,11 @@ If the semantic layer is stale, run the refresh protocol below, then commit `gra
    - you are given identity metadata + the doc text **only** — never request or emit code bodies.
 3. `cg-graphify-bridge semantic-merge . --out graphify-out` — merges the payloads into `semantic.json`
    and re-materializes the fused graph. Then `git add graphify-out/semantic.json` and commit it.
+
+**Isolation.** This graph is built by cg-graphify-bridge composing graphify + codegraph as
+*libraries*. Do **not** run `graphify install`, `codegraph install`, or `graphify hook install` in
+this repo — they install competing agent integrations: a codegraph **MCP** over the live `.codegraph`
+db (not the committed graph) and graphify **native-rebuild git hooks**. `init` sets
+`disabledMcpjsonServers: ["codegraph"]` to block a local codegraph MCP; if a graphify rebuild hook
+is present, `export GRAPHIFY_SKIP_HOOK=1`. graphify's read/query is fine — `cg-graphify-bridge serve`
+exposes graphify's MCP over the committed graph. `cg-graphify-bridge doctor .` surfaces these conflicts.
