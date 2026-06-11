@@ -24,9 +24,9 @@ quadrantChart
     x-axis Stable --> Unstable
     y-axis Concrete --> Abstract
     quadrant-1 Zone of Uselessness
-    quadrant-2 Ideal (abstract + stable)
+    quadrant-2 Ideal - abstract and stable
     quadrant-3 Zone of Pain
-    quadrant-4 Volatile leaf (ok)
+    quadrant-4 Volatile leaf - ok
     "c13": [0.000, 0.000]
     "c18": [0.000, 0.000]
     "c4": [0.000, 0.000]

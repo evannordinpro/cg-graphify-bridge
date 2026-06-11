@@ -18504,18 +18504,18 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 129,
+        "end_line": 131,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_glossary",
         "signature": "() -> list",
-        "start_line": 125,
+        "start_line": 127,
         "visibility": null
       },
       "source_file": "src/cg_graphify_bridge/insights.py",
-      "source_location": "L125"
+      "source_location": "L127"
     },
     {
       "file_type": "code",
@@ -22464,7 +22464,7 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 63,
+        "end_line": 65,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
@@ -24224,7 +24224,7 @@
       "metadata": {
         "cg_kind": "file",
         "cg_merged_ids": [],
-        "end_line": 231,
+        "end_line": 233,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
@@ -26444,18 +26444,18 @@
       "metadata": {
         "cg_kind": "function",
         "cg_merged_ids": [],
-        "end_line": 230,
+        "end_line": 232,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "render_markdown",
         "signature": "(ins: dict) -> str",
-        "start_line": 132,
+        "start_line": 134,
         "visibility": null
       },
       "source_file": "src/cg_graphify_bridge/insights.py",
-      "source_location": "L132"
+      "source_location": "L134"
     },
     {
       "file_type": "code",
@@ -27964,18 +27964,18 @@
       "metadata": {
         "cg_kind": "variable",
         "cg_merged_ids": [],
-        "end_line": 122,
+        "end_line": 124,
         "is_abstract": false,
         "is_exported": false,
         "language": "python",
         "origin": "codegraph",
         "qualified_name": "_GLOSSARY",
         "signature": "= [\n    (\"Token efficiency (pinpoint / global)\",\n     \"the % fewer tokens an agent reads to answer a q...",
-        "start_line": 67,
+        "start_line": 69,
         "visibility": null
       },
       "source_file": "src/cg_graphify_bridge/insights.py",
-      "source_location": "L67"
+      "source_location": "L69"
     },
     {
       "file_type": "code",
