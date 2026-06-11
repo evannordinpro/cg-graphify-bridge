@@ -1,6 +1,8 @@
 """Phase 2 (2b) — `health`: structural + semantic + COMBINED codebase-health metrics over the
-committed graph, each paired with the action it implies. Reads committed layers only (offline, no
-rebuild). Emits a structured dict (`--json`) and a markdown report. Advisory — never gates.
+committed graph, each paired with the action it implies. Reads committed layers (offline, no
+rebuild) plus — when a repo path is given — a textual scan of the indexed sources that rescues
+dynamically-wired symbols from the dead-code queue. Emits a structured dict (`--json`) and a
+markdown report. Advisory — never gates.
 
 The combined section is the differentiator: "are we documenting what structurally matters" —
 god-node / centrality-weighted doc coverage + the undocumented-load-bearing risk queue.
@@ -47,6 +49,47 @@ def _code_nodes(structural: dict) -> list:
     return [n for n in structural.get("nodes", [])
             if n.get("file_type") == "code"
             and n.get("metadata", {}).get("cg_kind") not in ("file", "import", "module")]
+
+
+def dynamic_refs(repo: Path, structural: dict, candidates: list) -> dict:
+    """Rescue dynamically-wired symbols from the dead-code queue via a textual source scan.
+
+    A symbol dispatched dynamically produces no call edge — argparse `set_defaults(func=handler)`,
+    callback/registry tables, `getattr`-by-name strings, constants read as bare identifiers — which
+    is exactly the false-positive class the dead-code note warns about. Evidence = the symbol's
+    name occurring in any indexed source file as a VALUE: not followed by `(` (a call — the graph's
+    job), not an assignment to it, not its own def/class line, not an import line. Textual on
+    purpose: a quoted name (getattr dispatch) or a mention in a comment counts — the queue is a
+    review list, not a gate, and should err toward fewer false positives.
+
+    Returns {node_id: "file:line" of the first evidence}; scan order is sorted, so deterministic
+    for a fixed working tree. Single-character names are skipped (they collide with everything).
+    """
+    texts = []
+    for sf in sorted({n.get("source_file") for n in structural.get("nodes", []) if n.get("source_file")}):
+        try:
+            texts.append((sf, (repo / sf).read_text(errors="replace").splitlines()))
+        except OSError:
+            continue
+    _import_line = re.compile(r"^\s*(?:from\s+\S+\s+)?import\s")
+    hits: dict = {}
+    for c in sorted(candidates, key=lambda d: d["id"]):
+        name = c.get("label") or ""
+        if len(name) < 2:
+            continue
+        esc = re.escape(name)
+        ref = re.compile(rf"\b{esc}\b(?!\s*\()(?!\s*=[^=])")
+        defline = re.compile(rf"^\s*(?:async\s+def|def|class)\s+{esc}\b")
+        for sf, lines in texts:
+            for i, line in enumerate(lines, 1):
+                if defline.match(line) or _import_line.match(line):
+                    continue
+                if ref.search(line):
+                    hits[c["id"]] = f"{sf}:{i}"
+                    break
+            if c["id"] in hits:
+                break
+    return hits
 
 
 def _documented_targets(semantic: dict | None) -> set:
@@ -205,15 +248,22 @@ def debt_assessment(structural: dict, sm: dict, sem: dict) -> dict:
             "total_items": len(items), "items": items}
 
 
-def health(out: Path, *, include_tests: bool = False) -> dict:
+def health(out: Path, *, include_tests: bool = False, repo: Path | None = None) -> dict:
     """Full health pass over the committed layers in `out`. Production-scoped by default
-    (test files excluded uniformly from every metric); pass include_tests=True for the whole graph."""
+    (test files excluded uniformly from every metric); pass include_tests=True for the whole graph.
+    With `repo`, dead-code candidates with textual value references in the indexed sources
+    (argparse/callback/getattr wiring) are excluded as dynamically wired — see dynamic_refs()."""
     structural = driver.read_layer(out, "structural")
     if structural is None:
         raise SystemExit(f"no structural.json in {out} — build the graph first (or pull it)")
     semantic = driver.read_layer(out, "semantic")
     scoped = structural if include_tests else source_scope(structural)
     sm = analytics.analyze(scoped)                # one centrality compute, reused below
+    dyn = dynamic_refs(repo, scoped, sm["dead_code"]) if repo else {}
+    dyn_wired = sorted(({"id": d["id"], "label": d.get("label", d["id"]), "evidence": dyn[d["id"]]}
+                        for d in sm["dead_code"] if d["id"] in dyn), key=lambda x: x["id"])
+    if dyn:        # debt_assessment reads sm["dead_code"], so the score sees the filtered queue too
+        sm["dead_code"] = [d for d in sm["dead_code"] if d["id"] not in dyn]
     cent = sm["centrality"]
     sem = semantic_health(scoped, semantic)
     comb = combined_health(scoped, semantic, cent)
@@ -234,7 +284,12 @@ def health(out: Path, *, include_tests: bool = False) -> dict:
             "abstractness": sm["abstractness"],
             "fan": sm["fan"],
             "dead_code": {"count": len(sm["dead_code"]), "top": sm["dead_code"][:15],
-                          "note": "static review queue — over-flags dynamic/reflection/framework-wired symbols"},
+                          "dynamically_wired_excluded": len(dyn_wired),
+                          "dynamically_wired": dyn_wired[:10],
+                          "note": "static review queue — over-flags dynamic/reflection/framework-wired symbols"
+                          + (f"; {len(dyn_wired)} dropped via textual value-reference evidence"
+                             if dyn_wired else
+                             ("" if repo else "; pass the repo path to drop dynamically-wired symbols"))},
         },
         "semantic": sem,
         "combined": comb,
