@@ -1,10 +1,10 @@
 # 📊 Graph Insights — cg-graphify-bridge
 
-> **97% less context** to answer a pinpoint code question · **0** dependency cycles · **40%** of architectural hubs documented
+> **97% less context** to answer a pinpoint code question · **0** dependency cycles · **80%** of architectural hubs documented
 
 | 🎯 Token efficiency | 🏛️ Architecture | 📚 Documentation |
 |:--:|:--:|:--:|
-| 97% pinpoint · 96% global | 0 cycles · 2 Zone-of-Pain | hubs 40% · debt 0.5523 |
+| 97% pinpoint · 96% global | 0 cycles · 2 Zone-of-Pain | hubs 80% · debt 0.4294 |
 
 ## 🎯 Token efficiency
 
@@ -40,7 +40,7 @@ quadrantChart
 
 ## 🧹 Technical Debt
 
-**Debt score** &nbsp; `██████░░░░░░░░░░░░░░` 31% _(0 = clean → 1 = heavy)_
+**Debt score** &nbsp; `██████░░░░░░░░░░░░░░` 28% _(0 = clean → 1 = heavy)_
 
 | Debt type | Count |
 |---|--:|
@@ -48,33 +48,32 @@ quadrantChart
 | dead-code | 7 |
 | high-fan-out | 4 |
 | zone-of-pain | 2 |
-| dangling-link | 1 |
 
 - **Most-indebted feature:** community 0 (4 debt items)
 - **Most-indebted component:** `src/cg_graphify_bridge/cli.py` (7 debt items)
-- _score contributions: god-object 0.1125, zone-of-pain 0.08, high-fan-out 0.0667, dangling-link 0.025, dead-code 0.0219_
+- _score contributions: god-object 0.1125, zone-of-pain 0.08, high-fan-out 0.0667, dead-code 0.0219_
 
 ## 📚 Documenting what matters
 
-- **God-node coverage** &nbsp; `████████░░░░░░░░░░░░` 40%
-- **Centrality-weighted coverage** &nbsp; `██░░░░░░░░░░░░░░░░░░` 11% _(the gap vs raw coverage = mis-targeted doc effort)_
-- **Undocumented hubs:** `resolve`, `health`, `analyze`, `visit`, `build_digraph`, `_traverse`, `benchmark`, `_semantic_merge`, `AdaptResult`
-- **Darkest subsystem:** community 1 (0% documented)
+- **God-node coverage** &nbsp; `████████████████░░░░` 80%
+- **Centrality-weighted coverage** &nbsp; `██████░░░░░░░░░░░░░░` 28% _(the gap vs raw coverage = mis-targeted doc effort)_
+- **Undocumented hubs:** `visit`, `_traverse`, `_semantic_merge`
+- **Darkest subsystem:** community 0 (38% documented)
 
 ## ⚠️ Undocumented load-bearing — document these first
 
 <details><summary>Top risk = centrality × (1 − documented)</summary>
 
-1. `resolve` — `src/cg_graphify_bridge/query.py`
-2. `srt` — `src/cg_graphify_bridge/query.py`
-3. `build_digraph` — `src/cg_graphify_bridge/analytics.py`
-4. `AdaptResult` — `src/cg_graphify_bridge/adapter.py`
-5. `_norm` — `src/cg_graphify_bridge/semantic.py`
-6. `files` — `src/cg_graphify_bridge/ts_substrate_js/extract.cjs`
-7. `_codegraph_bin` — `src/cg_graphify_bridge/cli.py`
-8. `_traverse` — `src/cg_graphify_bridge/query.py`
-9. `read_layer` — `src/cg_graphify_bridge/driver.py`
-10. `_iter_sources` — `src/cg_graphify_bridge/freshness.py`
+1. `srt` — `src/cg_graphify_bridge/query.py`
+2. `_norm` — `src/cg_graphify_bridge/semantic.py`
+3. `files` — `src/cg_graphify_bridge/ts_substrate_js/extract.cjs`
+4. `_traverse` — `src/cg_graphify_bridge/query.py`
+5. `read_layer` — `src/cg_graphify_bridge/driver.py`
+6. `_iter_sources` — `src/cg_graphify_bridge/freshness.py`
+7. `rel` — `src/cg_graphify_bridge/ts_substrate_js/extract.cjs`
+8. `source_hash` — `src/cg_graphify_bridge/freshness.py`
+9. `_resolve_hook_cmd` — `src/cg_graphify_bridge/cli.py`
+10. `_append_once` — `src/cg_graphify_bridge/cli.py`
 
 </details>
 
