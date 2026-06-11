@@ -107,3 +107,44 @@ def test_prep_tasks_and_merge_payloads_roundtrip(cg_db, tmp_path):
     combined = semantic.merge_payloads(res, out)
     assert combined["stats"]["kept"] == 1
     assert combined["semantic_edges"][0]["target"] == aid
+
+
+# ---------- dispatches: agent-confirmed dynamic wiring (pure-unit, no cg_db) ----------
+
+def _mini_nodes():
+    def n(nid, label, kind="function", s=1, e=1):
+        return {"id": nid, "label": label, "file_type": "code", "source_file": "src/a.py",
+                "source_location": f"L{s}",
+                "metadata": {"cg_kind": kind, "qualified_name": label,
+                             "start_line": s, "end_line": e}}
+    return [n("cg:file", "a.py", kind="file", s=1, e=6),
+            n("cg:site", "wire", s=4, e=5),
+            n("cg:handler", "handler", s=1, e=2)]
+
+
+def test_dispatches_edge_with_code_source_kept():
+    res = adapter.AdaptResult(_mini_nodes(), [], {}, {})
+    payload = {"nodes": [], "edges": [
+        {"source": "cg:site", "target": "cg:handler", "relation": "dispatches"}]}
+    merged = semantic.merge_semantic(payload, res)
+    assert merged["semantic_edges"] == payload["edges"] and merged["dangling"] == []
+
+
+def test_invented_edge_source_pruned():
+    res = adapter.AdaptResult(_mini_nodes(), [], {}, {})
+    payload = {"nodes": [], "edges": [
+        {"source": "cg:invented", "target": "cg:handler", "relation": "dispatches"}]}
+    merged = semantic.merge_semantic(payload, res)
+    assert merged["semantic_edges"] == [] and len(merged["dangling"]) == 1
+
+
+def test_dispatch_candidates_suggest_enclosing_source(tmp_path):
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src/a.py").write_text(
+        "def handler(args):\n    pass\n\ndef wire(sub):\n    sub.set_defaults(func=handler)\n")
+    structural = {"nodes": _mini_nodes(), "edges": [], "communities": {}, "god_nodes": []}
+    cands = semantic.dispatch_candidates(tmp_path, structural)
+    assert [c["target"] for c in cands] == ["cg:handler"]
+    c = cands[0]
+    assert c["evidence"] == "src/a.py:5"
+    assert c["suggested_source"] == "cg:site" and c["suggested_source_label"] == "wire"

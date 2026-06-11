@@ -323,12 +323,15 @@ def _semantic_prep(args: argparse.Namespace) -> None:
     structural, res = _load_structural(out)
     # degree ranking only — NO build_fused / cluster.cluster (R4: consume committed communities)
     info = semantic.prep_tasks(res, {"graph": driver.degree_graph(structural)}, repo, out,
-                               max_nodes=args.max_nodes, max_docs=args.max_docs, doc_filter=args.filter)
+                               max_nodes=args.max_nodes, max_docs=args.max_docs, doc_filter=args.filter,
+                               structural=structural)
     print(json.dumps({"tasks": len(info["tasks"]), "code_nodes": info["code_nodes"],
+                      "dispatch_candidates": info["dispatch_candidates"],
                       "tasks_dir": str(info["tasks_dir"]), "payloads_dir": str(info["payloads_dir"]),
                       "consumed": "structural.json (no re-cluster)",
                       "next": "for each tasks/<id>.json a subagent reads {doc, code_nodes} and writes "
-                              "payloads/<id>.json {nodes,edges}; then run `semantic-merge`."},
+                              "payloads/<id>.json {nodes,edges}; review dispatch_candidates.json and "
+                              "confirm real dynamic wiring as `dispatches` edges; then run `semantic-merge`."},
                      indent=2))
 
 
@@ -560,7 +563,13 @@ If the semantic layer is stale, run the refresh protocol below, then commit `{ou
    - if you know the symbol name but not its id, set `target_label` and leave `target` empty — the
      bridge resolves it by unique label or prunes + reports it (no silent dangling edges);
    - you are given identity metadata + the doc text **only** — never request or emit code bodies.
-3. `cg-graphify-bridge semantic-merge . --out {out_name}` — merges the payloads into `semantic.json`
+3. If `{out_name}/.cache/semantic/dispatch_candidates.json` exists, review each candidate's
+   `evidence` (file:line): when it is real dynamic wiring (dispatch table, callback, getattr-by-
+   name), add `{{"source": <dispatch-site id>, "target": <candidate id>, "relation": "dispatches"}}`
+   to any payload (`suggested_source` is precomputed). Confirmed `dispatches` edges are
+   authoritative liveness for the dead-code queue and are NOT documentation coverage. A false
+   positive (comment/string coincidence) gets no edge — it stays in the review queue.
+4. `cg-graphify-bridge semantic-merge . --out {out_name}` — merges the payloads into `semantic.json`
    and re-materializes the fused graph. Then `git add {out_name}/semantic.json` and commit it.
 
 **Isolation.** This graph is built by cg-graphify-bridge composing graphify + codegraph as

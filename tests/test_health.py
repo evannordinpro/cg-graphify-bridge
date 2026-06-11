@@ -292,3 +292,19 @@ def test_debt_score_sees_filtered_dead_code(tmp_path):
     with_repo = health.health(out, repo=tmp_path)["debt"]["by_type"].get("dead-code", 0)
     without = health.health(out)["debt"]["by_type"].get("dead-code", 0)
     assert without == 1 and with_repo == 0
+
+
+def test_confirmed_dispatches_edge_authoritative_for_dead_code(tmp_path):
+    out = tmp_path / "graphify-out"
+    _write_layers(out, [_node("H", label="handler", file="src/a.py")], [],
+                  sem_edges=[{"source": "doc:d", "target": "H", "relation": "dispatches"}])
+    dc = health.health(out)["structural"]["dead_code"]
+    assert dc["count"] == 0 and dc["dispatch_confirmed_excluded"] == 1
+
+
+def test_dispatches_edges_do_not_count_as_doc_coverage(tmp_path):
+    out = tmp_path / "graphify-out"
+    _write_layers(out, [_node("H", label="handler", file="src/a.py")], [],
+                  sem_edges=[{"source": "doc:d", "target": "H", "relation": "dispatches"}])
+    r = health.health(out)
+    assert r["semantic"]["coverage_overall"] == 0.0   # liveness wiring is not documentation
