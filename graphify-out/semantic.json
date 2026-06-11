@@ -3,19 +3,673 @@
   "schema_version": 1,
   "semantic_edges": [
     {
-      "relation": "specifies",
-      "source": "doc:overlayskilloverlaymd",
-      "target": "cg:1a0dfa28bf7d3c3c"
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:agentsmd",
+      "target": "cg:13dc2f72e26c825e",
+      "target_label": "write_structural"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:agentsmd",
+      "target": "cg:3671ce95e1a767f3",
+      "target_label": "write_semantic"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:agentsmd",
+      "target": "cg:5dc2a9c13ae8c1b6",
+      "target_label": "linkable_subset"
     },
     {
       "relation": "specifies",
-      "source": "doc:overlayskilloverlaymd",
-      "target": "cg:20071d980a7de331"
+      "source": "doc:agentsmd",
+      "target": "cg:663c5cfd8b221c7b"
     },
     {
+      "context": "label-fallback",
       "relation": "specifies",
-      "source": "doc:overlayskilloverlaymd",
-      "target": "cg:4626ede89c8f1831"
+      "source": "doc:agentsmd",
+      "target": "cg:6dd3607a25d92434",
+      "target_label": "merge_semantic"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:agentsmd",
+      "target": "cg:8aaf8e1ba47784ae",
+      "target_label": "_hook_sessionstart"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:agentsmd",
+      "target": "cg:8dbc9c38220fe1d7",
+      "target_label": "_serve"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "specifies",
+      "source": "doc:agentsmd",
+      "target": "cg:9d2d589b042b484a",
+      "target_label": "prep_tasks"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:agentsmd",
+      "target": "cg:a7a4b64251b0aabd",
+      "target_label": "_doctor"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "specifies",
+      "source": "doc:agentsmd",
+      "target": "cg:b4204c15352d8f77",
+      "target_label": "composite_id"
+    },
+    {
+      "relation": "references",
+      "source": "doc:agentsmd",
+      "target": "cg:e088c0baf177a262"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "specifies",
+      "source": "doc:agentsmd",
+      "target": "cg:e44e1bf9d91fd0a1",
+      "target_label": "merge_payloads"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "specifies",
+      "source": "doc:agentsmd",
+      "target": "cg:e7a781fb1be06490",
+      "target_label": "compute_status"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docssetupmd",
+      "target": "cg:0b09fca3dddc2d15",
+      "target_label": "_write_agents_md"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:164a13d5b9250633",
+      "target_label": "build_repo"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:23e318e7c72e30e7",
+      "target_label": "source_scope"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:3391343d51ca2dda",
+      "target_label": "check_engine_compat"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:37e1fb59471497e8",
+      "target_label": "_merge_driver"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:387ecfaf791671b2",
+      "target_label": "_install_hook"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docssetupmd",
+      "target": "cg:41887d5560742e2d",
+      "target_label": "abstractness_distance"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:4345f93363f0fc37",
+      "target_label": "debt_assessment"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:435cd7ecb3bba36a",
+      "target_label": "callers"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:4b9f00f91cbbe45a",
+      "target_label": "semantic_health"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:4c3f0d72f38071e3",
+      "target_label": "check_substrate_drift"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docssetupmd",
+      "target": "cg:569117df0d7952d9",
+      "target_label": "install_prepush_hook"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:663c5cfd8b221c7b"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docssetupmd",
+      "target": "cg:6d17ce09b4fa2f20",
+      "target_label": "write_ci_workflow"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:75637ed541aa7ba9",
+      "target_label": "resolve"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docssetupmd",
+      "target": "cg:7a567b547a024dd8",
+      "target_label": "_codegraph_bin"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:7af7daeeb499bcf8",
+      "target_label": "_check_semantic"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:8561c5dad12527dd"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:88cb248435a11be1",
+      "target_label": "enrich"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:8a0dda05dc1e6c4f",
+      "target_label": "impact"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:8aaf8e1ba47784ae",
+      "target_label": "_hook_sessionstart"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:8b0d99befd1aa704",
+      "target_label": "combined_health"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:8dbc9c38220fe1d7",
+      "target_label": "_serve"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:989f896cddda2652",
+      "target_label": "dead_code"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:9d2d589b042b484a",
+      "target_label": "prep_tasks"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:a135ab201a903149",
+      "target_label": "_hook_stop"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:a5e6e8a1f253ecff",
+      "target_label": "dynamic_refs"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:a7a4b64251b0aabd",
+      "target_label": "_doctor"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docssetupmd",
+      "target": "cg:adaada7f446a45e7",
+      "target_label": "_detect_substrate"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:b405ba996d23800b",
+      "target_label": "callees"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:b8845832111a5e7c",
+      "target_label": "knowledge_debt"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:e088c0baf177a262"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:e29379bb6bb9cf48",
+      "target_label": "build_insights"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:e44e1bf9d91fd0a1",
+      "target_label": "merge_payloads"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:e7a781fb1be06490",
+      "target_label": "compute_status"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:docssetupmd",
+      "target": "cg:fe3f8dd8bc1ea820"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:13dc2f72e26c825e",
+      "target_label": "write_structural"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:164a13d5b9250633",
+      "target_label": "build_repo"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:1a0dfa28bf7d3c3c",
+      "target_label": "adapt_ts"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:3671ce95e1a767f3",
+      "target_label": "write_semantic"
+    },
+    {
+      "relation": "references",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:52ed65910189769a"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:663c5cfd8b221c7b"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:75637ed541aa7ba9",
+      "target_label": "resolve"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:85c9d5757530c188",
+      "target_label": "AdaptResult"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:8aaf8e1ba47784ae",
+      "target_label": "_hook_sessionstart"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:9d2d589b042b484a",
+      "target_label": "prep_tasks"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:a135ab201a903149",
+      "target_label": "_hook_stop"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:aad5f15d80bae04e",
+      "target_label": "build_fused"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:ab8e704b83711a21",
+      "target_label": "build_digraph"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:b4204c15352d8f77",
+      "target_label": "composite_id"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:b8342ab2a94d09a7",
+      "target_label": "_adapt_repo"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:d29d39a748be57b7",
+      "target_label": "load_fused"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:e14b91e4896b1cc2",
+      "target_label": "semantic_baseline"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:e313e80a80f808d4",
+      "target_label": "analyze"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:e44e1bf9d91fd0a1",
+      "target_label": "merge_payloads"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:e7a781fb1be06490",
+      "target_label": "compute_status"
+    },
+    {
+      "relation": "references",
+      "source": "doc:docsusingthegraphmd",
+      "target": "cg:fe3f8dd8bc1ea820"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:13818f941c857325",
+      "target_label": "conductance"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:23e318e7c72e30e7",
+      "target_label": "source_scope"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:41887d5560742e2d",
+      "target_label": "abstractness_distance"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:4345f93363f0fc37",
+      "target_label": "debt_assessment"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:4b9f00f91cbbe45a",
+      "target_label": "semantic_health"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:7e64ea00f314b764",
+      "target_label": "_quadrant"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:7eef688a72fea582",
+      "target_label": "centrality"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:8561c5dad12527dd"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:8b0d99befd1aa704",
+      "target_label": "combined_health"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:987766e9481df715",
+      "target_label": "coupling_instability"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:989f896cddda2652",
+      "target_label": "dead_code"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:a5e6e8a1f253ecff",
+      "target_label": "dynamic_refs"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:b8845832111a5e7c",
+      "target_label": "knowledge_debt"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:bb506f5983bf18f7",
+      "target_label": "render_markdown"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:bb6fc38b517679e5",
+      "target_label": "cycles"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:ce550017ac803453",
+      "target_label": "fan_distribution"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:e29379bb6bb9cf48",
+      "target_label": "build_insights"
+    },
+    {
+      "relation": "documents",
+      "source": "doc:graphinsightsmd",
+      "target": "cg:fe3f8dd8bc1ea820"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:nextimplementationmd",
+      "target": "cg:34ca1b7369e952f9",
+      "target_label": "write_semantic_freshness"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:nextimplementationmd",
+      "target": "cg:3671ce95e1a767f3",
+      "target_label": "write_semantic"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:nextimplementationmd",
+      "target": "cg:4345f93363f0fc37",
+      "target_label": "debt_assessment"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:nextimplementationmd",
+      "target": "cg:569117df0d7952d9",
+      "target_label": "install_prepush_hook"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:nextimplementationmd",
+      "target": "cg:7af7daeeb499bcf8",
+      "target_label": "_check_semantic"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:nextimplementationmd",
+      "target": "cg:987766e9481df715",
+      "target_label": "coupling_instability"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:nextimplementationmd",
+      "target": "cg:9d2d589b042b484a",
+      "target_label": "prep_tasks"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:nextimplementationmd",
+      "target": "cg:a135ab201a903149",
+      "target_label": "_hook_stop"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:nextimplementationmd",
+      "target": "cg:e44e1bf9d91fd0a1",
+      "target_label": "merge_payloads"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:nextimplementationmd",
+      "target": "cg:e7a781fb1be06490",
+      "target_label": "compute_status"
+    },
+    {
+      "relation": "references",
+      "source": "doc:nextimplementationmd",
+      "target": "cg:fe3f8dd8bc1ea820"
     },
     {
       "relation": "specifies",
@@ -23,64 +677,93 @@
       "target": "cg:52ed65910189769a"
     },
     {
+      "context": "label-fallback",
       "relation": "specifies",
       "source": "doc:overlayskilloverlaymd",
-      "target": "cg:5dc2a9c13ae8c1b6"
+      "target": "cg:5dc2a9c13ae8c1b6",
+      "target_label": "linkable_subset"
     },
     {
+      "context": "label-fallback",
       "relation": "specifies",
       "source": "doc:overlayskilloverlaymd",
-      "target": "cg:6dd3607a25d92434"
+      "target": "cg:6dd3607a25d92434",
+      "target_label": "merge_semantic"
     },
     {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:overlayskilloverlaymd",
+      "target": "cg:9d2d589b042b484a",
+      "target_label": "prep_tasks"
+    },
+    {
+      "context": "label-fallback",
       "relation": "specifies",
       "source": "doc:overlayskilloverlaymd",
-      "target": "cg:b4204c15352d8f77"
+      "target": "cg:b4204c15352d8f77",
+      "target_label": "composite_id"
     },
     {
+      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:readmemd",
-      "target": "cg:13dc2f72e26c825e"
+      "target": "cg:13dc2f72e26c825e",
+      "target_label": "write_structural"
     },
     {
+      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:readmemd",
-      "target": "cg:164a13d5b9250633"
+      "target": "cg:164a13d5b9250633",
+      "target_label": "build_repo"
     },
     {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:1a0dfa28bf7d3c3c",
+      "target_label": "adapt_ts"
+    },
+    {
+      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:readmemd",
-      "target": "cg:1a0dfa28bf7d3c3c"
+      "target": "cg:3671ce95e1a767f3",
+      "target_label": "write_semantic"
     },
     {
-      "relation": "documents",
+      "context": "label-fallback",
+      "relation": "references",
       "source": "doc:readmemd",
-      "target": "cg:3671ce95e1a767f3"
+      "target": "cg:37e1fb59471497e8",
+      "target_label": "_merge_driver"
     },
     {
-      "relation": "documents",
+      "context": "label-fallback",
+      "relation": "references",
       "source": "doc:readmemd",
-      "target": "cg:37e1fb59471497e8"
+      "target": "cg:39fe57db003167c3",
+      "target_label": "detect_engine"
     },
     {
-      "relation": "documents",
+      "context": "label-fallback",
+      "relation": "references",
       "source": "doc:readmemd",
-      "target": "cg:39fe57db003167c3"
+      "target": "cg:435cd7ecb3bba36a",
+      "target_label": "callers"
     },
     {
-      "relation": "documents",
-      "source": "doc:readmemd",
-      "target": "cg:4b2ef1be40fba52c"
-    },
-    {
-      "relation": "documents",
+      "relation": "references",
       "source": "doc:readmemd",
       "target": "cg:52ed65910189769a"
     },
     {
-      "relation": "documents",
+      "context": "label-fallback",
+      "relation": "references",
       "source": "doc:readmemd",
-      "target": "cg:538debc562e34083"
+      "target": "cg:538debc562e34083",
+      "target_label": "write_manifest"
     },
     {
       "relation": "documents",
@@ -88,82 +771,194 @@
       "target": "cg:663c5cfd8b221c7b"
     },
     {
+      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:readmemd",
-      "target": "cg:6d17ce09b4fa2f20"
+      "target": "cg:6d17ce09b4fa2f20",
+      "target_label": "write_ci_workflow"
     },
     {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:7af7daeeb499bcf8",
+      "target_label": "_check_semantic"
+    },
+    {
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:8561c5dad12527dd"
+    },
+    {
+      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:readmemd",
-      "target": "cg:7af7daeeb499bcf8"
+      "target": "cg:864183784e4f00cf",
+      "target_label": "_pin_hashseed_for"
     },
     {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:88cb248435a11be1",
+      "target_label": "enrich"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:8a0dda05dc1e6c4f",
+      "target_label": "impact"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:8aaf8e1ba47784ae",
+      "target_label": "_hook_sessionstart"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:9d2d589b042b484a",
+      "target_label": "prep_tasks"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:a135ab201a903149",
+      "target_label": "_hook_stop"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:a7a4b64251b0aabd",
+      "target_label": "_doctor"
+    },
+    {
+      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:readmemd",
-      "target": "cg:864183784e4f00cf"
+      "target": "cg:aad5f15d80bae04e",
+      "target_label": "build_fused"
     },
     {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:b405ba996d23800b",
+      "target_label": "callees"
+    },
+    {
+      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:readmemd",
-      "target": "cg:9d2d589b042b484a"
+      "target": "cg:b4204c15352d8f77",
+      "target_label": "composite_id"
     },
     {
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:b8342ab2a94d09a7",
+      "target_label": "_adapt_repo"
+    },
+    {
+      "context": "label-fallback",
       "relation": "documents",
       "source": "doc:readmemd",
-      "target": "cg:aad5f15d80bae04e"
+      "target": "cg:d29d39a748be57b7",
+      "target_label": "load_fused"
     },
     {
-      "relation": "documents",
-      "source": "doc:readmemd",
-      "target": "cg:b4204c15352d8f77"
-    },
-    {
-      "relation": "documents",
-      "source": "doc:readmemd",
-      "target": "cg:b8342ab2a94d09a7"
-    },
-    {
-      "relation": "documents",
-      "source": "doc:readmemd",
-      "target": "cg:d29d39a748be57b7"
-    },
-    {
-      "relation": "documents",
+      "relation": "references",
       "source": "doc:readmemd",
       "target": "cg:e088c0baf177a262"
     },
     {
-      "relation": "documents",
+      "context": "label-fallback",
+      "relation": "references",
       "source": "doc:readmemd",
-      "target": "cg:e44e1bf9d91fd0a1"
+      "target": "cg:e29379bb6bb9cf48",
+      "target_label": "build_insights"
     },
     {
-      "relation": "documents",
+      "context": "label-fallback",
+      "relation": "references",
       "source": "doc:readmemd",
-      "target": "cg:e7a781fb1be06490"
+      "target": "cg:e44e1bf9d91fd0a1",
+      "target_label": "merge_payloads"
     },
     {
-      "relation": "describes",
-      "source": "doc:sampledocsdesignmd",
-      "target": "cg:172e861885ac849c"
+      "context": "label-fallback",
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:e7a781fb1be06490",
+      "target_label": "compute_status"
     },
     {
-      "relation": "describes",
-      "source": "doc:sampledocsdesignmd",
-      "target": "cg:c5b83cbad5fcb865"
+      "relation": "references",
+      "source": "doc:readmemd",
+      "target": "cg:fe3f8dd8bc1ea820"
     },
     {
-      "relation": "describes",
+      "context": "label-fallback",
+      "relation": "documents",
       "source": "doc:sampledocsdesignmd",
-      "target": "cg:ea5761eac89f83b9"
+      "target": "cg:172e861885ac849c",
+      "target_label": "charge"
     },
     {
-      "relation": "describes",
+      "context": "label-fallback",
+      "relation": "documents",
       "source": "doc:sampledocsdesignmd",
-      "target": "cg:ea87dac7d04078d1"
+      "target": "cg:c5b83cbad5fcb865",
+      "target_label": "BillingService"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:sampledocsdesignmd",
+      "target": "cg:ea5761eac89f83b9",
+      "target_label": "login"
+    },
+    {
+      "context": "label-fallback",
+      "relation": "documents",
+      "source": "doc:sampledocsdesignmd",
+      "target": "cg:ea87dac7d04078d1",
+      "target_label": "AuthService"
     }
   ],
   "semantic_nodes": [
+    {
+      "file_type": "document",
+      "id": "doc:agentsmd",
+      "label": "AGENTS.md"
+    },
+    {
+      "file_type": "document",
+      "id": "doc:docssetupmd",
+      "label": "setup.md"
+    },
+    {
+      "file_type": "document",
+      "id": "doc:docsusingthegraphmd",
+      "label": "using-the-graph.md"
+    },
+    {
+      "file_type": "document",
+      "id": "doc:graphinsightsmd",
+      "label": "GRAPH_INSIGHTS.md"
+    },
+    {
+      "file_type": "document",
+      "id": "doc:nextimplementationmd",
+      "label": "next_implementation.md"
+    },
     {
       "file_type": "document",
       "id": "doc:overlayskilloverlaymd",
@@ -182,8 +977,8 @@
   ],
   "stats": {
     "dangling": 0,
-    "fallback": 0,
-    "kept": 32,
-    "payloads": 3
+    "fallback": 120,
+    "kept": 138,
+    "payloads": 8
   }
 }
