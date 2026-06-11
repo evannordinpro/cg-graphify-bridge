@@ -28,7 +28,7 @@ pipx install "git+https://github.com/evannordinpro/cg-graphify-bridge@v0.1.0"
 ```
 
 Runtime deps (run `cg-graphify-bridge doctor <repo>` to check, with install hints):
-**node** (the TS substrate); the **codegraph** CLI for non-TS repos — `npm i -g @colbymchenry/codegraph`
+**node** (the TS substrate); the **codegraph** CLI for non-TS repos — `npm i -g @colbymchenry/codegraph@0.9.9`
 (or set `$CODEGRAPH_BIN`); and — for TS repos — the *target repo's* `node_modules/typescript`.
 
 ## Quick start
@@ -62,7 +62,9 @@ limits, command reference, troubleshooting: **[`docs/setup.md`](docs/setup.md)**
 ## Layout
 - `src/cg_graphify_bridge/` — `adapter` (codegraph DB → nodes/edges), `ts_substrate` (type-aware TS
   extractor), `driver` (library-composition over graphify + the layer split), `semantic`
-  (doc→code overlay), `freshness` (on-demand drift), `engine` (determinism stamp), `cli`
+  (doc→code overlay), `freshness` (on-demand drift), `engine` (determinism stamp), `health` /
+  `benchmark` / `insights` (metrics + showcase report), `query` (callers/callees/impact),
+  `analytics`, `cli`
 - `src/cg_graphify_bridge/templates/graph-build.yml` — the CI workflow `init` installs
 - `tests/` — pytest suite (determinism, packaging, artifact split, freshness, hooks, CI, …)
 - `overlay/SKILL_overlay.md` — the `/graphify` subagent contract (overlay mode)
