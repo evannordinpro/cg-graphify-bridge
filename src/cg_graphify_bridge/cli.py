@@ -102,11 +102,6 @@ def _detect_substrate(repo: Path, scopes: list[str]) -> str:
     return "codegraph"
 
 
-def _scopes_of(args: argparse.Namespace, repo: Path) -> list[str]:
-    return [s.strip() for s in args.scopes.split(",") if s.strip()] if getattr(args, "scopes", None) \
-        else _default_scopes(repo)
-
-
 def _adapt_repo(repo: Path, substrate: str, scopes: list[str], *, build_index: bool):
     """Route to the right substrate -> (AdaptResult, resolved_substrate). Shared by build and
     the semantic commands so doc->code edges key against the SAME node set the graph activates

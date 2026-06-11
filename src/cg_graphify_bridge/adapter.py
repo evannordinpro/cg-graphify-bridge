@@ -157,11 +157,6 @@ def adapt(db_path) -> AdaptResult:
     return AdaptResult(list(by_comp.values()), edges, cg2comp, stats)
 
 
-def full_graph(res: AdaptResult) -> dict:
-    """Topology/navigation view: everything, keyed by composite id (D12)."""
-    return {"nodes": res.nodes, "edges": res.edges}
-
-
 def from_structural(structural: dict) -> AdaptResult:
     """Reconstruct an AdaptResult from a committed structural.json layer — no DB read, no
     extraction, no clustering. Lets the semantic commands key doc->code edges against the

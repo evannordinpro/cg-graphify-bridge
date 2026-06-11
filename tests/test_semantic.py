@@ -10,14 +10,18 @@ def _auth_service_id(res):
     return next(n["id"] for n in res.nodes if n["label"] == "AuthService")
 
 
-def test_subagent_context_contains_no_source_code(cg_db):
-    """R7: the subagent boundary carries identity metadata + docs, never code."""
+def test_prep_tasks_contain_no_source_code(cg_db, tmp_path):
+    """R7: the subagent boundary (prep task files) carries identity metadata + doc text, never code."""
     res = adapter.adapt(cg_db)
-    ctx = semantic.build_subagent_context(res, docs=["The AuthService handles login."])
-    assert ctx["code_nodes"], "expected a curated code-node list"
-    for cn in ctx["code_nodes"]:
-        assert set(cn.keys()) <= {"id", "label", "file", "cg_kind"}
-        assert not any(k in cn for k in ("source", "body", "code", "signature"))
+    fused = driver.build_fused(cg_db)
+    out = tmp_path / "out"
+    info = semantic.prep_tasks(res, fused, SAMPLE, out, max_nodes=50)
+    for t in info["tasks"]:
+        task = json.loads((info["tasks_dir"] / f"{t['task_id']}.json").read_text())
+        assert task["code_nodes"], "expected a curated code-node list"
+        for cn in task["code_nodes"]:
+            assert set(cn.keys()) <= {"id", "label", "file", "kind"}
+            assert not any(k in cn for k in ("source", "body", "code", "signature"))
 
 
 def test_semantic_edge_targets_valid_composite_id(cg_db):
