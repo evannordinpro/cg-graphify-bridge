@@ -238,3 +238,57 @@ def test_health_includes_debt(tmp_path):
     _write_layers(out, [_node("o", file="src/a.py")], [], communities={"c0": ["o"]})
     r = health.health(out)
     assert "debt" in r and "score" in r["debt"] and "by_type" in r["debt"]
+
+
+# ---------- dynamic-wiring scan (dead-code false-positive rescue) ----------
+
+def _src(tmp_path, rel, text):
+    p = tmp_path / rel
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(text)
+
+
+def test_dynamic_refs_rescues_argparse_handler(tmp_path):
+    _src(tmp_path, "src/a.py",
+         "def handler(args):\n    pass\n\ndef wire(sub):\n    sub.set_defaults(func=handler)\n")
+    st = _struct([_node("H", label="handler", file="src/a.py")], [])
+    dyn = health.dynamic_refs(tmp_path, st, [{"id": "H", "label": "handler", "source_file": "src/a.py"}])
+    assert dyn == {"H": "src/a.py:5"}                  # the set_defaults line, not the def line
+
+
+def test_dynamic_refs_rescues_bare_constant_read(tmp_path):
+    _src(tmp_path, "src/a.py",
+         '_MARK = "x"\n\ndef use(path):\n    return stamp(path, _MARK)\n')
+    st = _struct([_node("M", label="_MARK", file="src/a.py")], [])
+    dyn = health.dynamic_refs(tmp_path, st, [{"id": "M", "label": "_MARK", "source_file": "src/a.py"}])
+    assert "M" in dyn                                  # arg-position read; its own `_MARK = ` line skipped
+
+
+def test_dynamic_refs_ignores_defs_calls_assignments_imports(tmp_path):
+    _src(tmp_path, "src/a.py",
+         "from x import truly_dead\n\ndef truly_dead():\n    pass\n\ntruly_dead = 1\nclass truly_dead:\n    pass\n")
+    st = _struct([_node("D", label="truly_dead", file="src/a.py")], [])
+    dyn = health.dynamic_refs(tmp_path, st, [{"id": "D", "label": "truly_dead", "source_file": "src/a.py"}])
+    assert dyn == {}                                   # no VALUE reference anywhere -> stays dead
+
+
+def test_health_drops_dynamically_wired_only_with_repo(tmp_path):
+    _src(tmp_path, "src/a.py",
+         "def handler(args):\n    pass\n\ndef wire(sub):\n    sub.set_defaults(func=handler)\n")
+    out = tmp_path / "graphify-out"
+    _write_layers(out, [_node("H", label="handler", file="src/a.py")], [])
+    base = health.health(out)["structural"]["dead_code"]
+    assert base["count"] == 1 and base["dynamically_wired_excluded"] == 0
+    dc = health.health(out, repo=tmp_path)["structural"]["dead_code"]
+    assert dc["count"] == 0 and dc["dynamically_wired_excluded"] == 1
+    assert dc["dynamically_wired"][0]["evidence"] == "src/a.py:5"
+
+
+def test_debt_score_sees_filtered_dead_code(tmp_path):
+    _src(tmp_path, "src/a.py",
+         "def handler(args):\n    pass\n\ndef wire(sub):\n    sub.set_defaults(func=handler)\n")
+    out = tmp_path / "graphify-out"
+    _write_layers(out, [_node("H", label="handler", file="src/a.py")], [])
+    with_repo = health.health(out, repo=tmp_path)["debt"]["by_type"].get("dead-code", 0)
+    without = health.health(out)["debt"]["by_type"].get("dead-code", 0)
+    assert without == 1 and with_repo == 0

@@ -15,7 +15,7 @@ from . import health as _health
 
 def build_insights(out: Path, repo: Path) -> dict:
     """Compose health (production-scoped) + benchmark + derived headline figures."""
-    h = _health.health(out)
+    h = _health.health(out, repo=repo)
     b = _benchmark.benchmark(out, repo)
     ab = h["structural"]["abstractness"]["communities"]
     comb = h["combined"]
@@ -94,8 +94,9 @@ _GLOSSARY = [
      "symbols that depend on an unusually large number of others — a single-responsibility smell / "
      "refactor candidate."),
     ("Dead-code review queue",
-     "symbols nothing else references (excluding entry points & exports) — a *review* list only; "
-     "static analysis over-flags reflection/dynamic dispatch, so never auto-delete."),
+     "symbols nothing else references (excluding entry points, exports, and dynamically-wired "
+     "symbols — names referenced as values, e.g. argparse `set_defaults(func=…)`, callbacks, "
+     "`getattr` strings) — a *review* list only; never auto-delete."),
     ("God-node coverage",
      "of the most-connected hub symbols, the % that have at least one documentation link."),
     ("Centrality-weighted coverage",

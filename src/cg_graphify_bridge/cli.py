@@ -746,7 +746,7 @@ def _health(args: argparse.Namespace) -> None:
     """Structural + semantic + combined health metrics over the committed graph (advisory)."""
     from . import health as _h
     repo = Path(args.repo).resolve()
-    res = _h.health(repo / args.out, include_tests=args.include_tests)
+    res = _h.health(repo / args.out, include_tests=args.include_tests, repo=repo)
     print(json.dumps(res, indent=2, default=str) if args.json else _h.render_report(res))
 
 

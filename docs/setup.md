@@ -149,6 +149,11 @@ layers, each with the action it implies:
 are excluded from every metric (coverage denominators, centrality, cycles, the risk queue) since
 codegraph indexes the whole repo; pass `--include-tests` to analyze everything.
 
+The **dead-code queue filters dynamically-wired symbols**: a zero-reference symbol whose name
+appears in the indexed sources as a *value* (argparse `set_defaults(func=…)`, callback/registry
+tables, `getattr`-by-name strings, constants read as bare identifiers) is treated as an entry
+point, not dead code — the JSON output lists what was dropped and the `file:line` evidence.
+
 `cg-graphify-bridge benchmark <repo>` reports graph-guided **token reduction** vs a naive
 full-file-read baseline, per query class (pinpoint vs global). Uses `tiktoken` for exact counts if
 installed, else a labelled `chars/4` estimate. Both commands add `--json` for machine output.
