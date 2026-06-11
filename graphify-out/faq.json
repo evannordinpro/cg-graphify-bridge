@@ -1,0 +1,179 @@
+{
+  "features": [
+    {
+      "anchor": "cg:0083623da07864e2",
+      "concept": "Runtime-dependency probes and tool-isolation conflict detectors.",
+      "functionality": "Verifies node/codegraph/typescript availability with actionable hints, and warns when a codegraph MCP, graphify rebuild hook, or schema clash would shadow the committed graph. Advisory and fail-open — findings never change an exit code.",
+      "name": "Doctor & isolation checks"
+    },
+    {
+      "anchor": "cg:042ead92d3771de9",
+      "concept": "Offline callers/callees/impact navigation over the committed graph.",
+      "functionality": "Resolves a human-typed name (label → qualified name → suffix, ambiguity surfaced), then BFS-traverses the dependency digraph by hop, annotating direct hits with their concrete relations. Works on a fresh clone with no index — unlike codegraph's own live-db query.",
+      "name": "Graph query engine"
+    },
+    {
+      "anchor": "cg:04b6fa245e986ced",
+      "concept": "Pass 1 of the type-aware TypeScript extractor.",
+      "functionality": "Walks each source file with a scope stack emitting one node per declaration (qualified by file and nesting), stamping the Martin-metric inputs (is_abstract, is_exported) from modifier flags.",
+      "name": "TS substrate — declaration pass"
+    },
+    {
+      "anchor": "cg:05e8d942953fe00f",
+      "concept": "Everything `init` wires into a consumer repo's Claude/git config.",
+      "functionality": "Writes the SessionStart/Stop hooks into committed .claude/settings.json, hard-blocks a project-local codegraph MCP, and registers the per-clone semantic union merge driver. Idempotent; preserves pre-existing user settings.",
+      "name": "Repo adoption scaffolding"
+    },
+    {
+      "anchor": "cg:066198be9b8b4e30",
+      "concept": "The shared core: committed-layer reading, fused materialization, and the health pass.",
+      "functionality": "read_layer validates schema and rejects corrupt layers loudly; materialize fuses the committed layers into the gitignored graph.json consumers read; health computes the structural/semantic/combined metrics with the layered dead-code tiers (dispatches edges, triage verdicts, dynamic_refs heuristic).",
+      "name": "Layer IO & health core"
+    },
+    {
+      "anchor": "cg:07dc31970361d343",
+      "concept": "The git merge driver for two branches that both extended the overlay.",
+      "functionality": "Unions semantic_nodes by id and edges by (source, target, relation), deterministically sorted — two PRs adding doc→code edges merge without conflict; over-inclusion is pruned as dangling at the next merge.",
+      "name": "Semantic union merge driver"
+    },
+    {
+      "anchor": "cg:0862bd793b5e3ae3",
+      "concept": "codegraph/TS output → graphify nodes/edges, keyed by the composite id.",
+      "functionality": "The composite id hashes (file, qualified_name, kind, signature) so it survives line-shifting edits; adapt maps the codegraph SQLite db, adapt_ts the TS extractor, and py_calls.enrich supplements Python cross-module call and value-reference edges.",
+      "name": "Substrate adapters & id model"
+    },
+    {
+      "anchor": "cg:0c34e25529c134e9",
+      "concept": "The argparse composition root plus the status/freshness surface.",
+      "functionality": "main wires every subcommand; compute_status reports per-layer freshness (structural = source hash vs build baseline, semantic = docs+linked files vs merge baseline) with exact refresh commands; the Stop hook blocks ending a session on a stale or uncommitted layer, fail-open with an escape hatch.",
+      "name": "CLI dispatch & freshness status"
+    },
+    {
+      "anchor": "cg:0ce1b293fd5fffda",
+      "concept": "The dev-owned doc→code layer: prep → agent payloads → merge.",
+      "functionality": "prep_tasks writes per-doc tasks (identity metadata only, never source); merge_semantic validates every edge endpoint, resolves target_label by unique normalized label, and prunes ambiguity rather than guessing; the baseline stamp makes doc/linked-code edits surface as staleness.",
+      "name": "Semantic overlay machinery"
+    },
+    {
+      "anchor": "cg:0d39c310d578fb02",
+      "concept": "Test fixture: the AuthService half of the sample repo.",
+      "functionality": "Exists so codegraph-backed tests and the overlay protocol have a tiny real codebase with documented symbols to link against.",
+      "name": "Sample fixture — auth"
+    },
+    {
+      "anchor": "cg:13375cbfb9decc97",
+      "concept": "GRAPH_INSIGHTS.md rendering plus the token-reduction benchmark.",
+      "functionality": "Composes health and benchmark into a content-deterministic, GitHub-native report (mermaid quadrant, debt scorecard, coverage gauges); benchmark measures graph-guided retrieval vs naive full-file reads per query class.",
+      "name": "Insights & benchmark showcase"
+    },
+    {
+      "anchor": "cg:13818f941c857325",
+      "concept": "The pure, offline metric spine over the committed structural layer.",
+      "functionality": "One digraph builder feeds centrality, cycles (with suggested cuts), conductance, Martin coupling/instability with the cross-community neighbor map, abstractness/distance, fan-out, and the dead-code review queue with its entry-point filter.",
+      "name": "Structural analytics"
+    },
+    {
+      "anchor": "cg:13dc2f72e26c825e",
+      "concept": "Deterministic serialization of the two committed layers.",
+      "functionality": "write_structural/write_semantic emit byte-stable JSON (sorted keys, stable ordering), plus GRAPH_REPORT.md and the gitignore block that keeps derived caches local.",
+      "name": "Committed-layer writers"
+    },
+    {
+      "anchor": "cg:164a13d5b9250633",
+      "concept": "The build path and the determinism guards around it.",
+      "functionality": "build_repo routes to the right substrate, re-execs under a pinned PYTHONHASHSEED, stamps engine/substrate versions, and refuses to overwrite a graph built by a different clustering engine — CI stays the single authoritative builder.",
+      "name": "Build orchestration & engine guard"
+    },
+    {
+      "anchor": "cg:172e861885ac849c",
+      "concept": "Test fixture: the BillingService half of the sample repo.",
+      "functionality": "Paired with the auth fixture to give cross-module edges and doc links a stable target.",
+      "name": "Sample fixture — billing"
+    },
+    {
+      "anchor": "cg:21b0757186f1f983",
+      "concept": "The alias tables behind the Python edge supplement.",
+      "functionality": "Resolves relative imports against the importing file's package and absolute imports by unique path-suffix match — ambiguity never guesses; `from x import name` is itself recorded as a reference.",
+      "name": "Python import resolution"
+    },
+    {
+      "anchor": "cg:2266fd7eaa1dbec8",
+      "concept": "Installs the build-on-PR-branch GitHub Actions workflow.",
+      "functionality": "Ships the template that rebuilds structural on every PR and commits it onto the PR's own branch (diff-gated, loop-safe), with opt-in insights/FAQ renders; never clobbers a customized workflow.",
+      "name": "CI workflow scaffolding"
+    },
+    {
+      "anchor": "cg:2ebb71d28baf1251",
+      "concept": "Pass 2 of the TypeScript extractor: type-checker-resolved references.",
+      "functionality": "Every identifier resolves through the compiler's symbol table (alias-following) back to a pass-1 declaration — dense, import-proof cross-file calls/references plus heritage edges.",
+      "name": "TS substrate — reference pass"
+    },
+    {
+      "anchor": "cg:387ecfaf791671b2",
+      "concept": "The universal (non-Claude) freshness reminders.",
+      "functionality": "Installs post-commit/merge/checkout hooks that recompute the source hash and drop a stale marker on drift — husky-aware, never blocking, portable across clones.",
+      "name": "Git freshness hooks"
+    },
+    {
+      "anchor": "cg:4345f93363f0fc37",
+      "concept": "The transparent 0–1 debt roll-up.",
+      "functionality": "Aggregates existing signals (cycles, zone-of-pain, god-objects, fan-out, dead code, dangling links) into ranked by-type/by-feature/by-component breakdowns with per-type score contributions — never an opaque number.",
+      "name": "Technical-debt assessment"
+    },
+    {
+      "anchor": "cg:43aeafd1fee9a466",
+      "concept": "The visitor that turns value-position uses into structural edges.",
+      "functionality": "Calls resolve through import aliases; bare names, kwarg function refs, and constant chain roots become `references` edges — the reason argparse handlers and module constants no longer look dead.",
+      "name": "Python value-reference extraction"
+    },
+    {
+      "anchor": "cg:4b9f00f91cbbe45a",
+      "concept": "The semantic and combined halves of health.",
+      "functionality": "Doc coverage overall/by-kind/public-API, dangling links and orphan docs, god-node and centrality-weighted coverage, dark subsystems, and the undocumented-load-bearing risk queue — 'are we documenting what matters'.",
+      "name": "Doc-coverage metrics"
+    },
+    {
+      "anchor": "cg:5d10fed5e715b75b",
+      "concept": "Library composition over graphify: cluster, fold, curate.",
+      "functionality": "build_fused clusters the analysis view and computes god nodes; singleton folding keeps community structure meaningful; linkable_subset curates the node list handed to overlay agents.",
+      "name": "Graph fusion & curation"
+    },
+    {
+      "anchor": "cg:8396d267d045de15",
+      "concept": "The human-readable markdown render of the health pass.",
+      "functionality": "Formats structural/semantic/combined findings with the actions they imply, matching the GRAPH_REPORT conventions.",
+      "name": "Health report rendering"
+    },
+    {
+      "anchor": "cg:8a4d3ba74a720236",
+      "concept": "The conservatism guard for bare-name resolution.",
+      "functionality": "Collects params and assignment targets per function scope (global/nonlocal un-shadow) so a local variable never mis-resolves to a module-level symbol — no guessing.",
+      "name": "Python scope shadowing"
+    },
+    {
+      "anchor": "cg:9af622d7c88e94ad",
+      "concept": "AGENTS.md and .gitattributes scaffolding.",
+      "functionality": "Marker-based idempotent appends ship the agent contract and the semantic merge-driver declaration into consumer repos without ever clobbering existing content.",
+      "name": "Contract-file writers"
+    },
+    {
+      "anchor": "cg:9ce80306eb323e2a",
+      "concept": "The never-block read path for graph consumers.",
+      "functionality": "load_fused prefers the materialized graph.json, re-materializes from committed layers when missing or corrupt, and degrades to best-effort raw-layer reads — the graph is an accelerator, never a dependency.",
+      "name": "Consumer read & degradation"
+    }
+  ],
+  "layer": "faq",
+  "project": {
+    "purpose": "Code knowledge graphs rot: local indexes drift, rebuilds churn artifacts, and documentation links break silently. The bridge makes the graph a versioned, byte-deterministic artifact — CI owns the structural layer, developers (via their agents) own the doc-to-code and narrative layers, and freshness gates keep every layer honest with near-zero manual effort.",
+    "value": "Agents and humans navigate by graph instead of cold file scans (~96% less context per question), architecture and documentation health are continuously measured (insights, debt, risk queues), and the whole thing survives clones, rebuilds, and refactors because every artifact is committed and deterministic.",
+    "what": "cg-graphify-bridge fuses codegraph (a deterministic code substrate) with graphify (a semantic, cross-domain overlay) into one committed, queryable knowledge graph for any repository, joined on a line-shift-stable composite id."
+  },
+  "schema_version": 1,
+  "stats": {
+    "dropped_orphans": [],
+    "features": 27,
+    "merged": 27,
+    "unknown_anchors": []
+  }
+}

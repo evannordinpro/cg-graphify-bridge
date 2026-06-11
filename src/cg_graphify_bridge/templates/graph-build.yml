@@ -75,16 +75,23 @@ jobs:
       - name: Render insights showcase (opt-in -> GRAPH_INSIGHTS.md)
         if: ${{ vars.CG_INSIGHTS == 'true' }}
         run: cg-graphify-bridge insights . --out-file GRAPH_INSIGHTS.md
+      # OPT-IN versioned FAQ: set repo variable CG_FAQ=true to render + commit PROJECT_FAQ.md at the
+      # repo root (deterministic facts + the committed faq.json narrative; LLM-free in CI).
+      - name: Render PROJECT_FAQ.md (opt-in)
+        if: ${{ vars.CG_FAQ == 'true' }}
+        run: cg-graphify-bridge faq-render . --out-file PROJECT_FAQ.md
       - name: Commit + push ONLY if structural changed (diff-gated = loop backstop)
         if: ${{ !github.event.pull_request.head.repo.fork }}
         env:
           CG_GRAPH_COMMIT_MSG: ${{ vars.CG_GRAPH_COMMIT_MSG }}   # optional: set this repo variable to override the bot commit message
           CG_INSIGHTS: ${{ vars.CG_INSIGHTS }}
+          CG_FAQ: ${{ vars.CG_FAQ }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           layers="graphify-out/structural.json graphify-out/GRAPH_REPORT.md graphify-out/.cg_manifest.json"
           if [ "${CG_INSIGHTS}" = "true" ] && [ -f GRAPH_INSIGHTS.md ]; then layers="$layers GRAPH_INSIGHTS.md"; fi
+          if [ "${CG_FAQ}" = "true" ] && [ -f PROJECT_FAQ.md ]; then layers="$layers PROJECT_FAQ.md"; fi
           if git diff --quiet -- $layers; then
             echo "structural unchanged — deterministic rebuild, nothing to push."; exit 0
           fi

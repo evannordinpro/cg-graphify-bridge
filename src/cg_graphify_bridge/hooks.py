@@ -73,6 +73,9 @@ def install_freshness_hooks(repo: Path, out_name: str, *, src: str | None = None
 def install_prepush_hook(repo: Path, out_name: str, *, write_husky: bool = False) -> dict:
     """Optional universal (non-Claude) gate: a git pre-push that fails when the semantic overlay
     is stale, with `git push --no-verify` as the escape (mirrors the repo's branch-name pre-push).
+    Phase 6 (KD8/DEC-1): also gates a stale PROJECT_FAQ narrative, CLAUDECODE-aware — a Claude
+    push fails with the imperative (Claude sees the failure and runs the faq loop); a human push
+    soft-warns only (DEC-5). check-faq itself fails open and exits 0 on un-adopted repos.
     Husky-aware: reports the snippet rather than rewriting committed .husky/ unless write_husky."""
     try:
         hp = subprocess.run(["git", "-C", str(repo), "rev-parse", "--git-path", "hooks"],
@@ -89,6 +92,14 @@ def install_prepush_hook(repo: Path, out_name: str, *, write_husky: bool = False
         f'if [ -n "$CG" ]; then $CG check-semantic "$R"{out_flag} --quiet || '
         f'{{ echo "cg-graphify-bridge: semantic overlay is stale — refresh + commit semantic.json '
         f'(see: cg-graphify-bridge status), or push with --no-verify"; exit 1; }}; fi\n'
+        f'if [ -n "$CG" ]; then\n'
+        f'  if [ "$CLAUDECODE" = "1" ]; then\n'
+        f'    $CG check-faq "$R"{out_flag} || exit 1\n'
+        f'  else\n'
+        f'    $CG check-faq "$R"{out_flag} --quiet || echo "cg-graphify-bridge (warning): '
+        f'PROJECT_FAQ narrative is stale — cg-graphify-bridge faq-prep / faq-merge when convenient"\n'
+        f'  fi\n'
+        f'fi\n'
     )
     if ".husky" in hooks_dir.parts:
         husky_root = hooks_dir.parent if hooks_dir.name == "_" else hooks_dir

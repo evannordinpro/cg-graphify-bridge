@@ -1086,6 +1086,11 @@
     },
     {
       "file_type": "document",
+      "id": "doc:projectfaqmd",
+      "label": "PROJECT_FAQ.md"
+    },
+    {
+      "file_type": "document",
       "id": "doc:readmemd",
       "label": "README.md"
     },
@@ -1099,6 +1104,6 @@
     "dangling": 0,
     "fallback": 0,
     "kept": 209,
-    "payloads": 10
+    "payloads": 11
   }
 }

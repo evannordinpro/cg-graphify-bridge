@@ -69,6 +69,9 @@ jobs:
       # Versioned, beautiful showcase at the repo root (content-deterministic -> rides the diff-gate).
       - name: Render insights showcase (GRAPH_INSIGHTS.md)
         run: cg-graphify-bridge insights . --out-file GRAPH_INSIGHTS.md
+      # Phase 6: deterministic FAQ render from the committed narrative (LLM-free in CI, KD11).
+      - name: Render PROJECT_FAQ.md (quantitative facts + committed faq.json narrative)
+        run: cg-graphify-bridge faq-render . --out-file PROJECT_FAQ.md
       - name: Commit + push ONLY if structural changed (diff-gated = loop backstop)
         if: ${{ !github.event.pull_request.head.repo.fork }}
         env:
@@ -76,7 +79,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          layers="graphify-out/structural.json graphify-out/GRAPH_REPORT.md graphify-out/.cg_manifest.json GRAPH_INSIGHTS.md"
+          layers="graphify-out/structural.json graphify-out/GRAPH_REPORT.md graphify-out/.cg_manifest.json GRAPH_INSIGHTS.md PROJECT_FAQ.md"
           if git diff --quiet -- $layers; then
             echo "structural unchanged — deterministic rebuild, nothing to push."; exit 0
           fi

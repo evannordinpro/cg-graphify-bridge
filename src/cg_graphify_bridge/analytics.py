@@ -151,7 +151,11 @@ def coupling_instability(structural: dict) -> dict:
         ({"from": cu, "to": cv, "i_from": inst.get(cu, 0.0), "i_to": inst.get(cv, 0.0)}
          for (cu, cv) in cross if inst.get(cu, 0.0) < inst.get(cv, 0.0)),
         key=lambda d: (d["i_to"] - d["i_from"]), reverse=True)
-    return {"communities": rows, "inversions": inversions, "instability": inst}
+    # KD1 (Phase 6): the cross-community nearest-neighbor map — who depends on whom, weighted.
+    neighbors = sorted(({"from": cu, "to": cv, "weight": w} for (cu, cv), w in cross.items()),
+                       key=lambda d: (-d["weight"], d["from"], d["to"]))
+    return {"communities": rows, "inversions": inversions, "instability": inst,
+            "neighbors": neighbors}
 
 
 def _is_abstract_type(n: dict) -> bool:

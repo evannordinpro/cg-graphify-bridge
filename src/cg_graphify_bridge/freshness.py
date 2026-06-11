@@ -187,6 +187,23 @@ def write_semantic_freshness(out, repo) -> dict:
     return base
 
 
+def faq_status(out, repo) -> dict:
+    """Light per-feature FAQ-narrative staleness for the gates (Phase 6 KD8): recompute each
+    feature's member-file hash from the FILE LISTS stored in the manifest baseline — stdlib
+    only, no graph load, so the bare-python3 pre-push/Stop hook path keeps working. 'unbuilt'
+    until the first faq-merge stamps a baseline (un-adopted repos are never nagged)."""
+    out, repo = Path(out), Path(repo)
+    base = (read_manifest(out) or {}).get("faq", {}).get("features")
+    if not base:
+        return {"state": "unbuilt", "stale_features": []}
+    stale = []
+    for anchor, ent in sorted(base.items()):
+        cur = _hash_paths(repo, [repo / f for f in ent.get("files", [])])[0]
+        if cur != ent.get("hash"):
+            stale.append(anchor)
+    return {"state": "stale" if stale else "fresh", "stale_features": stale}
+
+
 def compute_status(out, repo, scopes: list[str] | None = None) -> dict:
     """Pure, on-demand freshness of BOTH layers (no marker reads/writes). structural = code drift
     vs the hash captured at build; semantic = doc/linked drift vs the baseline captured at merge."""

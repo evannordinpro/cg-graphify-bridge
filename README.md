@@ -116,7 +116,10 @@ Determinism is non-negotiable: `build`/`init` re-exec under a pinned `PYTHONHASH
 - **[`GRAPH_INSIGHTS.md`](GRAPH_INSIGHTS.md)** — the auto-generated, versioned showcase: token
   efficiency, the Martin Zone-of-Pain/Uselessness quadrant, doc coverage, and the risk queue for
   this very repo (rebuilt by CI each graph build).
-- This repo is self-hosted — `graphify-out/` and `GRAPH_INSIGHTS.md` are live examples of the tool's own output.
+- **[`PROJECT_FAQ.md`](PROJECT_FAQ.md)** — the evolving project FAQ: deterministic graph facts
+  (features = communities, neighbors, public surfaces, debt) + the committed dev-narrative
+  (`graphify-out/faq.json`), rendered LLM-free by CI each build.
+- This repo is self-hosted — `graphify-out/`, `GRAPH_INSIGHTS.md`, and `PROJECT_FAQ.md` are live examples of the tool's own output.
 
 ## License
 [Apache-2.0](LICENSE).
