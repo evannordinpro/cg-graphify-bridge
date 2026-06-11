@@ -37,6 +37,28 @@ Verify: `cg-graphify-bridge doctor .`
 
 ## 3. Adopt the tool in a repo (one-time, by the repo owner)
 
+The whole adoption, in order — each step is detailed below:
+
+1. **Install the tool** (§2) and run `cg-graphify-bridge doctor <repo>` until it's clean.
+2. **`cg-graphify-bridge init <repo>`** — builds the first structural graph + installs the CI
+   workflow, agent contract, hooks, and merge driver (table below). Idempotent.
+3. **Commit everything `init` generated** (the ✅ rows below) and push.
+4. **Enable CI write access** — GitHub → Settings → Actions → General → Workflow permissions →
+   *"Read and write permissions"* (details below). Without this the structural commit-back can't push.
+5. **Opt into metrics** (recommended) — repo **variables**: `CG_INSIGHTS=true` renders the
+   `GRAPH_INSIGHTS.md` showcase at the repo root on every graph build; `CG_HEALTH_ADVISORY=true`
+   writes the health report to the CI run summary (never gates). See §6 "Health & benchmarks."
+6. **Seed the semantic overlay** — `init` does *not* create `semantic.json`; until it exists,
+   health/insights report structural metrics only and "no semantic overlay." Run
+   `cg-graphify-bridge semantic-prep <repo>`, have your agent fill the payloads (with Claude Code:
+   just ask it to "refresh the semantic overlay" — the committed `AGENTS.md` carries the exact
+   protocol), then `cg-graphify-bridge semantic-merge <repo>` and commit
+   `graphify-out/semantic.json`.
+7. **Verify** — open any PR touching source: the graph-build job should push a
+   `ci graph build` commit onto the PR's own branch updating `graphify-out/**` (or trigger the
+   workflow manually via *Actions → graph-build → Run workflow*). Then `cg-graphify-bridge
+   status <repo>` on a fresh pull reports both layers **fresh**.
+
 ```bash
 cg-graphify-bridge init <repo>     # idempotent
 ```
@@ -93,22 +115,42 @@ cg-graphify-bridge install-hook .
 git config merge.cg-semantic.driver "cg-graphify-bridge merge-driver %A %B"
 ```
 
-## 5. Daily use
+## 5. Daily use — the local loop
+
+**If you work with Claude Code, the loop is mostly automatic.** The committed `.claude` hooks and
+`AGENTS.md` do the work: SessionStart surfaces freshness and materializes `graph.json`; the agent
+consults the graph before file scans and follows the overlay-refresh protocol when needed; the Stop
+hook blocks ending a session on a stale/uncommitted overlay (escape hatch:
+`export CG_BRIDGE_DISABLE=1` — the gate always fails open on errors). Your part: pull regularly
+(CI owns structural) and commit `graphify-out/semantic.json` when the agent refreshes it.
+
+**Working by hand, the loop is:**
 
 ```bash
-cg-graphify-bridge status .          # structural + semantic freshness (+ exact refresh command)
+git pull                              # structural.json is CI-built — pulling IS the structural refresh
+cg-graphify-bridge status .           # both layers fresh? prints the exact refresh command if not
 ```
 
-- **Consume the graph:** read `graphify-out/graph.json` (or `GRAPH_REPORT.md`); full guidance in
-  [`using-the-graph.md`](using-the-graph.md) and `AGENTS.md`. If `graph.json` is missing,
-  `cg-graphify-bridge materialize .` rebuilds it (the SessionStart hook also does).
-- **Structural** is CI-owned — never rebuild it by hand; pull the latest.
+- **Navigate before you edit** — the committed graph answers "what breaks if I touch this":
+  ```bash
+  cg-graphify-bridge callers . <symbol>     # who depends on it
+  cg-graphify-bridge impact . <symbol>      # transitive blast radius (--depth N to bound)
+  cg-graphify-bridge callees . <symbol>     # what it depends on
+  ```
+  Or read `graphify-out/graph.json` / `GRAPH_REPORT.md` directly — full guidance in
+  [`using-the-graph.md`](using-the-graph.md). Missing `graph.json`? `cg-graphify-bridge
+  materialize .` (the SessionStart hook also does this). For repeat-query sessions (≥10 lookups),
+  `cg-graphify-bridge serve .` exposes the committed graph over graphify's MCP.
+- **Check the codebase pulse occasionally** — `cg-graphify-bridge health .` (debt, cycles,
+  doc-coverage, risk queue; advisory, never gates) and `insights .` (the rendered showcase).
+- **Structural is CI-owned** — never rebuild it by hand; pull the latest.
 - **Refresh the semantic overlay** when `status` says it's stale (you changed docs or linked code):
   ```bash
   cg-graphify-bridge semantic-prep .     # → an agent fills graphify-out/.cache/semantic/payloads/<id>.json
   cg-graphify-bridge semantic-merge .    # → then: git add graphify-out/semantic.json && commit
   ```
-  The exact payload protocol (composite-id targets, `target_label` fallback, no source code) is in
+  With Claude Code, ask it to "refresh the semantic overlay" — it follows the committed protocol.
+  The exact payload contract (composite-id targets, `target_label` fallback, no source code) is in
   `AGENTS.md` §"Refreshing the semantic overlay."
 
 ## 6. Command reference
