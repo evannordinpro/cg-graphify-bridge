@@ -5,13 +5,13 @@ This repo ships a committed code knowledge graph built by **cg-graphify-bridge**
 *before* broad file scans for "where is X / how does Y work / what touches Z".
 
 **Committed layers:**
-- `graphify-out/structural.json` — CI-owned deterministic code graph (nodes + edges + communities). Do not hand-edit; CI rebuilds it on merge to the default branch.
+- `graphify-out/structural.json` — CI-owned deterministic code graph (nodes + edges + communities). Do not hand-edit; CI rebuilds it on every PR and commits it onto the PR's own branch.
 - `graphify-out/semantic.json` — dev-owned doc->code overlay. Refresh locally when you change docs or linked code, and commit it with your change-set.
 - `graphify-out/GRAPH_REPORT.md` — human-browsable structural summary (god nodes, communities).
 - `graphify-out/.cg_manifest.json` — engine stamp + freshness baseline.
 
 **Derived (gitignored, local):**
-- `graphify-out/graph.json` — the fused view (structural + semantic) the graph consumer reads. Lazily materialized; if absent, run `cg-graphify-bridge build .` (or it is rebuilt on session start).
+- `graphify-out/graph.json` — the fused view (structural + semantic) the graph consumer reads. Lazily materialized; if absent, run `cg-graphify-bridge materialize .` (or it is rebuilt on session start).
 
 **Check freshness before relying on the graph:**
 ```

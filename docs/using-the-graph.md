@@ -4,8 +4,9 @@ This repo is **self-hosted**: `cg-graphify-bridge` was run on its own source, so
 is a live, worked example of the tool's output. This doc explains how to *consume* that output —
 the same way any repo's `graphify-out/` should be used.
 
-> The numbers/symbols below are from this repo's actual graph (507 code nodes, 23 communities,
-> 32 doc→code edges). Rebuild it any time with `cg-graphify-bridge build .` + the semantic steps.
+> The numbers/symbols below are from this repo's actual graph (770 code nodes, 27 communities,
+> 32 doc→code edges). CI rebuilds the structural layer on every PR; refresh the overlay with the
+> semantic steps below. (Exact counts drift as the code evolves — `GRAPH_REPORT.md` is current.)
 
 ## What's in `graphify-out/`
 
@@ -23,8 +24,8 @@ regenerate it with `cg-graphify-bridge materialize .` (the SessionStart hook als
 ## Human operators
 
 1. **Orient from `GRAPH_REPORT.md`.** Its *god nodes* are the architecturally central symbols — for
-   this repo: `materialize`, `write_structural`, `build_repo`, `_adapt_repo`, `source_hash`,
-   `AdaptResult`, `compute_status`, the hook handlers. Start there, not a cold file scan.
+   this repo: `resolve`, `build_digraph`, `analyze`, `build_repo`, `materialize`,
+   `semantic_baseline`, `health`, `AdaptResult`. Start there, not a cold file scan.
 2. **Check freshness before trusting it:**
    ```
    cg-graphify-bridge status .
