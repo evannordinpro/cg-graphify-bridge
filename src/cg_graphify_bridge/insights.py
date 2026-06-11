@@ -63,6 +63,72 @@ def _quadrant(communities: list) -> list:
     return out
 
 
+# Plain-language definition of EVERY stat the report surfaces — exactly what it measures.
+_GLOSSARY = [
+    ("Token efficiency (pinpoint / global)",
+     "the % fewer tokens an agent reads to answer a question using the graph's node summaries "
+     "instead of opening whole source files — *pinpoint* = single-symbol lookups, *global* = "
+     "whole-subsystem questions."),
+    ("Dependency cycle",
+     "a set of files that depend on each other in a loop (A→B→…→A); cycles make changes ripple "
+     "unpredictably — 0 is ideal."),
+    ("Abstractness (A)",
+     "fraction of a community's types that are abstract (interfaces / abstract classes) vs "
+     "concrete — 0 = all concrete, 1 = all abstract."),
+    ("Instability (I)",
+     "a community's exposure to forced change = outgoing deps ÷ (incoming + outgoing) — 0 = stable "
+     "(others depend on it), 1 = volatile (it depends on everything)."),
+    ("Zone of Pain",
+     "concrete *and* heavily depended-on (low A, low I): rigid and risky to change."),
+    ("Zone of Uselessness",
+     "abstract *but* unused (high A, high I): a dead abstraction to delete or inline."),
+    ("Conductance (leakiest module)",
+     "the share of a community's connections that cross its boundary — high = a leaky module not "
+     "cleanly separated from the rest."),
+    ("Betweenness (top hub)",
+     "how often a symbol lies on the shortest path between other symbols — a high value is an "
+     "architectural chokepoint the system routes through."),
+    ("High fan-out",
+     "symbols that depend on an unusually large number of others — a single-responsibility smell / "
+     "refactor candidate."),
+    ("Dead-code review queue",
+     "symbols nothing else references (excluding entry points & exports) — a *review* list only; "
+     "static analysis over-flags reflection/dynamic dispatch, so never auto-delete."),
+    ("God-node coverage",
+     "of the most-connected hub symbols, the % that have at least one documentation link."),
+    ("Centrality-weighted coverage",
+     "documentation coverage weighted by each symbol's importance — the gap vs raw coverage reveals "
+     "whether the docs cover what actually matters."),
+    ("Undocumented hubs",
+     "central hub symbols with no documentation — the doc backlog, ordered by importance."),
+    ("Darkest subsystem",
+     "the community carrying the most architectural importance but the least documentation."),
+    ("Undocumented load-bearing risk",
+     "importance × (1 − documented), ranked — symbols that are both central and undocumented: "
+     "document these first."),
+    ("Knowledge debt",
+     "a 0–1 roll-up of missing importance-weighted coverage + stale/dangling doc links — lower is "
+     "better; shown with its components so it's never an opaque score."),
+    ("Debt score",
+     "a 0–1 technical-debt roll-up = weighted, saturating contributions from each debt type (cycles, "
+     "Zone-of-Pain, god-objects, high-fan-out, dead-code, dangling links), shown per-type so it's "
+     "never opaque — higher = more debt. Also broken down by feature (community) and component (file)."),
+    ("God object",
+     "a symbol with unusually high betweenness (an architectural chokepoint) — central enough that "
+     "changing it ripples widely; a split candidate."),
+    ("Dangling link",
+     "a doc→code link whose target symbol no longer exists in the graph — a broken reference / "
+     "documentation debt to fix or re-point."),
+]
+
+
+def _glossary() -> list:
+    return (["<details>",
+             "<summary>📖 <b>What each metric measures</b> — plain-language definitions</summary>", ""]
+            + [f"- **{term}** — {definition}" for term, definition in _GLOSSARY]
+            + ["", "</details>"])
+
+
 def render_markdown(ins: dict) -> str:
     h, b, hd = ins["health"], ins["benchmark"], ins["headline"]
     s, comb, sem = h["structural"], h["combined"], h["semantic"]
@@ -109,6 +175,27 @@ def render_markdown(ins: dict) -> str:
              f"**Dead-code review queue:** {s['dead_code']['count']}")
     L.append("")
 
+    # 🧹 Technical Debt
+    debt = h.get("debt", {})
+    L += ["## 🧹 Technical Debt", "",
+          f"**Debt score** &nbsp; {_bar(debt.get('score', 0))} _(0 = clean → 1 = heavy)_", ""]
+    bt = debt.get("by_type", {})
+    if bt:
+        L += ["| Debt type | Count |", "|---|--:|"]
+        L += [f"| {t} | {c} |" for t, c in sorted(bt.items(), key=lambda kv: (-kv[1], kv[0]))]
+        L.append("")
+    if debt.get("by_feature"):
+        f0 = debt["by_feature"][0]
+        L.append(f"- **Most-indebted feature:** community {f0['feature']} ({f0['debt_items']} debt items)")
+    if debt.get("by_component"):
+        c0 = debt["by_component"][0]
+        L.append(f"- **Most-indebted component:** `{c0['component']}` ({c0['debt_items']} debt items)")
+    sc = {t: v for t, v in debt.get("score_components", {}).items() if v > 0}
+    if sc:
+        L.append("- _score contributions: "
+                 + ", ".join(f"{t} {v}" for t, v in sorted(sc.items(), key=lambda kv: -kv[1])) + "_")
+    L.append("")
+
     # 📚 Documentation
     L += ["## 📚 Documenting what matters", ""]
     if comb.get("available"):
@@ -133,6 +220,8 @@ def render_markdown(ins: dict) -> str:
         L += [f"{i + 1}. `{q['label']}` — `{q['source_file']}`"
               for i, q in enumerate(comb["risk_queue"][:10])]
         L += ["", "</details>", ""]
+
+    L += _glossary() + [""]
 
     L += ["---", "",
           "_Generated by [cg-graphify-bridge](https://github.com/evannordinpro/cg-graphify-bridge) "
