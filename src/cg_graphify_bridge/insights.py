@@ -52,10 +52,12 @@ def _quadrant(communities: list) -> list:
            "    title Architecture — Abstractness vs Instability (per community)",
            "    x-axis Stable --> Unstable",
            "    y-axis Concrete --> Abstract",
+           # quadrantChart's lexer rejects ( ) + : in bare text — keep these labels to
+           # alphanumerics, spaces, commas and hyphens or the whole diagram fails to render.
            "    quadrant-1 Zone of Uselessness",
-           "    quadrant-2 Ideal (abstract + stable)",
+           "    quadrant-2 Ideal - abstract and stable",
            "    quadrant-3 Zone of Pain",
-           "    quadrant-4 Volatile leaf (ok)"]
+           "    quadrant-4 Volatile leaf - ok"]
     for c in pts:
         label = (re.sub(r"[^A-Za-z0-9 ]", "", f"c{c['community']}")[:18]) or "c"
         out.append(f'    "{label}": [{c["instability"]:.3f}, {c["abstractness"]:.3f}]')
