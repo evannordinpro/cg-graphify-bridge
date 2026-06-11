@@ -1,7 +1,7 @@
 # Fused Graph Report (codegraph substrate + graphify overlay)
 
-- nodes: 891  edges: 2003  communities: 26
-- adapter stats: {'cg_nodes': 892, 'composite_nodes': 891, 'merges': 1, 'edges_in': 1763, 'edges_out': 1763, 'unmapped_edges': 0, 'kind_dist': {'class': 4, 'method': 11, 'function': 549, 'file': 58, 'import': 201, 'variable': 51, 'constant': 17}, 'pyast_call_edges': 408, 'pyast_ref_edges': 171, 'pyast_exports_stamped': 18}
+- nodes: 893  edges: 2013  communities: 26
+- adapter stats: {'cg_nodes': 894, 'composite_nodes': 893, 'merges': 1, 'edges_in': 1770, 'edges_out': 1770, 'unmapped_edges': 0, 'kind_dist': {'class': 4, 'method': 11, 'function': 551, 'file': 58, 'import': 201, 'variable': 51, 'constant': 17}, 'pyast_call_edges': 411, 'pyast_ref_edges': 171, 'pyast_exports_stamped': 18}
 
 ## God nodes
 
@@ -26,10 +26,10 @@
 - _label_index ↔ AdaptResult
 - _load_structural ↔ from_structural
 - build_fused ↔ fold_singleton_communities
-- build_repo ↔ check_engine_compat
-- build_repo ↔ check_substrate_drift
+- build_fused ↔ prune_orphans
 - curated_nodes ↔ AdaptResult
-- dispatch_candidates ↔ _caller_of
+- feature_map ↔ build_digraph
+- health ↔ analyze
 - merge_payloads ↔ AdaptResult
 - merge_semantic ↔ AdaptResult
 - prep_tasks ↔ AdaptResult
