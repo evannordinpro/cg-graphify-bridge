@@ -115,9 +115,11 @@ def _adapt_repo(repo: Path, substrate: str, scopes: list[str], *, build_index: b
     if sub == "ts":
         from . import ts_substrate
         return ts_substrate.adapt_ts(repo, scopes), sub
-    from . import adapter
+    from . import adapter, py_calls
     db = _index(repo) if build_index else _require_db(repo)
-    return adapter.adapt(db), sub
+    # codegraph resolves same-file Python calls only — supplement cross-module call edges
+    # (deterministic stdlib-ast pass; no-op for non-Python node sets)
+    return py_calls.enrich(repo, adapter.adapt(db)), sub
 
 
 def build_repo(repo: Path, out_name: str, *, substrate: str = "auto", scopes: str | None = None,
