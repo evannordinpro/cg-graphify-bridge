@@ -1,10 +1,10 @@
 # 📊 Graph Insights — cg-graphify-bridge
 
-> **97% less context** to answer a pinpoint code question · **0** dependency cycles · **80%** of architectural hubs documented
+> **97% less context** to answer a pinpoint code question · **0** dependency cycles · **100%** of architectural hubs documented
 
 | 🎯 Token efficiency | 🏛️ Architecture | 📚 Documentation |
 |:--:|:--:|:--:|
-| 97% pinpoint · 96% global | 0 cycles · 2 Zone-of-Pain | hubs 80% · debt 0.4294 |
+| 97% pinpoint · 96% global | 0 cycles · 2 Zone-of-Pain | hubs 100% · debt 0.3115 |
 
 ## 🎯 Token efficiency
 
@@ -55,25 +55,24 @@ quadrantChart
 
 ## 📚 Documenting what matters
 
-- **God-node coverage** &nbsp; `████████████████░░░░` 80%
-- **Centrality-weighted coverage** &nbsp; `██████░░░░░░░░░░░░░░` 28% _(the gap vs raw coverage = mis-targeted doc effort)_
-- **Undocumented hubs:** `visit`, `_traverse`, `_semantic_merge`
-- **Darkest subsystem:** community 0 (38% documented)
+- **God-node coverage** &nbsp; `████████████████████` 100%
+- **Centrality-weighted coverage** &nbsp; `██████████░░░░░░░░░░` 48% _(the gap vs raw coverage = mis-targeted doc effort)_
+- **Darkest subsystem:** community 0 (42% documented)
 
 ## ⚠️ Undocumented load-bearing — document these first
 
 <details><summary>Top risk = centrality × (1 − documented)</summary>
 
-1. `srt` — `src/cg_graphify_bridge/query.py`
-2. `_norm` — `src/cg_graphify_bridge/semantic.py`
-3. `files` — `src/cg_graphify_bridge/ts_substrate_js/extract.cjs`
-4. `_traverse` — `src/cg_graphify_bridge/query.py`
-5. `read_layer` — `src/cg_graphify_bridge/driver.py`
-6. `_iter_sources` — `src/cg_graphify_bridge/freshness.py`
-7. `rel` — `src/cg_graphify_bridge/ts_substrate_js/extract.cjs`
-8. `source_hash` — `src/cg_graphify_bridge/freshness.py`
-9. `_resolve_hook_cmd` — `src/cg_graphify_bridge/cli.py`
-10. `_append_once` — `src/cg_graphify_bridge/cli.py`
+1. `files` — `src/cg_graphify_bridge/ts_substrate_js/extract.cjs`
+2. `_write_json` — `src/cg_graphify_bridge/driver.py`
+3. `read_manifest` — `src/cg_graphify_bridge/freshness.py`
+4. `_ver` — `src/cg_graphify_bridge/engine.py`
+5. `_meta` — `src/cg_graphify_bridge/analytics.py`
+6. `process_helper` — `sample/pkg_a/auth.py`
+7. `_read_json` — `src/cg_graphify_bridge/freshness.py`
+8. `_load_tiktoken` — `src/cg_graphify_bridge/benchmark.py`
+9. `_documented_targets` — `src/cg_graphify_bridge/health.py`
+10. `_code_nodes` — `src/cg_graphify_bridge/health.py`
 
 </details>
 

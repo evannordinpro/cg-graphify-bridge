@@ -106,6 +106,9 @@ Determinism is non-negotiable: `build`/`init` re-exec under a pinned `PYTHONHASH
   strict-protection limits, a full command reference, and troubleshooting.
 - **[`docs/using-the-graph.md`](docs/using-the-graph.md)** — walkthrough for human **and** agent
   operators (reading the report, the composite-id model, the freshness gate, a worked example).
+- **[`docs/internals.md`](docs/internals.md)** — maintainer internals: the query engine, overlay
+  label resolution, freshness fingerprints, the TS substrate's two passes, and the Python
+  call-edge supplement.
 - **[`AGENTS.md`](AGENTS.md)** — the terse agent contract `init` ships into every consumer:
   how to *consume* the graph **and** the step-by-step protocol to *refresh* the semantic overlay.
 - **[`GRAPH_INSIGHTS.md`](GRAPH_INSIGHTS.md)** — the auto-generated, versioned showcase: token
