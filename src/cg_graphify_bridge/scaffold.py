@@ -71,6 +71,17 @@ If the semantic layer is stale, run the refresh protocol below, then commit `{ou
 4. `cg-graphify-bridge semantic-merge . --out {out_name}` — merges the payloads into `semantic.json`
    and re-materializes the fused graph. Then `git add {out_name}/semantic.json` and commit it.
 
+**Refreshing the PROJECT_FAQ narrative (agent protocol).** When a push or session-stop gate says
+the FAQ narrative is stale (a feature's code changed since the last `faq-merge`):
+1. `cg-graphify-bridge faq-prep . --out {out_name}` — writes one task per stale/missing feature
+   (graph facts + the existing narrative) plus a project-level task under
+   `{out_name}/.cache/faq/tasks/`.
+2. For each task, write the narrative payload it asks for under `{out_name}/.cache/faq/payloads/`
+   — short, factual prose grounded in the listed members/inputs/outputs; never invent anchors.
+3. `cg-graphify-bridge faq-merge . --out {out_name}` — merges into `{out_name}/faq.json` and
+   stamps the per-feature baseline. Then `git add {out_name}/faq.json` and commit. CI renders
+   `PROJECT_FAQ.md` from it deterministically (no LLM in CI).
+
 **Isolation.** This graph is built by cg-graphify-bridge composing graphify + codegraph as
 *libraries*. Do **not** run `graphify install`, `codegraph install`, or `graphify hook install` in
 this repo — they install competing agent integrations: a codegraph **MCP** over the live `.codegraph`

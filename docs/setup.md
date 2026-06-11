@@ -47,7 +47,10 @@ The whole adoption, in order — each step is detailed below:
    *"Read and write permissions"* (details below). Without this the structural commit-back can't push.
 5. **Opt into metrics** (recommended) — repo **variables**: `CG_INSIGHTS=true` renders the
    `GRAPH_INSIGHTS.md` showcase at the repo root on every graph build; `CG_HEALTH_ADVISORY=true`
-   writes the health report to the CI run summary (never gates). See §6 "Health & benchmarks."
+   writes the health report to the CI run summary (never gates); `CG_FAQ=true` renders
+   `PROJECT_FAQ.md` (deterministic graph facts + the committed `faq.json` narrative — seed the
+   narrative once with `faq-prep`/`faq-merge`, then the CLAUDECODE-aware gates keep it current
+   per-feature). See §6.
 6. **Seed the semantic overlay** — `init` does *not* create `semantic.json`; until it exists,
    health/insights report structural metrics only and "no semantic overlay." Run
    `cg-graphify-bridge semantic-prep <repo>`, have your agent fill the payloads (with Claude Code:
@@ -170,6 +173,9 @@ cg-graphify-bridge status .           # both layers fresh? prints the exact refr
 | `callees <repo> <symbol> [--depth N] [--json]` | symbols SYMBOL depends on |
 | `impact <repo> <symbol> [--depth N] [--json]` | transitive blast radius if SYMBOL changes (full by default) |
 | `insights <repo> [--out-file PATH]` | render the versioned showcase report (health + benchmark) as GitHub-native markdown |
+| `faq-prep <repo>` / `faq-merge <repo>` | the dev-owned PROJECT_FAQ narrative refresh (per-feature; agent fills payloads) |
+| `faq-render <repo> [--out-file PATH]` | render PROJECT_FAQ.md — deterministic facts + committed `faq.json` narrative (what CI runs) |
+| `check-faq <repo> [--quiet]` | exit non-zero when a feature's narrative is stale (the CLAUDECODE-aware gate; fail-open) |
 | `check-semantic <repo> [--require-committed]` | exit non-zero if the overlay is stale (the Stop-hook gate) |
 | `install-hook <repo>` | install the git freshness hooks |
 | `hook-sessionstart` / `hook-stop` | the Claude hook entrypoints (wired by `init` into `.claude/settings.json`) |

@@ -434,6 +434,68 @@ def _insights(args: argparse.Namespace) -> None:
         print(md)
 
 
+# ---------- Phase 6: PROJECT_FAQ (quantitative facts + dev-Claude narrative) ----------
+
+def _faq_prep(args: argparse.Namespace) -> None:
+    from . import faq
+    repo = Path(args.repo).resolve()
+    out = repo / args.out
+    structural, _ = _load_structural(out)
+    info = faq.prep_faq(out, repo, structural)
+    print(json.dumps({**info, "consumed": "structural.json (no re-cluster)",
+                      "next": "fill payloads/project.json + per-feature narrative payloads, "
+                              "then run `faq-merge`."}, indent=2))
+
+
+def _faq_merge(args: argparse.Namespace) -> None:
+    from . import faq
+    repo = Path(args.repo).resolve()
+    out = repo / args.out
+    structural, _ = _load_structural(out)
+    info = faq.merge_faq(out, repo, structural)
+    print(json.dumps({**info, "next": f"git add {args.out}/faq.json  # then commit; "
+                                      "CI renders PROJECT_FAQ.md from it"}, indent=2))
+
+
+def _faq_render(args: argparse.Namespace) -> None:
+    from . import faq, health as _h
+    repo = Path(args.repo).resolve()
+    out = repo / args.out
+    structural, _ = _load_structural(out)
+    md = faq.render_faq(out, repo, structural, _h.health(out, repo=repo))
+    if args.out_file:
+        dest = Path(args.out_file)
+        dest = dest if dest.is_absolute() else repo / dest
+        dest.write_text(md)
+        print(f"wrote {dest}")
+    else:
+        print(md)
+
+
+def _check_faq(args: argparse.Namespace) -> None:
+    """The KD8 gate predicate: exit non-zero ONLY when a stamped FAQ baseline says a feature's
+    narrative went stale. Fail-open by construction: un-adopted repos (no baseline), the escape
+    hatch, and any internal error all exit 0 — a guard error must never brick a push/session."""
+    try:
+        from . import freshness
+        if _hook_disabled():
+            raise SystemExit(0)
+        repo = Path(args.repo).resolve()
+        st = freshness.faq_status(repo / args.out, repo)
+        if st["state"] != "stale":
+            raise SystemExit(0)
+        if not args.quiet:
+            print(f"cg-graphify-bridge: PROJECT_FAQ narrative is stale for "
+                  f"{len(st['stale_features'])} feature(s) — run `cg-graphify-bridge faq-prep "
+                  f"{repo}` → fill the payloads → `cg-graphify-bridge faq-merge {repo}`, "
+                  f"commit {args.out}/faq.json, then re-push.")
+        raise SystemExit(1)
+    except SystemExit:
+        raise
+    except Exception:
+        raise SystemExit(0)  # fail open
+
+
 # ---------- Claude hooks (in-process subcommands; .claude/settings.json wires them) ----------
 # Thin: SessionStart surfaces freshness, Stop gates on a stale/uncommitted overlay. Both honor
 # the escape hatch and FAIL OPEN — a guard that errors must never brick a session (R7/R10).
@@ -476,12 +538,18 @@ def _hook_stop(args: argparse.Namespace) -> None:
         stale = sem.get("state") == "stale"
         uncommitted = (out / "semantic.json").exists() and \
             freshness.is_uncommitted(repo, out / "semantic.json")
-        if not (stale or uncommitted):
+        faq_stale = freshness.faq_status(out, repo).get("state") == "stale"
+        if not (stale or uncommitted or faq_stale):
             return  # allow stop
-        reason = ("the semantic overlay is stale — docs or linked code changed since the last merge"
-                  if stale else "semantic.json has uncommitted changes (refreshed but not committed)")
-        cmd = _refresh_cmds(repo, args.out, False, True)["semantic"]
-        msg = (f"cg-graphify-bridge: {reason}. Refresh the overlay and commit it before ending:\n{cmd}\n"
+        if stale or uncommitted:
+            reason = ("the semantic overlay is stale — docs or linked code changed since the last merge"
+                      if stale else "semantic.json has uncommitted changes (refreshed but not committed)")
+            cmd = _refresh_cmds(repo, args.out, False, True)["semantic"]
+        else:
+            reason = "the PROJECT_FAQ narrative is stale — a feature's code changed since faq-merge"
+            cmd = (f"cg-graphify-bridge faq-prep {repo}   # fill the payloads, then: "
+                   f"cg-graphify-bridge faq-merge {repo}   # then: git add {args.out}/faq.json")
+        msg = (f"cg-graphify-bridge: {reason}. Refresh and commit it before ending:\n{cmd}\n"
                f"(escape: `export CG_BRIDGE_DISABLE=1` or `touch ~/.claude/state/cg-bridge/OFF`)")
         print(json.dumps({"decision": "block", "reason": msg}))
     except Exception:
@@ -597,6 +665,28 @@ def main() -> None:
     ins.add_argument("--out", default="graphify-out")
     ins.add_argument("--out-file", default=None, help="write markdown to this path (default: stdout)")
     ins.set_defaults(func=_insights)
+
+    fp = sub.add_parser("faq-prep", help="write per-feature narrative tasks under <out>/.cache/faq/")
+    fp.add_argument("repo")
+    fp.add_argument("--out", default="graphify-out")
+    fp.set_defaults(func=_faq_prep)
+
+    fm = sub.add_parser("faq-merge", help="merge narrative payloads -> faq.json + stamp the per-feature baseline")
+    fm.add_argument("repo")
+    fm.add_argument("--out", default="graphify-out")
+    fm.set_defaults(func=_faq_merge)
+
+    fr = sub.add_parser("faq-render", help="render PROJECT_FAQ.md (deterministic; what CI runs)")
+    fr.add_argument("repo")
+    fr.add_argument("--out", default="graphify-out")
+    fr.add_argument("--out-file", default=None, help="write markdown to this path (default: stdout)")
+    fr.set_defaults(func=_faq_render)
+
+    cf = sub.add_parser("check-faq", help="exit non-zero if the FAQ narrative is stale (the KD8 gate; fail-open)")
+    cf.add_argument("repo")
+    cf.add_argument("--out", default="graphify-out")
+    cf.add_argument("--quiet", action="store_true")
+    cf.set_defaults(func=_check_faq)
 
     hs = sub.add_parser("hook-sessionstart", help="Claude SessionStart hook: surface freshness + materialize")
     hs.add_argument("--out", default="graphify-out")
