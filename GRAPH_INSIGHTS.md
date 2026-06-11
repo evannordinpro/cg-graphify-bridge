@@ -4,7 +4,7 @@
 
 | 🎯 Token efficiency | 🏛️ Architecture | 📚 Documentation |
 |:--:|:--:|:--:|
-| 97% pinpoint · 96% global | 0 cycles · 3 Zone-of-Pain | hubs 100% · debt 0.4349 |
+| 97% pinpoint · 96% global | 0 cycles · 3 Zone-of-Pain | hubs 100% · debt 0.4342 |
 
 ## 🎯 Token efficiency
 
@@ -27,38 +27,38 @@ quadrantChart
     quadrant-2 Ideal - abstract and stable
     quadrant-3 Zone of Pain
     quadrant-4 Volatile leaf - ok
-    "c11": [0.000, 0.000]
+    "c10": [0.000, 0.000]
     "c16": [0.000, 0.000]
     "c0": [0.200, 0.000]
 ```
 
 - **Dependency cycles:** 0 — acyclic ✓
 - **Zone of Pain:** 3 · **Zone of Uselessness:** 0 communities
-- **Leakiest module:** community 20 (conductance 0.5)
+- **Leakiest module:** community 19 (conductance 0.5)
 - **Top architectural hub (betweenness):** `cg:75637ed541aa7ba9`
-- **High fan-out (SRP) candidates:** 4 · **Dead-code review queue:** 7
+- **High fan-out (SRP) candidates:** 4 · **Dead-code review queue:** 2
 
 ## 🧹 Technical Debt
 
-**Debt score** &nbsp; `███████░░░░░░░░░░░░░` 37% _(0 = clean → 1 = heavy)_
+**Debt score** &nbsp; `███████░░░░░░░░░░░░░` 35% _(0 = clean → 1 = heavy)_
 
 | Debt type | Count |
 |---|--:|
 | god-object | 9 |
-| dead-code | 7 |
 | dangling-link | 6 |
 | high-fan-out | 4 |
 | zone-of-pain | 3 |
+| dead-code | 2 |
 
 - **Most-indebted feature:** community 0 (3 debt items)
-- **Most-indebted component:** `src/cg_graphify_bridge/cli.py` (7 debt items)
-- _score contributions: god-object 0.1125, zone-of-pain 0.1, high-fan-out 0.0667, dangling-link 0.0667, dead-code 0.0219_
+- **Most-indebted component:** `src/cg_graphify_bridge/cli.py` (6 debt items)
+- _score contributions: god-object 0.1125, zone-of-pain 0.1, high-fan-out 0.0667, dangling-link 0.0667, dead-code 0.0074_
 
 ## 📚 Documenting what matters
 
 - **God-node coverage** &nbsp; `████████████████████` 100%
 - **Centrality-weighted coverage** &nbsp; `██████████░░░░░░░░░░` 48% _(the gap vs raw coverage = mis-targeted doc effort)_
-- **Darkest subsystem:** community 0 (39% documented)
+- **Darkest subsystem:** community 0 (43% documented)
 
 ## ⚠️ Undocumented load-bearing — document these first
 
