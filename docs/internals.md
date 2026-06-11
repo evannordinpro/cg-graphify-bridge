@@ -46,6 +46,13 @@ When a semantic payload edge has no exact composite id, `merge_semantic` resolve
 - `build_subagent_context` is the egress boundary: agents get identity metadata
   (`{composite_id, label, file, cg_kind}` via `linkable_subset`) plus doc text — **never source
   code** (R7).
+- **`dispatch_candidates`** turns the dead-code heuristic into curated graph data: it re-runs
+  `health.dynamic_refs` over the production scope, attributes each evidence line to its
+  enclosing declaration (`py_calls._caller_of` over node line spans), and writes the candidate
+  list for the agent to confirm as code→code `dispatches` edges. `merge_semantic` validates the
+  *source* of every edge too (a payload semantic node or an existing code id) so a dispatch
+  site can't be invented; `health` treats confirmed targets as authoritatively live and
+  `_documented_targets` excludes the relation from coverage.
 
 ## Freshness fingerprints (`freshness.py`)
 

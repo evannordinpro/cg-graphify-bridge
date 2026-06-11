@@ -59,13 +59,18 @@ def _label_index(res: AdaptResult) -> dict[str, list[str]]:
 
 def merge_semantic(payload: dict, res: AdaptResult, label_index: dict | None = None) -> dict:
     """Validate + merge subagent output. A target that isn't a known id is resolved by
-    UNIQUE label match (incl. file/module stem) or pruned + reported (no silent dangling)."""
+    UNIQUE label match (incl. file/module stem) or pruned + reported (no silent dangling).
+    Edge sources must be a payload semantic node or an existing code node (code→code edges,
+    e.g. relation "dispatches", name a real dispatch site — never an invented id)."""
     code_ids = {n["id"] for n in res.nodes}
     idx = label_index if label_index is not None else _label_index(res)
     sem_nodes = payload.get("nodes", [])
     valid = code_ids | {n["id"] for n in sem_nodes}
     kept, dangling, fallback = [], [], 0
     for e in payload.get("edges", []):
+        if e.get("source") not in valid:
+            dangling.append(e)
+            continue
         if e.get("target") in valid:
             kept.append(e)
             continue
@@ -82,6 +87,44 @@ def merge_semantic(payload: dict, res: AdaptResult, label_index: dict | None = N
         "stats": {"in_edges": len(payload.get("edges", [])), "kept": len(kept),
                   "dangling": len(dangling), "fallback": fallback},
     }
+
+
+# ---------- dispatches: agent-confirmed dynamic-wiring edges (code -> code) ----------
+
+def dispatch_candidates(repo: Path, structural: dict) -> list[dict]:
+    """Candidates for agent-confirmed `dispatches` edges: zero-in-degree symbols whose only
+    liveness evidence is textual (health.dynamic_refs — argparse tables, callbacks, getattr
+    strings). An agent reviews each candidate's evidence and, where the wiring is real, emits a
+    code→code edge {source: <dispatch site>, target: <handler>, relation: "dispatches"} in a
+    payload. Confirmed edges are authoritative for dead-code (the heuristic stops mattering for
+    them) and are NOT counted as documentation coverage. Suggested source = the innermost
+    declaration enclosing the evidence line (file node fallback) — the agent may override it."""
+    from . import analytics, health
+    from .py_calls import _caller_of
+    scoped = health.source_scope(structural)
+    dyn = health.dynamic_refs(repo, scoped, analytics.dead_code(scoped))
+    meta = {n["id"]: n for n in structural.get("nodes", [])}
+    spans: dict[str, list] = {}
+    file_node: dict[str, str] = {}
+    for n in structural.get("nodes", []):
+        md = n.get("metadata", {})
+        sf = n.get("source_file")
+        if not sf:
+            continue
+        if md.get("cg_kind") == "file":
+            file_node.setdefault(sf, n["id"])
+        elif md.get("start_line") and md.get("end_line"):
+            spans.setdefault(sf, []).append((md["start_line"], md["end_line"], n["id"]))
+    for v in spans.values():
+        v.sort()
+    out = []
+    for tid, evidence in sorted(dyn.items()):
+        sf, _, line = evidence.rpartition(":")
+        sid = _caller_of(int(line), spans.get(sf, []), file_node.get(sf))
+        out.append({"target": tid, "target_label": meta.get(tid, {}).get("label"),
+                    "evidence": evidence, "suggested_source": sid,
+                    "suggested_source_label": meta.get(sid, {}).get("label") if sid else None})
+    return out
 
 
 # ---------- scaling: prep tasks (context) + merge payloads ----------
@@ -106,8 +149,10 @@ def curated_nodes(res: AdaptResult, fused: dict, max_nodes: int) -> list[dict]:
 
 
 def prep_tasks(res: AdaptResult, fused: dict, repo: Path, out: Path, max_nodes: int = 600,
-               max_docs: int | None = None, doc_filter: str | None = None) -> dict:
-    """Write one subagent task ({doc, code_nodes}) per doc into <out>/.cache/semantic/tasks/."""
+               max_docs: int | None = None, doc_filter: str | None = None,
+               structural: dict | None = None) -> dict:
+    """Write one subagent task ({doc, code_nodes}) per doc into <out>/.cache/semantic/tasks/.
+    With `structural`, also writes dispatch_candidates.json (see dispatch_candidates)."""
     nodes = curated_nodes(res, fused, max_nodes)
     docs = discover_docs(repo, out.name)
     if doc_filter:
@@ -129,8 +174,21 @@ def prep_tasks(res: AdaptResult, fused: dict, repo: Path, out: Path, max_nodes: 
         }))
         manifest.append({"task_id": tid, "doc_path": rel})
     (base / "manifest.json").write_text(json.dumps(manifest, indent=2))
+    cands = dispatch_candidates(repo, structural) if structural else []
+    if cands:
+        (base / "dispatch_candidates.json").write_text(json.dumps({
+            "instruction": (
+                "Each candidate is a symbol whose only liveness evidence is textual. Inspect the "
+                "evidence (file:line); if it is real dynamic wiring (dispatch table, callback, "
+                "getattr-by-name), add to any payload an edge "
+                '{"source": <dispatch-site composite id>, "target": <candidate target id>, '
+                '"relation": "dispatches"} — suggested_source is precomputed; override it if the '
+                "true dispatch site differs. If the evidence is a false positive (comment/string "
+                "coincidence), emit nothing — the symbol stays in the dead-code review queue."),
+            "candidates": cands}, indent=1))
     return {"tasks": manifest, "tasks_dir": tasks_dir,
-            "payloads_dir": base / "payloads", "code_nodes": len(nodes)}
+            "payloads_dir": base / "payloads", "code_nodes": len(nodes),
+            "dispatch_candidates": len(cands)}
 
 
 def merge_payloads(res: AdaptResult, out: Path) -> dict:

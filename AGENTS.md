@@ -31,7 +31,13 @@ If the semantic layer is stale, run the refresh protocol below, then commit `gra
    - if you know the symbol name but not its id, set `target_label` and leave `target` empty — the
      bridge resolves it by unique label or prunes + reports it (no silent dangling edges);
    - you are given identity metadata + the doc text **only** — never request or emit code bodies.
-3. `cg-graphify-bridge semantic-merge . --out graphify-out` — merges the payloads into `semantic.json`
+3. If `graphify-out/.cache/semantic/dispatch_candidates.json` exists, review each candidate's
+   `evidence` (file:line): when it is real dynamic wiring (dispatch table, callback, getattr-by-
+   name), add `{"source": <dispatch-site id>, "target": <candidate id>, "relation": "dispatches"}`
+   to any payload (`suggested_source` is precomputed). Confirmed `dispatches` edges are
+   authoritative liveness for the dead-code queue and are NOT documentation coverage. A false
+   positive (comment/string coincidence) gets no edge — it stays in the review queue.
+4. `cg-graphify-bridge semantic-merge . --out graphify-out` — merges the payloads into `semantic.json`
    and re-materializes the fused graph. Then `git add graphify-out/semantic.json` and commit it.
 
 **Isolation.** This graph is built by cg-graphify-bridge composing graphify + codegraph as

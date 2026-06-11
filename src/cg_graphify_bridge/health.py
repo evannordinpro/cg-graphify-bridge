@@ -93,9 +93,20 @@ def dynamic_refs(repo: Path, structural: dict, candidates: list) -> dict:
 
 
 def _documented_targets(semantic: dict | None) -> set:
+    """Targets of doc→code edges. `dispatches` edges are liveness wiring, not documentation —
+    counting them would inflate coverage with edges no doc prose backs."""
     if not semantic:
         return set()
-    return {e["target"] for e in semantic.get("semantic_edges", []) if e.get("target")}
+    return {e["target"] for e in semantic.get("semantic_edges", [])
+            if e.get("target") and e.get("relation") != "dispatches"}
+
+
+def _dispatch_confirmed(semantic: dict | None) -> set:
+    """Targets of agent-confirmed `dispatches` edges — authoritative liveness for dead-code."""
+    if not semantic:
+        return set()
+    return {e["target"] for e in semantic.get("semantic_edges", [])
+            if e.get("target") and e.get("relation") == "dispatches"}
 
 
 def semantic_health(structural: dict, semantic: dict | None) -> dict:
@@ -259,6 +270,11 @@ def health(out: Path, *, include_tests: bool = False, repo: Path | None = None) 
     semantic = driver.read_layer(out, "semantic")
     scoped = structural if include_tests else source_scope(structural)
     sm = analytics.analyze(scoped)                # one centrality compute, reused below
+    # agent-confirmed `dispatches` edges are authoritative liveness — drop them first, so the
+    # textual heuristic below only speaks for the still-unconfirmed remainder
+    confirmed = _dispatch_confirmed(semantic) & {d["id"] for d in sm["dead_code"]}
+    if confirmed:
+        sm["dead_code"] = [d for d in sm["dead_code"] if d["id"] not in confirmed]
     dyn = dynamic_refs(repo, scoped, sm["dead_code"]) if repo else {}
     dyn_wired = sorted(({"id": d["id"], "label": d.get("label", d["id"]), "evidence": dyn[d["id"]]}
                         for d in sm["dead_code"] if d["id"] in dyn), key=lambda x: x["id"])
@@ -284,10 +300,13 @@ def health(out: Path, *, include_tests: bool = False, repo: Path | None = None) 
             "abstractness": sm["abstractness"],
             "fan": sm["fan"],
             "dead_code": {"count": len(sm["dead_code"]), "top": sm["dead_code"][:15],
+                          "dispatch_confirmed_excluded": len(confirmed),
                           "dynamically_wired_excluded": len(dyn_wired),
                           "dynamically_wired": dyn_wired[:10],
                           "note": "static review queue — over-flags dynamic/reflection/framework-wired symbols"
-                          + (f"; {len(dyn_wired)} dropped via textual value-reference evidence"
+                          + (f"; {len(confirmed)} excluded via confirmed `dispatches` edges" if confirmed else "")
+                          + (f"; {len(dyn_wired)} dropped via textual value-reference evidence "
+                             "(unconfirmed — see semantic-prep's dispatch_candidates.json)"
                              if dyn_wired else
                              ("" if repo else "; pass the repo path to drop dynamically-wired symbols"))},
         },

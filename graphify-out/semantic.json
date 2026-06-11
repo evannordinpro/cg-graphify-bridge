@@ -3,6 +3,106 @@
   "schema_version": 1,
   "semantic_edges": [
     {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:166448311ebac559"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:18af856fd7b86ad8"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:311c26dd9f180e0e"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:37d69353cf030a92"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:37e1fb59471497e8"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:387ecfaf791671b2"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:7af7daeeb499bcf8"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:8aaf8e1ba47784ae"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:8dbc9c38220fe1d7"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:a135ab201a903149"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:a644b0f4b4844fcb"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:a7a4b64251b0aabd"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:ace5dbd5b16b7cee"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:c38cfe22f0d77c40"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:e088c0baf177a262"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:f6329320a51f4b05"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:4b1559b6f6e0f7ea",
+      "target": "cg:ff9bce62be77e00d"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:c38cfe22f0d77c40",
+      "target": "cg:435cd7ecb3bba36a"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:c38cfe22f0d77c40",
+      "target": "cg:8a0dda05dc1e6c4f"
+    },
+    {
+      "relation": "dispatches",
+      "source": "cg:c38cfe22f0d77c40",
+      "target": "cg:b405ba996d23800b"
+    },
+    {
       "relation": "references",
       "source": "doc:agentsmd",
       "target": "cg:13dc2f72e26c825e"
@@ -978,7 +1078,7 @@
   "stats": {
     "dangling": 0,
     "fallback": 0,
-    "kept": 185,
-    "payloads": 9
+    "kept": 205,
+    "payloads": 10
   }
 }
