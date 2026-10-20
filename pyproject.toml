@@ -19,7 +19,7 @@ dependencies = [
     # an engine swap or a networkx node_link_data change would alter the committed output.
     # NOTE: base install is Louvain-deterministic — graspologic is NOT pulled here; it is the
     # opt-in [leiden] extra (CI carries it as the single Leiden builder, D4/KD14).
-    "graphifyy==0.8.36",
+    "graphifyy==0.9.70",
     "networkx==3.6.1",
 ]
 
